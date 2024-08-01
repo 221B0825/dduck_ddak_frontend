@@ -10,7 +10,7 @@ function RightSidebar() {
   };
 
   return (
-    <div id="rightSidebar-wrapper" className='bg-white' style={{position: 'fixed', right: 0, top: 0, height: '100vh', zIndex: 2000, width: isOpen ? '250px' : '50px', transition: 'width 0.3s ease-in-out'}}>
+    <div id="rightSidebar-wrapper" className='bg-white' style={{position: 'fixed', right: 0, top: 0, height: '100vh', zIndex: 2000, width: isOpen ? '400px' : '50px', transition: 'width 0.3s ease-in-out'}}>
       <button id='rightSidebarBtn' onClick={toggleSidebar} className="btn btn-primary" style={{
         position: 'absolute',
         top: '50%',

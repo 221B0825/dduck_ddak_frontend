@@ -2,6 +2,7 @@
   width: 100%;
   position: fixed;
   top: 0;
+  border-bottom: 1px solid #ccc; /* 옅은 회색의 border 추가 */
 }
 
 #leftSidebar-wrapper {

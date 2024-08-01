@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function CustomHeader() {
   return (
-    <nav id='customHeader' className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav id='customHeader' className="navbar navbar-expand-lg navbar-light bg-white">
       <a className="navbar-brand" href="#">Navbar</a>
       <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon"></span>
