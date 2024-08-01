@@ -1,0 +1,41 @@
+#customHeader {
+  width: 100%;
+  position: fixed;
+  top: 0;
+}
+
+#leftSidebar-wrapper {
+  z-index: 2000;
+  box-shadow: 5px 5px 3px rgb(0, 0, 0, 0.1);
+}
+
+#rightSidebar-wrapper {
+  z-index: 2000;
+  box-shadow: -5px 5px 3px rgb(0, 0, 0, 0.1);
+}
+
+.transition-width {
+  transition: width 0.3s ease-in-out;
+}
+
+#customHeader {
+  z-index: 2500;
+}
+
+#leftSidebarBtn {
+  background-color: white;
+  border: none;
+  border-radius: 0 10px 10px 0;
+  height: 20%;
+  color: black;
+  box-shadow: 5px 5px 3px rgb(0, 0, 0, 0.1);
+}
+
+#rightSidebarBtn {
+  background-color: white;
+  border: none;
+  border-radius: 10px 0 0 10px;
+  height: 20%;
+  color: black;
+  box-shadow: -5px 5px 3px rgb(0, 0, 0, 0.1);
+}
