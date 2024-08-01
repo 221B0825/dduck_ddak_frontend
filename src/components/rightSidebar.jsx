@@ -17,7 +17,7 @@ function RightSidebar() {
         left: isOpen ? '0px' : '-35px',
         transform: `translateY(-50%) ${isOpen ? 'translateX(-100%)' : 'translateX(0)'}`
       }}>
-        {isOpen ? <i class="bi bi-caret-right-fill"></i> : <i class="bi bi-caret-left-fill"></i>}
+        {isOpen ? <i className="bi bi-caret-right-fill"></i> : <i className="bi bi-caret-left-fill"></i>}
       </button>
       <div className={`sidebar-heading ${isOpen ? '' : 'd-none'}`}>Right Sidebar</div>
       <div className={`list-group list-group-flush ${isOpen ? '' : 'd-none'}`}>

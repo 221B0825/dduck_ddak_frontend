@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css'; // Bootstrap Icons 추가
 
 function leftSidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +17,7 @@ function leftSidebar() {
         right: isOpen ? '-35px' : '-35px', // 토글 버튼이 왼쪽으로 나오도록 조정
         transform: 'translateY(-50%)'
       }}>
-        {isOpen ? <i class="bi bi-caret-left-fill"></i> : <i class="bi bi-caret-right-fill"></i>}
+        {isOpen ? <i className="bi bi-caret-left-fill"></i> : <i className="bi bi-caret-right-fill"></i>}
       </button>
       <div className={`sidebar-heading ${isOpen ? '' : 'd-none'}`}>Left Sidebar</div>
       <div className={`list-group list-group-flush ${isOpen ? '' : 'd-none'}`}>
