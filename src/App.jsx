@@ -1,15 +1,16 @@
-import React from "react";
-import KakaoMap from "./KakaoMap";
-import KakaoMarkerMap from "./KaKaoMakerMap";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
-const App = () => {
+import LoginView from "./views/loginView/loginView";
+import MainView from "./views/mainView/mainView";
+
+function App() {
   return (
-    <div>
-      <h1>My Kakao Map</h1>
-      {/* <KakaoMap /> */}
-      <KakaoMarkerMap />
-    </div>
+        <Routes>
+          <Route path="/" element={<LoginView />} />
+          <Route path="/main" element={<MainView />} />
+        </Routes>
   );
-};
+}
 
 export default App;

@@ -1,16 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link, Route, Routes, BrowserRouter } from "react-router-dom";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import LeftSidebar from "./components/leftSidebar.jsx";
-import RightSidebar from "./components/rightSidebar.jsx";
-import CustomHeader from "./components/customHeader.jsx";
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <CustomHeader />
-    <LeftSidebar/>
-    <RightSidebar />
+  <BrowserRouter>
     <App />
-  </React.StrictMode>
+  </BrowserRouter>
 );
