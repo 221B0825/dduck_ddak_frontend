@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import areaData from '/public/dong.json';  // Ensure this path matches the location of the JSON file
+import areaData from '/src/apis/dong.json';
 
 const KakaoMap = () => {
     useEffect(() => {

@@ -22,14 +22,22 @@ function leftSidebar() {
         {isOpen ? <i className="bi bi-caret-left-fill"></i> : <i className="bi bi-caret-right-fill"></i>}
       </button>
       <div id='searchArea' className={`sidebar-heading ${isOpen ? '' : 'd-none'}`} style={{marginTop: '80px', padding: '20px'}}>
+        <h3 className='md-2'>검색조건</h3>
+        <hr></hr>
+        <div className='d-flex justify-content-between'>
         <input
           type="text"
           className="form-control"
-          placeholder="검색하세요"
+          placeholder="구 또는 동을 입력해주세요"
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           style={{ marginBottom: '10px' }}
         />
+        <button className="btn btn-primary" onClick={() => alert(`Searching for: ${searchQuery} in ${selectedRegion}`)}>
+            <i className="bi bi-search"></i>
+          </button>
+        </div>
+       
         <select className="form-select" value={selectedRegion} onChange={e => setSelectedRegion(e.target.value)} style={{ marginBottom: '10px' }}>
           <option value="">지역 선택</option>
           <option value="Seoul">서울</option>
@@ -38,12 +46,8 @@ function leftSidebar() {
           <option value="Daegu">대구</option>
         </select>
         <div className="d-flex justify-content-between">
-          <button className="btn btn-outline-secondary" onClick={() => setSelectedRegion('')}>
-            <i className="bi bi-x-lg"></i>
-          </button>
-          <button className="btn btn-primary" onClick={() => alert(`Searching for: ${searchQuery} in ${selectedRegion}`)}>
-            <i className="bi bi-search"></i>
-          </button>
+          <div className='badgeArea'></div>
+         
         </div>
       </div>
     </div>
