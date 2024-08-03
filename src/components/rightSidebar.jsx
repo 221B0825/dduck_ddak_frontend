@@ -3,7 +3,7 @@ import Chart from "chart.js/auto";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Bootstrap Icons 추가
 
-const RightSidebar = ({ selectedSize, selectedArea }) => {
+const RightSidebar = ({ isSelectedSize, selectedArea }) => {
   const [isOpen, setIsOpen] = useState(false);
   const chartRef = useRef(null);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -11,29 +11,34 @@ const RightSidebar = ({ selectedSize, selectedArea }) => {
   useEffect(() => {
     if (selectedArea && selectedArea.additionalData) {
       const { labels, values, expndtr_totamt } = selectedArea.additionalData;
-      console.log(expndtr_totamt);
       setTotalAmount(expndtr_totamt);
-      console.log(labels);
-      console.log(values);
+      console.log("동별 선택: " + isSelectedSize);
 
-      // "행정동_코드_명", "소득_구간_코드", "기준_년분기_코드", "월_평균_소득_금액" 필드를 제외
-      const filteredData = labels.reduce(
-        (acc, label, index) => {
-          if (
-            label !== "행정동_코드_명" &&
-            label !== "소득_구간_코드" &&
-            label !== "기준_년분기_코드" &&
-            label !== "월_평균_소득_금액" &&
-            label !== "지출_총금액" &&
-            label !== "행정동_코드"
-          ) {
-            acc.labels.push(label);
-            acc.values.push(values[index]);
-          }
-          return acc;
-        },
-        { labels: [], values: [] }
-      );
+      let filteredData;
+
+      // 행정동 별 선택
+      if (isSelectedSize) {
+        filteredData = labels.reduce(
+          (acc, label, index) => {
+            if (
+              label !== "행정동_코드_명" &&
+              label !== "소득_구간_코드" &&
+              label !== "기준_년분기_코드" &&
+              label !== "월_평균_소득_금액" &&
+              label !== "지출_총금액" &&
+              label !== "행정동_코드"
+            ) {
+              acc.labels.push(label);
+              acc.values.push(values[index]);
+            }
+            return acc;
+          },
+          { labels: [], values: [] }
+        );
+        // 행정구 별 선택
+      } else {
+        filteredData = { labels, values };
+      }
 
       const ctx = document.getElementById("myChart").getContext("2d");
 
@@ -114,7 +119,6 @@ const RightSidebar = ({ selectedSize, selectedArea }) => {
             <div className="list-group-item list-group-item-action bg-light">
               <strong>{selectedArea.name} 분석 보고서</strong>
               <br></br>
-              <strong>{selectedSize}</strong>
             </div>
             <div className="list-group-item list-group-item-action bg-light">
               Name: {selectedArea.name}

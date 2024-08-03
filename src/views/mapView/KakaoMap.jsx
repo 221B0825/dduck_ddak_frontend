@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import axios from "axios";
-import areaData from "../../apis/updated_dong.json";
-import chartData from "../../apis/consumption_test.json";
+import dongAreaData from "../../apis/dong.json";
+import guAreaData from "../../apis/gu.json";
+import dongChartData from "../../apis/dong_consumption_test.json";
+import guChartData from "../../apis/gu_consumption_test.json";
 
-const KakaoMap = ({ setSelectedArea }) => {
+const KakaoMap = ({ isSelectedSize, setSelectedArea }) => {
   const selectedPolygonRef = useRef(null);
 
   useEffect(() => {
@@ -27,7 +29,11 @@ const KakaoMap = ({ setSelectedArea }) => {
           customOverlay = new kakao.maps.CustomOverlay({}),
           infowindow = new kakao.maps.InfoWindow({ removable: true });
 
-        areaData.forEach((area) => {
+        dongAreaData.forEach((area) => {
+          displayArea(area, map, customOverlay, infowindow);
+        });
+
+        guAreaData.forEach((area) => {
           displayArea(area, map, customOverlay, infowindow);
         });
       });
@@ -52,7 +58,7 @@ const KakaoMap = ({ setSelectedArea }) => {
 
     const fetchAreaData = async (adm_cd) => {
       try {
-        const response = chartData;
+        const response = dongChartData;
         const data = response.DATA.find((data) => data.adstrd_cd === adm_cd);
         const labels = Object.values(response.DESCRIPTION);
         const values = Object.keys(response.DESCRIPTION).map(

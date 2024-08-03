@@ -7,10 +7,11 @@ const CustomHeader = ({ setSelectedSize }) => {
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
+
     if (isChecked) {
-      setSelectedSize("행정구 별 선택");
+      setSelectedSize(false);
     } else {
-      setSelectedSize("행정동 별 선택");
+      setSelectedSize(true);
     }
   };
 
@@ -36,7 +37,7 @@ const CustomHeader = ({ setSelectedSize }) => {
             onChange={handleCheckboxChange}
           />
           <label className="form-check-label" htmlFor="flexSwitchCheckChecked">
-            {isChecked ? "행정동 별 선택" : "행정구 별 선택"}
+            {isChecked ? "행정동 별 선택" : "자치구 별 선택"}
           </label>
         </div>
       </div>
