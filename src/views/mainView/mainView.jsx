@@ -3,7 +3,6 @@ import LeftSidebar from "../../components/leftSidebar";
 import RightSidebar from "../../components/rightSidebar";
 import KakaoMap from "../mapView/KakaoMap";
 
-
 function MainPage() {
   return (
     <div>
