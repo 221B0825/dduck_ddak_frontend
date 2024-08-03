@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css'; // Bootstrap Icons 추가
+import React, { useState, useEffect, useRef } from "react";
+import Chart from "chart.js/auto";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css"; // Bootstrap Icons 추가
 
-const RightSidebar = ({ selectedArea }) => {
+const RightSidebar = ({ selectedSize, selectedArea }) => {
   const [isOpen, setIsOpen] = useState(false);
   const chartRef = useRef(null);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -20,12 +20,12 @@ const RightSidebar = ({ selectedArea }) => {
       const filteredData = labels.reduce(
         (acc, label, index) => {
           if (
-            label !== '행정동_코드_명' &&
-            label !== '소득_구간_코드' &&
-            label !== '기준_년분기_코드' &&
-            label !== '월_평균_소득_금액' &&
-            label !== '지출_총금액' &&
-            label !== '행정동_코드'
+            label !== "행정동_코드_명" &&
+            label !== "소득_구간_코드" &&
+            label !== "기준_년분기_코드" &&
+            label !== "월_평균_소득_금액" &&
+            label !== "지출_총금액" &&
+            label !== "행정동_코드"
           ) {
             acc.labels.push(label);
             acc.values.push(values[index]);
@@ -35,7 +35,7 @@ const RightSidebar = ({ selectedArea }) => {
         { labels: [], values: [] }
       );
 
-      const ctx = document.getElementById('myChart').getContext('2d');
+      const ctx = document.getElementById("myChart").getContext("2d");
 
       // 기존 차트가 존재하면 제거
       if (chartRef.current) {
@@ -44,15 +44,15 @@ const RightSidebar = ({ selectedArea }) => {
 
       // 새 차트를 생성하고 참조를 저장
       chartRef.current = new Chart(ctx, {
-        type: 'doughnut',
+        type: "doughnut",
         data: {
           labels: filteredData.labels,
           datasets: [
             {
-              label: '지출 항목별 금액 (원)',
+              label: "지출 항목별 금액 (원)",
               data: filteredData.values,
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              borderColor: "rgba(75, 192, 192, 1)",
               borderWidth: 1,
             },
           ],
@@ -77,13 +77,13 @@ const RightSidebar = ({ selectedArea }) => {
       id="rightSidebar-wrapper"
       className="bg-white"
       style={{
-        position: 'fixed',
+        position: "fixed",
         right: 0,
         top: 0,
-        height: '100vh',
+        height: "100vh",
         zIndex: 2000,
-        width: isOpen ? '400px' : '50px',
-        transition: 'width 0.3s ease-in-out',
+        width: isOpen ? "400px" : "50px",
+        transition: "width 0.3s ease-in-out",
       }}
     >
       <button
@@ -91,11 +91,11 @@ const RightSidebar = ({ selectedArea }) => {
         onClick={toggleSidebar}
         className="btn btn-primary"
         style={{
-          position: 'absolute',
-          top: '50%',
-          left: isOpen ? '0px' : '-35px',
+          position: "absolute",
+          top: "50%",
+          left: isOpen ? "0px" : "-35px",
           transform: `translateY(-50%) ${
-            isOpen ? 'translateX(-100%)' : 'translateX(0)'
+            isOpen ? "translateX(-100%)" : "translateX(0)"
           }`,
         }}
       >
@@ -105,14 +105,16 @@ const RightSidebar = ({ selectedArea }) => {
           <i className="bi bi-caret-left-fill"></i>
         )}
       </button>
-      <div className={`sidebar-heading ${isOpen ? '' : 'd-none'} mt-4`}>
+      <div className={`sidebar-heading ${isOpen ? "" : "d-none"} mt-4`}>
         Right Sidebar
       </div>
-      <div className={`list-group list-group-flush ${isOpen ? '' : 'd-none'}`}>
+      <div className={`list-group list-group-flush ${isOpen ? "" : "d-none"}`}>
         {selectedArea ? (
           <>
             <div className="list-group-item list-group-item-action bg-light">
               <strong>{selectedArea.name} 분석 보고서</strong>
+              <br></br>
+              <strong>{selectedSize}</strong>
             </div>
             <div className="list-group-item list-group-item-action bg-light">
               Name: {selectedArea.name}

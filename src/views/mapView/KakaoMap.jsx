@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import axios from 'axios';
-import areaData from '../../apis/updated_dong.json';
-import chartData from '../../apis/consumption_test.json';
+import React, { useEffect, useRef } from "react";
+import axios from "axios";
+import areaData from "../../apis/updated_dong.json";
+import chartData from "../../apis/consumption_test.json";
 
 const KakaoMap = ({ setSelectedArea }) => {
   const selectedPolygonRef = useRef(null);
@@ -10,14 +10,14 @@ const KakaoMap = ({ setSelectedArea }) => {
     const kakaoAPI = import.meta.env.VITE_KAKAO_MAP_API_KEY;
     const seoulAPI = import.meta.env.VITE_SEOUL_PUBLIC_API_KEY;
 
-    const script = document.createElement('script');
+    const script = document.createElement("script");
     script.onload = () => initMap();
     script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoAPI}&autoload=false`;
     document.head.appendChild(script);
 
     const initMap = () => {
       kakao.maps.load(() => {
-        const mapContainer = document.getElementById('map'),
+        const mapContainer = document.getElementById("map"),
           mapOption = {
             center: new kakao.maps.LatLng(37.532527, 126.99049),
             level: 6,
@@ -60,7 +60,7 @@ const KakaoMap = ({ setSelectedArea }) => {
         );
         return { labels, values, expndtr_totamt: data.expndtr_totamt }; // Include expndtr_totamt
       } catch (error) {
-        console.error('Failed to fetch area data', error);
+        console.error("Failed to fetch area data", error);
         return null;
       }
     };
@@ -74,25 +74,25 @@ const KakaoMap = ({ setSelectedArea }) => {
         map: map,
         path: path,
         strokeWeight: 0, // 초기에는 선을 보이지 않도록 설정
-        strokeColor: '#004c80',
+        strokeColor: "#004c80",
         strokeOpacity: 0.8,
-        fillColor: '#fff',
+        fillColor: "#fff",
         fillOpacity: 0.2,
       });
 
       kakao.maps.event.addListener(
         polygon,
-        'click',
+        "click",
         async function (mouseEvent) {
           if (selectedPolygonRef.current) {
             selectedPolygonRef.current.setOptions({
-              fillColor: '#fff',
+              fillColor: "#fff",
               strokeWeight: 0, // 클릭 해제 시 선을 보이지 않도록 설정
             });
           }
 
           polygon.setOptions({
-            fillColor: '#09f',
+            fillColor: "#09f",
             strokeWeight: 2, // 클릭 시 선을 보이도록 설정
           });
 
@@ -123,7 +123,7 @@ const KakaoMap = ({ setSelectedArea }) => {
     };
   }, [setSelectedArea]);
 
-  return <div id="map" style={{ width: '100%', height: '1000px' }}></div>;
+  return <div id="map" style={{ width: "100%", height: "1000px" }}></div>;
 };
 
 export default KakaoMap;

@@ -6,12 +6,13 @@ import KakaoMap from "../mapView/KakaoMap";
 
 function MainPage() {
   const [selectedArea, setSelectedArea] = useState(null);
+  const [selectedSize, setSelectedSize] = useState("행정동 별 선택");
 
   return (
     <div>
-      <CustomHeader />
+      <CustomHeader setSelectedSize={setSelectedSize} />
       <LeftSidebar />
-      <RightSidebar selectedArea={selectedArea} />
+      <RightSidebar selectedArea={selectedArea} selectedSize={selectedSize} />
       <KakaoMap setSelectedArea={setSelectedArea} />
     </div>
   );
