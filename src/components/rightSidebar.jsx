@@ -110,10 +110,18 @@ const RightSidebar = ({ isSelectedSize, selectedArea }) => {
           <i className="bi bi-caret-left-fill"></i>
         )}
       </button>
-      <div className={`sidebar-heading ${isOpen ? "" : "d-none"} mt-4`}>
+      <div
+        className={`sidebar-heading ${
+          isOpen ? "show-content" : "hidden-content"
+        } mt-4`}
+      >
         Right Sidebar
       </div>
-      <div className={`list-group list-group-flush ${isOpen ? "" : "d-none"}`}>
+      <div
+        className={`list-group list-group-flush ${
+          isOpen ? "show-content" : "hidden-content"
+        }`}
+      >
         {selectedArea ? (
           <>
             <div className="list-group-item list-group-item-action bg-light">

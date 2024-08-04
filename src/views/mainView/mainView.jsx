@@ -7,11 +7,12 @@ import KakaoMap from "../mapView/KakaoMap";
 function MainPage() {
   const [selectedArea, setSelectedArea] = useState(null);
   const [isSelectedSize, setSelectedSize] = useState(true);
+  const [selectQuery, setSelectQuery] = useState([]);
 
   return (
     <div>
       <CustomHeader setSelectedSize={setSelectedSize} />
-      <LeftSidebar />
+      <LeftSidebar setSelectQuery={setSelectQuery} />
       <RightSidebar
         selectedArea={selectedArea}
         isSelectedSize={isSelectedSize}
@@ -19,6 +20,7 @@ function MainPage() {
       <KakaoMap
         setSelectedArea={setSelectedArea}
         isSelectedSize={isSelectedSize}
+        selectQuery={selectQuery}
       />
     </div>
   );

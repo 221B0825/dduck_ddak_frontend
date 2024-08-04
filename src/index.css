@@ -54,3 +54,13 @@
   color: black;
   box-shadow: -5px 5px 3px rgb(0, 0, 0, 0.1);
 }
+
+.hidden-content {
+  transition: opacity 0.1s step-end; /* 서서히 나타나는 효과 추가 */
+  opacity: 0; /* 내용 숨기기 */
+}
+
+.show-content {
+  transition: opacity 0.2s step-end; /* 서서히 나타나는 효과 추가 */
+  opacity: 1; /* 내용 표시 */
+}

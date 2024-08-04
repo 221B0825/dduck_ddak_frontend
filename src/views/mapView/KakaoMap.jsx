@@ -5,7 +5,7 @@ import guAreaData from "../../apis/gu.json";
 import dongChartData from "../../apis/dong_consumption_test.json";
 import guChartData from "../../apis/gu_consumption_test.json";
 
-const KakaoMap = ({ isSelectedSize, setSelectedArea }) => {
+const KakaoMap = ({ isSelectedSize, setSelectedArea, selectQuery }) => {
   const selectedPolygonRef = useRef(null);
 
   useEffect(() => {

@@ -1,32 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import searchData from "../apis/searchArea.json";
 
-function LeftSidebar() {
+function LeftSidebar({ setSelectQuery }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectInput, setSelectInput] = useState("");
   const [selectedGu, setSelectedGu] = useState("");
   const [selectedDong, setSelectedDong] = useState("");
   const [selectedDongCode, setSelectedDongCode] = useState("");
   const [filteredDongList, setFilteredDongList] = useState([]);
-
-  useEffect(() => {
-    console.log(filteredDongList);
-  }, [filteredDongList]); // filteredDongList가 변할 때마다 로그를 찍음
+  const contentRef = useRef(null);
 
   useEffect(() => {
     // 선택된 '구'에 따라 '동' 목록을 필터링
-    console.log(selectedGu);
     if (selectedGu) {
       const dongList = searchData.dongList[selectedGu] || [];
       setFilteredDongList(dongList);
-      console.log(filteredDongList);
-      setSelectedDong(""); // '구'가 변경되면 '동' 선택을 초기화
-      setSelectedDongCode("");
+      setSelectInput(selectedGu);
     } else {
       setFilteredDongList([]);
+      setSelectInput("");
     }
+    setSelectedDong("");
+    setSelectedDongCode("");
   }, [selectedGu]); // 'selectedGu'가 변경될 때만 이 코드를 실행
 
   const toggleSidebar = () => {
@@ -39,9 +36,41 @@ function LeftSidebar() {
 
   const handleDongChange = (e) => {
     const dong = filteredDongList.find((dong) => dong.name === e.target.value);
+    // 동 이름 설정
     setSelectedDong(e.target.value);
+    // 동 코드 설정
     setSelectedDongCode(dong ? dong.adm_cd : "");
+    // 구 이름 + 동 이름으로 query 설정
+    setSelectInput(selectedGu + " " + e.target.value);
   };
+
+  useEffect(() => {
+    const contentElement = contentRef.current;
+    const handleTransitionEnd = () => {
+      if (isOpen) {
+        contentElement.classList.add("show-content");
+      } else {
+        contentElement.classList.remove("show-content");
+      }
+    };
+    contentElement.addEventListener("transitionend", handleTransitionEnd);
+
+    return () => {
+      contentElement.removeEventListener("transitionend", handleTransitionEnd);
+    };
+  }, [isOpen]);
+
+  function editQuery() {
+    if (selectedGu) {
+      if (selectedDong) {
+        setSelectQuery({ type: "dongCode", data: selectedDongCode });
+      } else {
+        setSelectQuery({ type: "guName", data: selectedGu });
+      }
+    } else {
+      alert("구 또는 동을 선택해 주십시오.");
+    }
+  }
 
   return (
     <div
@@ -76,7 +105,10 @@ function LeftSidebar() {
       </button>
       <div
         id="searchArea"
-        className={`sidebar-heading ${isOpen ? "" : "d-none"}`}
+        className={`sidebar-heading ${
+          isOpen ? "show-content" : "hidden-content"
+        }`}
+        ref={contentRef}
         style={{ marginTop: "80px", padding: "20px" }}
       >
         <h3 className="md-2">검색조건</h3>
@@ -86,17 +118,21 @@ function LeftSidebar() {
             type="text"
             className="form-control"
             placeholder="구 또는 동을 입력해주세요"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            value={selectInput}
+            onChange={(e) => setSelectInput(e.target.value)}
             style={{ marginBottom: "10px" }}
+            disabled
+            readOnly
           />
           <button
             className="btn btn-primary"
-            onClick={() =>
+            onClick={() => {
+              editQuery();
               alert(
-                `Searching for: ${searchQuery} in ${selectedGu} ${selectedDong} (${selectedDongCode})`
-              )
-            }
+                `Searching for: ${selectInput} in ${selectedGu} ${selectedDong} (${selectedDongCode})`
+              );
+            }}
+            style={{ margin: "0 10px 10px 10px" }}
           >
             <i className="bi bi-search"></i>
           </button>
