@@ -8,14 +8,20 @@ function MainPage() {
   const [selectedArea, setSelectedArea] = useState(null);
   const [isSelectedSize, setSelectedSize] = useState(true);
   const [selectQuery, setSelectQuery] = useState([]);
+  const [selectCategory, setSelectCategory] = useState("");
 
   return (
     <div>
       <CustomHeader setSelectedSize={setSelectedSize} />
-      <LeftSidebar setSelectQuery={setSelectQuery} />
+      <LeftSidebar
+        setSelectedSize={setSelectedSize}
+        setSelectQuery={setSelectQuery}
+        setSelectCategory={setSelectCategory}
+      />
       <RightSidebar
         selectedArea={selectedArea}
         isSelectedSize={isSelectedSize}
+        selectCategory={selectCategory}
       />
       <KakaoMap
         setSelectedArea={setSelectedArea}

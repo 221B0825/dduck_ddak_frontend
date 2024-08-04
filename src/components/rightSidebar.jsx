@@ -8,10 +8,13 @@ import PopulationQuarter from "./charts/populationQuarter";
 import PopulationTime from "./charts/populationTime";
 // 시간별 매출
 import SalesTime from "./charts/salesTime";
+// 행정동 별 점포 추이
+import IndustryRecently from "./charts/industryRecently";
+// 행정동 별 업종 매출 추이
+import IndustrySales from "./charts/industrySales";
 
-const RightSidebar = ({ isSelectedSize, selectedArea }) => {
+const RightSidebar = ({ isSelectedSize, selectedArea, selectCategory }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const chartRef = useRef(null);
 
   useEffect(() => {
     console.log("selectedArea updated in RightSidebar:", selectedArea);
@@ -59,35 +62,49 @@ const RightSidebar = ({ isSelectedSize, selectedArea }) => {
         className={`list-group list-group-flush ${
           isOpen ? "show-content" : "hidden-content"
         }`}
-        style={{ maxHeight: "900px", overflowY: "auto" }}
+        style={{ maxHeight: "950px", overflowY: "auto" }}
       >
         {selectedArea ? (
           <>
-            <div className="list-group-item list-group-item-action bg-light">
+            <div className="list-group-item list-group-item-action bg-light mt-5">
               <strong>{selectedArea.name} 분석 보고서</strong>
               <br></br>
             </div>
             <div className="list-group-item list-group-item-action bg-light">
-              Name: {selectedArea.name}
+              위치: {selectedArea.name}
             </div>
-            <div className="list-group-item list-group-item-action bg-light">
+            {/* <div className="list-group-item list-group-item-action bg-light">
               Code: {selectedArea.code}
             </div>
             <div className="list-group-item list-group-item-action bg-light">
               Total area: approx {Math.floor(selectedArea.calculatedArea)} m²
+            </div> */}
+            <div>
+              {isSelectedSize ? (
+                <>
+                  <PopulationQuarter code={selectedArea.code} />
+                  <PopulationTime code={selectedArea.code} />
+                  <SalesTime code={selectedArea.code} />
+                  {selectCategory ? (
+                    <>
+                      <IndustryRecently
+                        code={selectedArea.code}
+                        category={selectCategory}
+                      />
+                      <IndustrySales
+                        code={selectedArea.code}
+                        category={selectCategory}
+                      />
+                    </>
+                  ) : (
+                    <div></div>
+                  )}
+                  <div style={{ marginBottom: "100px" }}></div>
+                </>
+              ) : (
+                <></>
+              )}
             </div>
-
-            {isSelectedSize ? (
-              // 행정동별 보고서 내용
-              <>
-                <PopulationQuarter code={selectedArea.code} />
-                <PopulationTime code={selectedArea.code} />
-                <SalesTime code={selectedArea.code} />
-              </>
-            ) : (
-              // 자치구별 보고서 내용
-              <></>
-            )}
           </>
         ) : (
           <div className="list-group-item list-group-item-action bg-light">

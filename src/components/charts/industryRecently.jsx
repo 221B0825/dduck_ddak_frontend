@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const SalesTime = ({ code }) => {
+const IndustryRecently = ({ code, category }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
 
@@ -10,15 +10,14 @@ const SalesTime = ({ code }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://gadduck.info/towns/sales/time?code=${code}`
+          `https://gadduck.info/towns/industry/recently?code=${code}&name=${category}`
         );
-        const timeData = response.data.data;
+        const data = response.data.data;
 
         // 데이터를 차트에 맞게 변환
-        const labels = Object.keys(timeData).map((key) =>
-          key.replace("hour_", "").replace("_", "-")
-        );
-        const values = Object.values(timeData);
+
+        const labels = data.map((item) => item.quarter); // 분기 데이터
+        const counts = data.map((item) => item.count); // 카운트 데이터
 
         if (chart) {
           chart.destroy(); // 이전 차트가 있으면 파괴
@@ -26,21 +25,26 @@ const SalesTime = ({ code }) => {
 
         const ctx = chartRef.current.getContext("2d");
         const newChart = new Chart(ctx, {
-          type: "bar", // 차트 유형: 'bar'
+          type: "bar", // 차트의 유형
           data: {
             labels: labels,
             datasets: [
               {
-                label: "Sales by Time of Day",
-                data: values,
-                backgroundColor: "rgba(75, 192, 192, 0.5)",
+                label: "industry recently count",
+                data: counts,
                 borderColor: "rgb(75, 192, 192)",
-                borderWidth: 1,
+                tension: 0.1,
+                borderWidth: 0,
               },
             ],
           },
           options: {
-            scales: {},
+            scales: {
+              y: {
+                // Y 축의 ID는 'y'로 설정
+                beginAtZero: true,
+              },
+            },
             plugins: {
               legend: {
                 display: true, // 범례 표시
@@ -48,7 +52,6 @@ const SalesTime = ({ code }) => {
             },
           },
         });
-
         setChart(newChart);
       } catch (error) {
         console.error("Failed to fetch area data", error);
@@ -65,4 +68,4 @@ const SalesTime = ({ code }) => {
   );
 };
 
-export default SalesTime;
+export default IndustryRecently;

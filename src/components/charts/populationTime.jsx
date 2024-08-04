@@ -9,12 +9,9 @@ const PopulationTime = ({ code }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("code", code);
-
         const response = await axios.get(
           `https://gadduck.info/towns/populations/floating/time?code=${code}`
         );
-        console.log(response.data);
         const timeData = response.data.data;
 
         // 데이터를 차트에 맞게 변환

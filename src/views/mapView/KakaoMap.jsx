@@ -2,8 +2,6 @@ import React, { useEffect, useRef } from "react";
 import axios from "axios";
 import dongAreaData from "../../apis/dong.json";
 import guAreaData from "../../apis/gu.json";
-import dongChartData from "../../apis/dong_consumption_test.json";
-import guChartData from "../../apis/gu_consumption_test.json";
 
 const KakaoMap = ({ isSelectedSize, setSelectedArea, selectQuery }) => {
   const selectedPolygonRef = useRef(null);
@@ -57,12 +55,12 @@ const KakaoMap = ({ isSelectedSize, setSelectedArea, selectQuery }) => {
       const polygon = new kakao.maps.Polygon({
         map: map,
         path: path,
-        strokeWeight: 3, // 기본 스타일 설정
+        strokeWeight: 3,
         strokeColor: "#000000",
         strokeOpacity: 0.2,
         fillColor: "#D9D9D9",
         fillOpacity: 0.2,
-        zIndex: 1, // 최하위 층에 위치
+        zIndex: 1,
       });
 
       return polygon;
@@ -84,107 +82,83 @@ const KakaoMap = ({ isSelectedSize, setSelectedArea, selectQuery }) => {
         zIndex: type === "dong" ? 10 : 5,
       });
 
-      // 폴리곤 객체에 추가 정보 저장\
-
-      // 현재 행정동은 행정동 코드 별 호출, 자치구는 구 이름으로 호출
-      let nameSplit = area.name.split(" ");
-      polygon.code = type === "dong" ? area.adm_cd : nameSplit[1];
+      polygon.code = type === "dong" ? area.adm_cd : area.name.split(" ")[1];
       polygon.areaName = area.name;
 
-      kakao.maps.event.addListener(
-        polygon,
-        "click",
-        async function (mouseEvent) {
-          if (selectedPolygonRef.current) {
-            selectedPolygonRef.current.setOptions({
-              fillColor: "#fff",
-              strokeWeight: 0,
-            });
-          }
-
-          polygon.setOptions({
-            fillColor: "#09f",
-            strokeWeight: 2,
-          });
-
-          selectedPolygonRef.current = polygon;
-
-          setSelectedArea({
-            name: polygon.areaName,
-            code: polygon.code,
-            type: type,
-            calculatedArea: Math.floor(polygon.getArea()),
-            // additionalData: additionalData,
-          });
-        }
-      );
+      attachPolygonEvents(polygon, area, type, map);
 
       return polygon;
     };
 
+    const attachPolygonEvents = (polygon, area, type, map) => {
+      kakao.maps.event.addListener(polygon, "click", function () {
+        if (selectedPolygonRef.current) {
+          selectedPolygonRef.current.setOptions({
+            fillColor: "#fff",
+            strokeWeight: 0,
+          });
+        }
+
+        polygon.setOptions({ fillColor: "#09f", strokeWeight: 2 });
+
+        selectedPolygonRef.current = polygon;
+        setSelectedArea({
+          name: polygon.areaName,
+          code: polygon.code,
+          type: type,
+          calculatedArea: Math.floor(polygon.getArea()),
+        });
+      });
+    };
+
     const updatePolygonsVisibility = () => {
-      dongPolygonsRef.current.forEach((polygon) =>
-        polygon.setMap(isSelectedSize ? mapRef.current : null)
+      dongPolygonsRef.current.forEach((p) =>
+        p.setMap(isSelectedSize ? mapRef.current : null)
       );
-      guPolygonsRef.current.forEach((polygon) =>
-        polygon.setMap(isSelectedSize ? null : mapRef.current)
+      guPolygonsRef.current.forEach((p) =>
+        p.setMap(isSelectedSize ? null : mapRef.current)
       );
     };
 
     return () => {
       dongPolygonsRef.current = [];
       guPolygonsRef.current = [];
-      defaultPolygonsRef.current.forEach((polygon) => polygon.setMap(null)); // 메모리 정리
+      defaultPolygonsRef.current.forEach((p) => p.setMap(null));
       if (mapRef.current) {
-        const mapContainer = document.getElementById("map");
-        mapContainer.innerHTML = "";
+        document.getElementById("map").innerHTML = "";
       }
     };
   }, [isSelectedSize]);
 
   useEffect(() => {
-    console.log("동 set: ", selectQuery, selectQuery.type, selectQuery.data);
     if (!mapRef.current || !selectQuery) return;
 
     let polygonsRef =
       selectQuery.type === "dongCode" ? dongPolygonsRef : guPolygonsRef;
-
-    console.log("polygon: ", polygonsRef);
-
-    let targetPolygon = polygonsRef.current.find((p) => {
-      return p.code === selectQuery.data;
-    });
-
-    console.log("target: ", targetPolygon);
+    let targetPolygon = polygonsRef.current.find(
+      (p) => p.code === selectQuery.data
+    );
 
     if (targetPolygon) {
-      // 선택한 폴리곤 클릭 효과 적용
       if (selectedPolygonRef.current) {
         selectedPolygonRef.current.setOptions({
-          fillColor: "#fff", // 원래 색으로 초기화
+          fillColor: "#fff",
           strokeWeight: 0,
         });
+        selectedPolygonRef.current.setMap(null);
+        selectedPolygonRef.current.setMap(mapRef.current);
       }
 
-      targetPolygon.setOptions({
-        fillColor: "#09f",
-        strokeWeight: 2,
-        zIndex: 100, // zIndex를 높여 상위에 표시
-      });
+      targetPolygon.setOptions({ fillColor: "#09f", strokeWeight: 2 });
+      targetPolygon.setMap(null);
+      targetPolygon.setMap(mapRef.current);
 
       selectedPolygonRef.current = targetPolygon;
-      console.log("색 변경 후 폴리곤:", targetPolygon);
-
-      // 지도 중심 이동
       const bounds = new kakao.maps.LatLngBounds();
-      const path = targetPolygon.getPath();
-      path.forEach(function (point) {
-        bounds.extend(point);
-      });
-      mapRef.current.setBounds(bounds); // 경계 설정
-      mapRef.current.setLevel(5); // 지도 레벨 설정
+      targetPolygon.getPath().forEach((point) => bounds.extend(point));
+      mapRef.current.setBounds(bounds);
+      mapRef.current.setLevel(selectQuery.type === "dongCode" ? 5 : 7);
 
-      // 선택 지역 정보 업데이트
       setSelectedArea({
         name: targetPolygon.areaName,
         code: targetPolygon.code,
@@ -194,7 +168,7 @@ const KakaoMap = ({ isSelectedSize, setSelectedArea, selectQuery }) => {
     }
   }, [selectQuery]);
 
-  return <div id="map" style={{ width: "100%", height: "1000px" }}></div>;
+  return <div id="map" style={{ width: "100%", height: "950px" }}></div>;
 };
 
 export default KakaoMap;

@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import searchData from "../apis/searchArea.json";
+import searchCategoryData from "../apis/searchCategory.json";
 
-function LeftSidebar({ setSelectQuery }) {
+function LeftSidebar({ setSelectedSize, setSelectQuery, setSelectCategory }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectInput, setSelectInput] = useState("");
   const [selectedGu, setSelectedGu] = useState("");
@@ -12,8 +13,11 @@ function LeftSidebar({ setSelectQuery }) {
   const [filteredDongList, setFilteredDongList] = useState([]);
   const contentRef = useRef(null);
 
+  const [inputCategory, setinputCategory] = useState("");
+  const [inputDetailCategory, setInputDetailCategory] = useState("");
+  const [filteredCategoryList, setFilteredCategoryList] = useState([]);
+
   useEffect(() => {
-    // 선택된 '구'에 따라 '동' 목록을 필터링
     if (selectedGu) {
       const dongList = searchData.dongList[selectedGu] || [];
       setFilteredDongList(dongList);
@@ -24,7 +28,20 @@ function LeftSidebar({ setSelectQuery }) {
     }
     setSelectedDong("");
     setSelectedDongCode("");
-  }, [selectedGu]); // 'selectedGu'가 변경될 때만 이 코드를 실행
+  }, [selectedGu]);
+
+  useEffect(() => {
+    if (inputCategory) {
+      const detailList = searchCategoryData.하위카테고리[inputCategory] || [];
+      setFilteredCategoryList(detailList);
+      setinputCategory(inputCategory);
+    } else {
+      setFilteredCategoryList([]);
+      setinputCategory("");
+    }
+    setInputDetailCategory("");
+    setSelectCategory("");
+  }, [inputCategory]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -36,12 +53,18 @@ function LeftSidebar({ setSelectQuery }) {
 
   const handleDongChange = (e) => {
     const dong = filteredDongList.find((dong) => dong.name === e.target.value);
-    // 동 이름 설정
     setSelectedDong(e.target.value);
-    // 동 코드 설정
     setSelectedDongCode(dong ? dong.adm_cd : "");
-    // 구 이름 + 동 이름으로 query 설정
     setSelectInput(selectedGu + " " + e.target.value);
+  };
+
+  const handleCategoryChange = (e) => {
+    setinputCategory(e.target.value);
+  };
+
+  const handleDetailCategoryChange = (e) => {
+    setInputDetailCategory(e.target.value);
+    setSelectCategory(e.target.value);
   };
 
   useEffect(() => {
@@ -134,16 +157,19 @@ function LeftSidebar({ setSelectQuery }) {
               );
             }}
             style={{ margin: "0 10px 10px 10px" }}
+            disabled={!isOpen} // 버튼이 활성화 상태일 때만 작동하도록 설정
           >
             <i className="bi bi-search"></i>
           </button>
         </div>
 
+        {/* 구 선택 */}
         <select
           className="form-select"
           value={selectedGu}
           onChange={handleGuChange}
           style={{ marginBottom: "10px" }}
+          disabled={!isOpen} // 사이드바가 닫혀 있으면 선택 불가
         >
           <option value="">구 선택</option>
           {searchData.guList.map((gu) => (
@@ -153,17 +179,51 @@ function LeftSidebar({ setSelectQuery }) {
           ))}
         </select>
 
+        {/* 동 선택 */}
         <select
           className="form-select"
           value={selectedDong}
           onChange={handleDongChange}
           style={{ marginBottom: "10px" }}
-          disabled={!selectedGu}
+          disabled={!selectedGu || !isOpen} // 사이드바가 닫혀 있거나 구가 선택되지 않은 경우 선택 불가
         >
           <option value="">동 선택</option>
           {filteredDongList.map((dong) => (
             <option key={dong.adm_cd} value={dong.name}>
               {dong.name}
+            </option>
+          ))}
+        </select>
+
+        {/* 카테고리 선택 */}
+        <hr />
+        <select
+          className="form-select"
+          value={inputCategory}
+          onChange={handleCategoryChange}
+          style={{ marginBottom: "10px" }}
+          disabled={!isOpen} // 사이드바가 닫혀 있으면 선택 불가
+        >
+          <option value="">카테고리 선택</option>
+          {searchCategoryData.상위카테고리.map((상위카테고리) => (
+            <option key={상위카테고리} value={상위카테고리}>
+              {상위카테고리}
+            </option>
+          ))}
+        </select>
+
+        {/* 하위 카테고리 선택 */}
+        <select
+          className="form-select"
+          value={inputDetailCategory}
+          onChange={handleDetailCategoryChange}
+          style={{ marginBottom: "10px" }}
+          disabled={!inputCategory || !isOpen} // 상위 카테고리가 선택되지 않았거나 사이드바가 닫혀 있으면 선택 불가
+        >
+          <option value="">하위 카테고리 선택</option>
+          {filteredCategoryList.map((category) => (
+            <option key={category} value={category}>
+              {category}
             </option>
           ))}
         </select>
@@ -175,5 +235,4 @@ function LeftSidebar({ setSelectQuery }) {
     </div>
   );
 }
-
 export default LeftSidebar;
