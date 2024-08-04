@@ -1,21 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
-import Chart from "chart.js/auto";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap-icons/font/bootstrap-icons.css"; // Bootstrap Icons 추가
-import { constSelector } from "recoil";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
+// 분기별 유동인구수 차트
+import PopulationQuarter from "./charts/populationQuarter";
+// 시간별 유동인구수 차트
+import PopulationTime from "./charts/populationTime";
+// 시간별 매출
+import SalesTime from "./charts/salesTime";
 
 const RightSidebar = ({ isSelectedSize, selectedArea }) => {
   const [isOpen, setIsOpen] = useState(false);
   const chartRef = useRef(null);
-  const [totalAmount, setTotalAmount] = useState(0);
 
   useEffect(() => {
     console.log("selectedArea updated in RightSidebar:", selectedArea);
-    if (selectedArea && selectedArea.additionalData) {
-      const { labels, values, expndtr_totamt } = selectedArea.additionalData;
-      setTotalAmount(expndtr_totamt);
-      console.log("동별 선택: " + isSelectedSize);
-    }
   }, [selectedArea]);
 
   const toggleSidebar = () => {
@@ -25,14 +24,14 @@ const RightSidebar = ({ isSelectedSize, selectedArea }) => {
   return (
     <div
       id="rightSidebar-wrapper"
-      className="bg-white"
+      className="bg-white md-5"
       style={{
         position: "fixed",
         right: 0,
         top: 0,
         height: "100vh",
         zIndex: 2000,
-        width: isOpen ? "400px" : "50px",
+        width: isOpen ? "550px" : "50px",
         transition: "width 0.3s ease-in-out",
       }}
     >
@@ -55,17 +54,12 @@ const RightSidebar = ({ isSelectedSize, selectedArea }) => {
           <i className="bi bi-caret-left-fill"></i>
         )}
       </button>
-      <div
-        className={`sidebar-heading ${
-          isOpen ? "show-content" : "hidden-content"
-        } mt-4`}
-      >
-        Right Sidebar
-      </div>
+
       <div
         className={`list-group list-group-flush ${
           isOpen ? "show-content" : "hidden-content"
         }`}
+        style={{ maxHeight: "900px", overflowY: "auto" }}
       >
         {selectedArea ? (
           <>
@@ -77,17 +71,21 @@ const RightSidebar = ({ isSelectedSize, selectedArea }) => {
               Name: {selectedArea.name}
             </div>
             <div className="list-group-item list-group-item-action bg-light">
-              Code: {selectedArea.adm_cd}
+              Code: {selectedArea.code}
             </div>
             <div className="list-group-item list-group-item-action bg-light">
               Total area: approx {Math.floor(selectedArea.calculatedArea)} m²
             </div>
-            <canvas id="myChart" width="400" height="400"></canvas>
+
             {isSelectedSize ? (
-              <div className="list-group-item list-group-item-action bg-light">
-                지출 총금액: {totalAmount} 원
-              </div>
+              // 행정동별 보고서 내용
+              <>
+                <PopulationQuarter code={selectedArea.code} />
+                <PopulationTime code={selectedArea.code} />
+                <SalesTime code={selectedArea.code} />
+              </>
             ) : (
+              // 자치구별 보고서 내용
               <></>
             )}
           </>

@@ -84,8 +84,11 @@ const KakaoMap = ({ isSelectedSize, setSelectedArea, selectQuery }) => {
         zIndex: type === "dong" ? 10 : 5,
       });
 
-      // 폴리곤 객체에 추가 정보 저장
-      polygon.areaCode = type === "dong" ? area.adm_cd : area.ssg_cd;
+      // 폴리곤 객체에 추가 정보 저장\
+
+      // 현재 행정동은 행정동 코드 별 호출, 자치구는 구 이름으로 호출
+      let nameSplit = area.name.split(" ");
+      polygon.code = type === "dong" ? area.adm_cd : nameSplit[1];
       polygon.areaName = area.name;
 
       kakao.maps.event.addListener(
@@ -105,25 +108,13 @@ const KakaoMap = ({ isSelectedSize, setSelectedArea, selectQuery }) => {
           });
 
           selectedPolygonRef.current = polygon;
-          const areaCode = type === "dong" ? area.adm_cd : area.ssg_cd;
-          let additionalData = null;
-
-          try {
-            const response = await axios.get(
-              `https://gadduck.info/towns/populations/floating/quarter?code=${areaCode}`
-            );
-            additionalData = response.data;
-            console.log(additionalData);
-          } catch (error) {
-            console.error("Failed to fetch area data", error);
-          }
 
           setSelectedArea({
             name: polygon.areaName,
-            code: polygon.areaCode,
+            code: polygon.code,
             type: type,
             calculatedArea: Math.floor(polygon.getArea()),
-            additionalData: additionalData,
+            // additionalData: additionalData,
           });
         }
       );
@@ -161,7 +152,7 @@ const KakaoMap = ({ isSelectedSize, setSelectedArea, selectQuery }) => {
     console.log("polygon: ", polygonsRef);
 
     let targetPolygon = polygonsRef.current.find((p) => {
-      return p.areaCode === selectQuery.data;
+      return p.code === selectQuery.data;
     });
 
     console.log("target: ", targetPolygon);
@@ -196,7 +187,7 @@ const KakaoMap = ({ isSelectedSize, setSelectedArea, selectQuery }) => {
       // 선택 지역 정보 업데이트
       setSelectedArea({
         name: targetPolygon.areaName,
-        code: targetPolygon.areaCode,
+        code: targetPolygon.code,
         type: selectQuery.type,
         calculatedArea: Math.floor(targetPolygon.getArea()),
       });
