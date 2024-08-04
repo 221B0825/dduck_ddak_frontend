@@ -125,6 +125,7 @@ function LeftSidebar({ setSelectQuery }) {
             readOnly
           />
           <button
+            id="searchBtn"
             className="btn btn-primary"
             onClick={() => {
               editQuery();

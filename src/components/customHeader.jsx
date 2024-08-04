@@ -7,12 +7,7 @@ const CustomHeader = ({ setSelectedSize }) => {
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
-
-    if (isChecked) {
-      setSelectedSize(false);
-    } else {
-      setSelectedSize(true);
-    }
+    setSelectedSize(!isChecked);
   };
 
   return (
