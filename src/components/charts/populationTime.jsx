@@ -16,7 +16,8 @@ const PopulationTime = ({ code }) => {
 
         // 데이터를 차트에 맞게 변환
         const labels = Object.keys(timeData).map((key) =>
-          key.replace("hour_", "").replace("_", "-")
+          key.replace("hour_", "").replace("_", "~")
+        
         );
         const values = Object.values(timeData);
 
@@ -26,16 +27,16 @@ const PopulationTime = ({ code }) => {
 
         const ctx = chartRef.current.getContext("2d");
         const newChart = new Chart(ctx, {
-          type: "bar", // 차트 유형: 'bar'
+          type: "line",
           data: {
             labels: labels,
             datasets: [
               {
-                label: "Population by Time of Day",
+                label: "행정동 시간별 유동 인구수",
                 data: values,
-                backgroundColor: "rgba(75, 192, 192, 0.5)",
-                borderColor: "rgb(75, 192, 192)",
-                borderWidth: 1,
+                borderColor: "rgb(255, 99, 71)", // 다홍색으로 설정
+                backgroundColor: "rgba(255, 99, 71, 0.2)", // 다홍색의 투명 배경
+                tension: 0.2
               },
             ],
           },

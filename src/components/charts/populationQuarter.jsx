@@ -15,7 +15,11 @@ const PopulationQuarter = ({ code }) => {
         const populationList = response.data.data.populationList;
 
         // 데이터를 차트에 맞게 변환
-        const labels = populationList.map((item) => item.quarter.toString());
+        const labels = populationList.map((item) => {
+          const year = Math.floor(item.quarter / 10);
+          const quarter = item.quarter % 10;
+          return `${year}년 ${quarter}분기`;
+        });
         const values = populationList.map((item) => item.population);
 
         if (chart) {
@@ -24,39 +28,26 @@ const PopulationQuarter = ({ code }) => {
 
         const ctx = chartRef.current.getContext("2d");
         const newChart = new Chart(ctx, {
-          type: "bar", // 차트의 유형
+          type: "line", // 차트의 유형
           data: {
             labels: labels,
             datasets: [
               {
-                label: "Population over Quarters",
+                label: "행정동 분기별 유동 인구수",
                 data: values,
-                borderColor: "rgb(75, 192, 192)",
-                tension: 0.1,
-                borderWidth: 0,
+                tension: 0.2,
+            
               },
             ],
           },
           options: {
-            scales: {
-              y: {
-                // Y 축의 ID는 'y'로 설정
-                beginAtZero: true,
-                ticks: {
-                  stepSize: 2000000, // Y축 간격을 500,000으로 설정
-                  // 추가: 최대 값 설정을 위한 논리적 추정
-                  callback: function (value, index, values) {
-                    return value.toLocaleString(); // 값의 형식을 1,000 등의 형식으로 변경
-                  },
-                },
-                suggestedMax: Math.max(...values) + 100000, // 가장 높은 값에 100,000을 더한 값을 최대값으로 제안
-              },
-            },
+            responsive: true,
             plugins: {
               legend: {
-                display: true, // 범례 표시
+                position: 'top',
               },
-            },
+              
+            }
           },
         });
         setChart(newChart);

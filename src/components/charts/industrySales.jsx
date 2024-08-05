@@ -10,9 +10,8 @@ const IndustrySales = ({ code, category }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const encodedCategory = encodeURIComponent(category);
         const response = await axios.get(
-          `https://gadduck.info/towns/industry/sales?code=${code}&name=${encodedCategory}`
+          `https://gadduck.info/towns/industry/sales?code=${code}&name=${category}`
         );
         const salesData = response.data.data;
 
@@ -24,7 +23,7 @@ const IndustrySales = ({ code, category }) => {
         setIsEmpty(false); // 데이터가 있으면 isEmpty를 false로 설정
 
         // 데이터를 차트에 맞게 변환
-        const labels = Object.keys(salesData);
+        const labels = ["월요일", "화요일", "목요일", "금요일", "토요일", "일요일", "수요일"];
         const counts = Object.values(salesData).map((count) =>
           parseFloat(count)
         );
@@ -40,10 +39,18 @@ const IndustrySales = ({ code, category }) => {
             labels: labels,
             datasets: [
               {
-                label: `${category} Sales by Day of Week`,
+                label: `일자별 매출`,
                 data: counts,
               },
             ],
+          },
+          options: {
+            plugins: {
+              title: {
+                display: true,
+                text: `행정동 별 ${category} 매출 추이`,
+              },
+            },
           },
         });
         setChart(newChart);

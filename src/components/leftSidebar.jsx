@@ -5,7 +5,7 @@ import searchData from "../apis/searchArea.json";
 import searchCategoryData from "../apis/searchCategory.json";
 
 function LeftSidebar({ setSelectedSize, setSelectQuery, setSelectCategory }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [selectInput, setSelectInput] = useState("");
   const [selectedGu, setSelectedGu] = useState("");
   const [selectedDong, setSelectedDong] = useState("");
@@ -86,8 +86,10 @@ function LeftSidebar({ setSelectedSize, setSelectQuery, setSelectCategory }) {
   function editQuery() {
     if (selectedGu) {
       if (selectedDong) {
+        // setSelectedSize(true);
         setSelectQuery({ type: "dongCode", data: selectedDongCode });
       } else {
+        // setSelectedSize(false);
         setSelectQuery({ type: "guName", data: selectedGu });
       }
     } else {
@@ -152,9 +154,9 @@ function LeftSidebar({ setSelectedSize, setSelectQuery, setSelectCategory }) {
             className="btn btn-primary"
             onClick={() => {
               editQuery();
-              alert(
-                `Searching for: ${selectInput} in ${selectedGu} ${selectedDong} (${selectedDongCode})`
-              );
+              // alert(
+              //   `Searching for: ${selectInput} in ${selectedGu} ${selectedDong} (${selectedDongCode})`
+              // );
             }}
             style={{ margin: "0 10px 10px 10px" }}
             disabled={!isOpen} // 버튼이 활성화 상태일 때만 작동하도록 설정

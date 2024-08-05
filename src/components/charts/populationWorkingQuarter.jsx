@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const IndustryRecently = ({ code, category }) => {
+const PopulationWorkingQuarter = ({ code }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
 
@@ -10,17 +10,17 @@ const IndustryRecently = ({ code, category }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://gadduck.info/towns/industry/recently?code=${code}&name=${category}`
+          `https://gadduck.info/towns/populations/working/quarter?code=${code}`
         );
-        const data = response.data.data;
-
+        const populationList = response.data.data.populationList;
+        console.log(populationList);
         // 데이터를 차트에 맞게 변환
-        const labels = data.map((item) => {
+        const labels = populationList.map((item) => {
           const year = Math.floor(item.quarter / 10);
           const quarter = item.quarter % 10;
           return `${year}년 ${quarter}분기`;
         });
-        const counts = data.map((item) => item.count); // 카운트 데이터
+        const values = populationList.map((item) => item.population);
 
         if (chart) {
           chart.destroy(); // 이전 차트가 있으면 파괴
@@ -28,30 +28,23 @@ const IndustryRecently = ({ code, category }) => {
 
         const ctx = chartRef.current.getContext("2d");
         const newChart = new Chart(ctx, {
-          type: "bar", // 차트의 유형
+          type: "line", // 차트의 유형
           data: {
             labels: labels,
             datasets: [
               {
-                label: `행정동 별 ${category} 점포 수 추이`,
-                data: counts,
-                tension: 0.1,
+                label: "행정동 분기별 직장 인구수",
+                data: values,
+                tension: 0.2,
+              
               },
             ],
           },
           options: {
-            scales: {
-              y: {
-                // Y 축의 ID는 'y'로 설정
-                beginAtZero: true,
-                ticks: {
-                  stepSize: 1, // Y축 값의 스텝을 1로 설정
-                },
-              },
-            },
+            responsive: true,
             plugins: {
               legend: {
-                display: true, // 범례 표시
+                position: 'top',
               },
             },
           },
@@ -63,7 +56,7 @@ const IndustryRecently = ({ code, category }) => {
     };
 
     fetchData();
-  }, [code, category]); // code 또는 category가 변경될 때마다 fetchData 실행
+  }, [code]); // code가 변경될 때마다 fetchData 실행
 
   return (
     <div style={{ margin: "40px" }}>
@@ -72,4 +65,4 @@ const IndustryRecently = ({ code, category }) => {
   );
 };
 
-export default IndustryRecently;
+export default PopulationWorkingQuarter;

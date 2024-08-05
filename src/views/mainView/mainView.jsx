@@ -12,7 +12,7 @@ function MainPage() {
 
   return (
     <div>
-      <CustomHeader setSelectedSize={setSelectedSize} />
+      <CustomHeader setSelectedSize={setSelectedSize} setSelectedArea={setSelectedArea} />
       <LeftSidebar
         setSelectedSize={setSelectedSize}
         setSelectQuery={setSelectQuery}

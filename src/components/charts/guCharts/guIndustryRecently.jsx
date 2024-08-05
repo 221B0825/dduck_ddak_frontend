@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const IndustryRecently = ({ code, category }) => {
+const GuIndustryRecently = ({ code, category }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
 
@@ -10,12 +10,14 @@ const IndustryRecently = ({ code, category }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://gadduck.info/towns/industry/recently?code=${code}&name=${category}`
+          `https://gadduck.info/towns/industry/recently-district?district=${code}&name=${category}`
         );
         const data = response.data.data;
 
         // 데이터를 차트에 맞게 변환
-        const labels = data.map((item) => {
+
+         // 데이터를 차트에 맞게 변환
+         const labels = data.map((item) => {
           const year = Math.floor(item.quarter / 10);
           const quarter = item.quarter % 10;
           return `${year}년 ${quarter}분기`;
@@ -33,9 +35,11 @@ const IndustryRecently = ({ code, category }) => {
             labels: labels,
             datasets: [
               {
-                label: `행정동 별 ${category} 점포 수 추이`,
+                label: "구별 점포 수 추이",
                 data: counts,
+                borderColor: "rgb(75, 192, 192)",
                 tension: 0.1,
+                borderWidth: 0,
               },
             ],
           },
@@ -44,9 +48,6 @@ const IndustryRecently = ({ code, category }) => {
               y: {
                 // Y 축의 ID는 'y'로 설정
                 beginAtZero: true,
-                ticks: {
-                  stepSize: 1, // Y축 값의 스텝을 1로 설정
-                },
               },
             },
             plugins: {
@@ -63,7 +64,7 @@ const IndustryRecently = ({ code, category }) => {
     };
 
     fetchData();
-  }, [code, category]); // code 또는 category가 변경될 때마다 fetchData 실행
+  }, [code]); // code가 변경될 때마다 fetchData 실행
 
   return (
     <div style={{ margin: "40px" }}>
@@ -72,4 +73,4 @@ const IndustryRecently = ({ code, category }) => {
   );
 };
 
-export default IndustryRecently;
+export default GuIndustryRecently;

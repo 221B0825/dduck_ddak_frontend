@@ -2,19 +2,44 @@ import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-// 분기별 유동인구수 차트
+// 행정동 분기별 유동인구수 차트
 import PopulationQuarter from "./charts/populationQuarter";
-// 시간별 유동인구수 차트
+// 행정동 시간별 유동인구수 차트
 import PopulationTime from "./charts/populationTime";
-// 시간별 매출
+// 행정동 시간별 매출
 import SalesTime from "./charts/salesTime";
 // 행정동 별 점포 추이
 import IndustryRecently from "./charts/industryRecently";
 // 행정동 별 업종 매출 추이
 import IndustrySales from "./charts/industrySales";
 
+// 자치구 별 점포 추이
+import GuIndustryRecently from "./charts/guCharts/guIndustryRecently";
+
+// 유사 점포 수 추이
+import IndustrySimilar from "./charts/industrySimilar";
+
+// 업종 별 영업 시간
+import IndustryBusiness from "./charts/industryBusiness";
+
+// 행정동 분기별 거주인구수 차트
+import PopulationResidentQuarter from "./charts/populationResidentQuarter";
+
+// 행정동 분기별 직장 인구수 차트
+import PopulationWorkingQuarter from "./charts/populationWorkingQuarter";
+
+// 행정동 별 집객시설 수
+import TownFacility from "./charts/townsFacility";
+
+// 점포 수 / 유사 점포 수 동시 차트
+import IndustryComparison from "./charts/industryComparison";
+// 직장 인구, 거주 인구 수 동시 차트
+import PopulationComparison from "./charts/populationComparison";
+
+import IndustrySalesComparison from "./charts/test";
+
 const RightSidebar = ({ isSelectedSize, selectedArea, selectCategory }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     console.log("selectedArea updated in RightSidebar:", selectedArea);
@@ -82,27 +107,68 @@ const RightSidebar = ({ isSelectedSize, selectedArea, selectCategory }) => {
             <div>
               {isSelectedSize ? (
                 <>
-                  <PopulationQuarter code={selectedArea.code} />
-                  <PopulationTime code={selectedArea.code} />
-                  <SalesTime code={selectedArea.code} />
+                  
                   {selectCategory ? (
                     <>
-                      <IndustryRecently
+                      {/* 카테고리 선택 시 */}
+                      
+                      
+                      {/* 업종 점포 수 추이 */}
+                      {/* <IndustryRecently
                         code={selectedArea.code}
                         category={selectCategory}
-                      />
+                      /> */}
+                      {/* 유사 업종 점포 수 추이 */}
+                      {/* <IndustrySimilar
+                        code={selectedArea.code}
+                        category={selectCategory}
+                      /> */}
+
+                        {/* 업종 점포 수와 유사 점포 수 합한 차트 */}
+                        
+                        <IndustryComparison code={selectedArea.code} category={selectCategory} />
+
+                      {/* 업종 일자별 매출 */}
                       <IndustrySales
                         code={selectedArea.code}
                         category={selectCategory}
                       />
+                      {/* 업종별 평균 영업시간 */}
+                      <IndustryBusiness code={selectedArea.code}
+                        category={selectCategory}/>
+                      
+                      <IndustrySalesComparison  code1={selectedArea.code} code2={11530780} category={selectCategory} />
                     </>
                   ) : (
-                    <div></div>
+                    // 카테고리 선택 X
+                    <div>
+                  {/* 행정동 분기별 유동인구 */}
+                  <PopulationQuarter code={selectedArea.code} />
+                  {/* 행정동 시간별 유동인구 */}
+                  <PopulationTime code={selectedArea.code} />
+                  {/* 행정동 시간별 매출 추이 */}
+                  <SalesTime code={selectedArea.code} />
+
+                    </div>
                   )}
+
+                  {/* 거주 인구 수 */}
+                  {/* <PopulationResidentQuarter code={selectedArea.code} /> */}
+                  {/* 직장 인구 수 */}
+                  {/* <PopulationWorkingQuarter code={selectedArea.code}/> */}
+
+                  {/* 직장 인구 수 / 거주 인구 수 동시 차트 */}
+                  <PopulationComparison code={selectedArea.code}/>
+
+                  {/* 집객시설 수 */}
+                  <TownFacility code={selectedArea.code}/>
                   <div style={{ marginBottom: "100px" }}></div>
                 </>
               ) : (
-                <></>
+                // 구별 선택 시
+                <div>
+                  <GuIndustryRecently code={selectedArea.code} category={selectCategory} />
+                </div>
               )}
             </div>
           </>

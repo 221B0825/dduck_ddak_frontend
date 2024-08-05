@@ -26,24 +26,31 @@ const SalesTime = ({ code }) => {
 
         const ctx = chartRef.current.getContext("2d");
         const newChart = new Chart(ctx, {
-          type: "bar", // 차트 유형: 'bar'
+          
           data: {
             labels: labels,
             datasets: [
               {
-                label: "Sales by Time of Day",
+                type: "line",
                 data: values,
                 backgroundColor: "rgba(75, 192, 192, 0.5)",
                 borderColor: "rgb(75, 192, 192)",
                 borderWidth: 1,
-              },
+              }, {
+                type: "bar",
+                data: values
+              }
             ],
           },
           options: {
             scales: {},
             plugins: {
               legend: {
-                display: true, // 범례 표시
+                display: false, // 범례 표시
+              },
+              title: {
+                display: true,
+                text: "행정동 시간별 매출", // 차트 타이틀
               },
             },
           },
