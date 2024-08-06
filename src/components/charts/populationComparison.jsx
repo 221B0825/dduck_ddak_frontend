@@ -11,13 +11,13 @@ const PopulationComparison = ({ code }) => {
       try {
         // Fetch data for PopulationWorkingQuarter
         const workingResponse = await axios.get(
-          `https://gadduck.info/towns/populations/working/quarter?code=${code}`
+          `https://api.gadduck.info/towns/populations/working/quarter?code=${code}`
         );
         const workingData = workingResponse.data.data.populationList;
 
         // Fetch data for PopulationResidentQuarter
         const residentResponse = await axios.get(
-          `https://gadduck.info/towns/populations/resident/quarter?code=${code}`
+          `https://api.gadduck.info/towns/populations/resident/quarter?code=${code}`
         );
         const residentData = residentResponse.data.data.populationList;
 

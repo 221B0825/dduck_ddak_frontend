@@ -10,7 +10,7 @@ const PopulationResidentQuarter = ({ code }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://gadduck.info/towns/populations/resident/quarter?code=${code}`
+          `https://api.gadduck.info/towns/populations/resident/quarter?code=${code}`
         );
         const populationList = response.data.data.populationList;
         console.log(populationList);

@@ -10,7 +10,7 @@ const SalesTime = ({ code }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://gadduck.info/towns/sales/time?code=${code}`
+          `https://api.gadduck.info/towns/sales/time?code=${code}`
         );
         const timeData = response.data.data;
 

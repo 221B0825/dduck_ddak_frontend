@@ -8,7 +8,7 @@ const IndustryBusiness = ({ code, category }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://gadduck.info/towns/industry/business-period?code=${code}&quarter=20241`
+          `https://api.gadduck.info/towns/industry/business-period?code=${code}&quarter=20241`
         );
         
         const result = (response.data.data.businessPeriod / 12).toFixed(1);

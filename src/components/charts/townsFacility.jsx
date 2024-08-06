@@ -10,7 +10,7 @@ const TownFacility = ({ code }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://gadduck.info/towns/facility?code=${code}`
+          `https://api.gadduck.info/towns/facility?code=${code}`
         );
         const data = response.data.data;
 

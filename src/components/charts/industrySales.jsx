@@ -11,7 +11,7 @@ const IndustrySales = ({ code, category }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://gadduck.info/towns/industry/sales?code=${code}&name=${category}`
+          `https://api.gadduck.info/towns/industry/sales?code=${code}&name=${category}`
         );
         const salesData = response.data.data;
 

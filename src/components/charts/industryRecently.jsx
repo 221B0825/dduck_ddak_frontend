@@ -10,7 +10,7 @@ const IndustryRecently = ({ code, category }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://gadduck.info/towns/industry/recently?code=${code}&name=${category}`
+          `https://api.gadduck.info/towns/industry/recently?code=${code}&name=${category}`
         );
         const data = response.data.data;
 

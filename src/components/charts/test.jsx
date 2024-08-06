@@ -11,8 +11,8 @@ const IndustrySalesComparison = ({ code1, code2, category }) => {
     const fetchData = async () => {
       try {
         const [response1, response2] = await Promise.all([
-          axios.get(`https://gadduck.info/towns/industry/sales?code=${code1}&name=${category}`),
-          axios.get(`https://gadduck.info/towns/industry/sales?code=${code2}&name=${category}`)
+          axios.get(`https://api.gadduck.info/towns/industry/sales?code=${code1}&name=${category}`),
+          axios.get(`https://api.gadduck.info/towns/industry/sales?code=${code2}&name=${category}`)
         ]);
 
         const salesData1 = response1.data.data;

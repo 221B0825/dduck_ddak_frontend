@@ -11,13 +11,13 @@ const IndustryComparison = ({ code, category }) => {
       try {
         // Fetch data for IndustryRecently
         const recentlyResponse = await axios.get(
-          `https://gadduck.info/towns/industry/recently?code=${code}&name=${category}`
+          `https://api.gadduck.info/towns/industry/recently?code=${code}&name=${category}`
         );
         const recentlyData = recentlyResponse.data.data;
 
         // Fetch data for IndustrySimilar
         const similarResponse = await axios.get(
-          `https://gadduck.info/towns/industry/similar?code=${code}&name=${category}`
+          `https://api.gadduck.info/towns/industry/similar?code=${code}&name=${category}`
         );
         const similarData = similarResponse.data.data;
 

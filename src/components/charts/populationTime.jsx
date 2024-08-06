@@ -10,7 +10,7 @@ const PopulationTime = ({ code }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://gadduck.info/towns/populations/floating/time?code=${code}`
+          `https://api.gadduck.info/towns/populations/floating/time?code=${code}`
         );
         const timeData = response.data.data;
 

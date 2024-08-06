@@ -18,7 +18,8 @@ const CustomHeader = ({ setSelectedSize, setSelectedArea }) => {
   return (
     <nav
       id="customHeader"
-      className="navbar navbar-expand-lg navbar-light bg-white"
+      className="bg-white"
+    
     >
       <a className="navbar-brand" href="#" style={{ fontSize: "1rem" }}>
         <div id="teamLogoContianer">
