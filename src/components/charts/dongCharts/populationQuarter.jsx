@@ -26,37 +26,40 @@ const PopulationQuarter = ({ code }) => {
           chart.destroy(); // 이전 차트가 있으면 파괴
         }
 
-        const ctx = chartRef.current.getContext("2d");
-        const newChart = new Chart(ctx, {
-          type: "line", // 차트의 유형
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: "행정동 분기별 유동 인구수",
-                data: values,
-                tension: 0.2,
-            
+        if (chartRef.current) {
+          const ctx = chartRef.current.getContext("2d");
+          const newChart = new Chart(ctx, {
+            type: "line", // 차트의 유형
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: "행정동 분기별 유동 인구수",
+                  data: values,
+                  tension: 0.2,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: "top",
+                },
               },
-            ],
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                position: 'top',
-              },
-              
-            }
-          },
-        });
-        setChart(newChart);
+            },
+          });
+
+          setChart(newChart);
+        }
       } catch (error) {
         console.error("Failed to fetch area data", error);
       }
     };
 
-    fetchData();
+    if (chartRef.current) {
+      fetchData();
+    }
   }, [code]); // code가 변경될 때마다 fetchData 실행
 
   return (

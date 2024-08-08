@@ -142,7 +142,7 @@ function LeftSidebar({ setSelectedSize, setSelectQuery, setSelectCategory }) {
           <input
             type="text"
             className="form-control"
-            placeholder="구 또는 동을 입력해주세요"
+            placeholder="구 또는 동을 선택해주세요"
             value={selectInput}
             onChange={(e) => setSelectInput(e.target.value)}
             style={{ marginBottom: "10px" }}

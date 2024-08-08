@@ -23,7 +23,15 @@ const IndustrySales = ({ code, category }) => {
         setIsEmpty(false); // 데이터가 있으면 isEmpty를 false로 설정
 
         // 데이터를 차트에 맞게 변환
-        const labels = ["월요일", "화요일", "목요일", "금요일", "토요일", "일요일", "수요일"];
+        const labels = [
+          "월요일",
+          "화요일",
+          "수요일",
+          "목요일",
+          "금요일",
+          "토요일",
+          "일요일",
+        ];
         const counts = Object.values(salesData).map((count) =>
           parseFloat(count)
         );

@@ -3,7 +3,13 @@ import axios from "axios";
 import dongAreaData from "../../apis/dong.json";
 import guAreaData from "../../apis/gu.json";
 
-const KakaoMap = ({ isSelectedSize, setSelectedArea, selectQuery }) => {
+const KakaoMap = ({
+  isSelectedSize,
+  setSelectedArea,
+  selectQuery,
+  baseArea,
+  compareArea,
+}) => {
   const selectedPolygonRef = useRef(null);
   const mapRef = useRef(null);
   const dongPolygonsRef = useRef([]);
@@ -129,6 +135,25 @@ const KakaoMap = ({ isSelectedSize, setSelectedArea, selectQuery }) => {
       }
     };
   }, [isSelectedSize]);
+
+  useEffect(() => {
+    if (baseArea && compareArea) {
+      const basePolygon = dongPolygonsRef.current.find(
+        (p) => p.code === baseArea.code
+      );
+      const comparePolygon = dongPolygonsRef.current.find(
+        (p) => p.code === compareArea.code
+      );
+
+      if (basePolygon) {
+        basePolygon.setOptions({ fillColor: "#09f", strokeWeight: 2 });
+      }
+
+      if (comparePolygon) {
+        comparePolygon.setOptions({ fillColor: "red", strokeWeight: 2 });
+      }
+    }
+  }, [baseArea, compareArea]);
 
   useEffect(() => {
     if (!mapRef.current || !selectQuery) return;
