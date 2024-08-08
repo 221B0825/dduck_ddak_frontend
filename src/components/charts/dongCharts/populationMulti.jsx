@@ -27,17 +27,21 @@ const PopulationComparison = ({ code }) => {
           "2023년 2분기",
           "2023년 3분기",
           "2023년 4분기",
-          "2024년 1분기"
+          "2024년 1분기",
         ];
 
         // Convert data to chart-compatible format and order it
         const workingMapped = workingData.map((item) => ({
-          quarter: `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기`,
+          quarter: `${Math.floor(item.quarter / 10)}년 ${
+            item.quarter % 10
+          }분기`,
           population: item.population,
         }));
 
         const residentMapped = residentData.map((item) => ({
-          quarter: `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기`,
+          quarter: `${Math.floor(item.quarter / 10)}년 ${
+            item.quarter % 10
+          }분기`,
           population: item.population,
         }));
 
@@ -55,53 +59,57 @@ const PopulationComparison = ({ code }) => {
           chart.destroy();
         }
 
-        const ctx = chartRef.current.getContext("2d");
-        const newChart = new Chart(ctx, {
-          type: "line",
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: "행정동 분기별 직장 인구수",
-                data: workingCounts,
-                tension: 0.2,
-                backgroundColor: "rgba(54, 162, 235, 0.2)", // 파란색 배경
-                borderColor: "rgba(54, 162, 235, 1)", // 파란색 경계
-                borderWidth: 1,
-                fill: false,
+        if (chartRef.current) {
+          const ctx = chartRef.current.getContext("2d");
+          const newChart = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: "행정동 분기별 직장 인구수",
+                  data: workingCounts,
+                  tension: 0.2,
+                  backgroundColor: "rgba(54, 162, 235, 0.2)", // 파란색 배경
+                  borderColor: "rgba(54, 162, 235, 1)", // 파란색 경계
+                  borderWidth: 1,
+                  fill: false,
+                },
+                {
+                  label: "행정동 분기별 주거 인구수",
+                  data: residentCounts,
+                  tension: 0.2,
+                  backgroundColor: "rgba(255, 159, 64, 0.2)", // 주황색 배경
+                  borderColor: "rgba(255, 159, 64, 1)", // 주황색 경계
+                  borderWidth: 1,
+                  fill: false,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: "top",
+                },
               },
-              {
-                label: "행정동 분기별 주거 인구수",
-                data: residentCounts,
-                tension: 0.2,
-                backgroundColor: "rgba(255, 159, 64, 0.2)", // 주황색 배경
-                borderColor: "rgba(255, 159, 64, 1)", // 주황색 경계
-                borderWidth: 1,
-                fill: false,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                position: 'top',
+              scales: {
+                y: {
+                  beginAtZero: true,
+                },
               },
             },
-            scales: {
-              y: {
-                beginAtZero: true,
-              },
-            },
-          },
-        });
-        setChart(newChart);
+          });
+          setChart(newChart);
+        }
       } catch (error) {
         console.error("Failed to fetch area data", error);
       }
     };
 
-    fetchData();
+    if (chartRef.current) {
+      fetchData();
+    }
   }, [code]);
 
   return (

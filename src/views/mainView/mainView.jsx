@@ -4,7 +4,7 @@ import LeftSidebar from "../../components/leftSidebar";
 import RightSidebar from "../../components/rightSidebar";
 import KakaoMap from "../mapView/KakaoMap";
 
-function MainPage() {
+function MainView() {
   const [selectedArea, setSelectedArea] = useState(null);
   const [isSelectedSize, setSelectedSize] = useState(true);
   const [selectQuery, setSelectQuery] = useState([]);
@@ -12,7 +12,10 @@ function MainPage() {
 
   return (
     <div>
-      <CustomHeader setSelectedSize={setSelectedSize} setSelectedArea={setSelectedArea} />
+      <CustomHeader
+        setSelectedSize={setSelectedSize}
+        setSelectedArea={setSelectedArea}
+      />
       <LeftSidebar
         setSelectedSize={setSelectedSize}
         setSelectQuery={setSelectQuery}
@@ -32,4 +35,4 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+export default MainView;

@@ -1,52 +1,58 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 // 행정동 분기별 유동인구수 차트
-import PopulationQuarter from "./charts/populationQuarter";
+import PopulationQuarter from "./charts/dongCharts/populationQuarter";
 // 행정동 시간별 유동인구수 차트
-import PopulationTime from "./charts/populationTime";
+import PopulationTime from "./charts/dongCharts/populationTime";
 // 행정동 시간별 매출
-import SalesTime from "./charts/salesTime";
-// 행정동 별 점포 추이
-import IndustryRecently from "./charts/industryRecently";
+import SalesTime from "./charts/dongCharts/salesTime";
+
 // 행정동 별 업종 매출 추이
-import IndustrySales from "./charts/industrySales";
+import IndustrySales from "./charts/dongCharts/industrySales";
 
 // 자치구 별 점포 추이
 import GuIndustryRecently from "./charts/guCharts/guIndustryRecently";
 
-// 유사 점포 수 추이
-import IndustrySimilar from "./charts/industrySimilar";
-
 // 업종 별 영업 시간
-import IndustryBusiness from "./charts/industryBusiness";
-
-// 행정동 분기별 거주인구수 차트
-import PopulationResidentQuarter from "./charts/populationResidentQuarter";
-
-// 행정동 분기별 직장 인구수 차트
-import PopulationWorkingQuarter from "./charts/populationWorkingQuarter";
+import IndustryBusiness from "./labels/industryBusiness";
 
 // 행정동 별 집객시설 수
-import TownFacility from "./charts/townsFacility";
+import TownFacility from "./charts/dongCharts/townsFacility";
 
 // 점포 수 / 유사 점포 수 동시 차트
-import IndustryComparison from "./charts/industryComparison";
+import IndustryMulti from "./charts/dongCharts/industryMulti";
 // 직장 인구, 거주 인구 수 동시 차트
-import PopulationComparison from "./charts/populationComparison";
+import PopulationMulti from "./charts/dongCharts/populationMulti";
 
-import IndustrySalesComparison from "./charts/test";
+// 같은 업종, 다른 동 매출 비교 차트
+import IndustrySalesComparison from "./charts/dongComparisonCharts/industrySalesComparison";
 
 const RightSidebar = ({ isSelectedSize, selectedArea, selectCategory }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [compareMode, setCompareMode] = useState(false);
+  const [baseArea, setBaseArea] = useState(null);
+  const [compareArea, setCompareArea] = useState(null);
 
   useEffect(() => {
-    console.log("selectedArea updated in RightSidebar:", selectedArea);
-  }, [selectedArea]);
+    if (compareMode && selectedArea && selectedArea !== baseArea) {
+      setCompareArea(selectedArea);
+    }
+  }, [selectedArea, compareMode, baseArea]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleCompareClick = () => {
+    setCompareMode((prevCompareMode) => !prevCompareMode);
+    if (!compareMode) {
+      setBaseArea(selectedArea);
+    } else {
+      setBaseArea(null);
+      setCompareArea(null);
+    }
   };
 
   return (
@@ -93,82 +99,69 @@ const RightSidebar = ({ isSelectedSize, selectedArea, selectCategory }) => {
           <>
             <div className="list-group-item list-group-item-action bg-light mt-5">
               <strong>{selectedArea.name} 분석 보고서</strong>
-              <br></br>
+              <br />
             </div>
             <div className="list-group-item list-group-item-action bg-light">
               위치: {selectedArea.name}
             </div>
-            {/* <div className="list-group-item list-group-item-action bg-light">
-              Code: {selectedArea.code}
+            <div className="form-check form-switch m-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="compareModeSwitch"
+                checked={compareMode}
+                onChange={handleCompareClick}
+              />
+              <label className="form-check-label" htmlFor="compareModeSwitch">
+                {compareMode ? "행정동 비교" : "행정동 정보"}
+              </label>
             </div>
-            <div className="list-group-item list-group-item-action bg-light">
-              Total area: approx {Math.floor(selectedArea.calculatedArea)} m²
-            </div> */}
             <div>
-              {isSelectedSize ? (
+              {compareMode ? (
+                baseArea &&
+                compareArea && (
+                  <IndustrySalesComparison
+                    code1={baseArea.code}
+                    code2={compareArea.code}
+                    category={selectCategory}
+                  />
+                )
+              ) : (
                 <>
-                  
-                  {selectCategory ? (
+                  {isSelectedSize ? (
                     <>
-                      {/* 카테고리 선택 시 */}
-                      
-                      
-                      {/* 업종 점포 수 추이 */}
-                      {/* <IndustryRecently
-                        code={selectedArea.code}
-                        category={selectCategory}
-                      /> */}
-                      {/* 유사 업종 점포 수 추이 */}
-                      {/* <IndustrySimilar
-                        code={selectedArea.code}
-                        category={selectCategory}
-                      /> */}
-
-                        {/* 업종 점포 수와 유사 점포 수 합한 차트 */}
-                        
-                        <IndustryComparison code={selectedArea.code} category={selectCategory} />
-
-                      {/* 업종 일자별 매출 */}
-                      <IndustrySales
-                        code={selectedArea.code}
-                        category={selectCategory}
-                      />
-                      {/* 업종별 평균 영업시간 */}
-                      <IndustryBusiness code={selectedArea.code}
-                        category={selectCategory}/>
-                      
-                      <IndustrySalesComparison  code1={selectedArea.code} code2={11530780} category={selectCategory} />
+                      {selectCategory ? (
+                        <>
+                          <IndustryMulti
+                            code={selectedArea.code}
+                            category={selectCategory}
+                          />
+                          <IndustrySales
+                            code={selectedArea.code}
+                            category={selectCategory}
+                          />
+                          <IndustryBusiness
+                            code={selectedArea.code}
+                            category={selectCategory}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <PopulationQuarter code={selectedArea.code} />
+                          <PopulationTime code={selectedArea.code} />
+                          <SalesTime code={selectedArea.code} />
+                        </>
+                      )}
+                      <PopulationMulti code={selectedArea.code} />
+                      <TownFacility code={selectedArea.code} />
                     </>
                   ) : (
-                    // 카테고리 선택 X
-                    <div>
-                  {/* 행정동 분기별 유동인구 */}
-                  <PopulationQuarter code={selectedArea.code} />
-                  {/* 행정동 시간별 유동인구 */}
-                  <PopulationTime code={selectedArea.code} />
-                  {/* 행정동 시간별 매출 추이 */}
-                  <SalesTime code={selectedArea.code} />
-
-                    </div>
+                    <GuIndustryRecently
+                      code={selectedArea.code}
+                      category={selectCategory}
+                    />
                   )}
-
-                  {/* 거주 인구 수 */}
-                  {/* <PopulationResidentQuarter code={selectedArea.code} /> */}
-                  {/* 직장 인구 수 */}
-                  {/* <PopulationWorkingQuarter code={selectedArea.code}/> */}
-
-                  {/* 직장 인구 수 / 거주 인구 수 동시 차트 */}
-                  <PopulationComparison code={selectedArea.code}/>
-
-                  {/* 집객시설 수 */}
-                  <TownFacility code={selectedArea.code}/>
-                  <div style={{ marginBottom: "100px" }}></div>
                 </>
-              ) : (
-                // 구별 선택 시
-                <div>
-                  <GuIndustryRecently code={selectedArea.code} category={selectCategory} />
-                </div>
               )}
             </div>
           </>
