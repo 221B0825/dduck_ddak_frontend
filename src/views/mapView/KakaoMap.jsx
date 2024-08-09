@@ -9,6 +9,7 @@ const KakaoMap = ({
   selectQuery,
   baseArea,
   compareArea,
+  
 }) => {
   const selectedPolygonRef = useRef(null);
   const mapRef = useRef(null);

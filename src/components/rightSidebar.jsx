@@ -12,9 +12,6 @@ import SalesTime from "./charts/dongCharts/salesTime";
 // 행정동 별 업종 매출 추이
 import IndustrySales from "./charts/dongCharts/industrySales";
 
-// 자치구 별 점포 추이
-import GuIndustryRecently from "./charts/guCharts/guIndustryRecently";
-
 // 업종 별 영업 시간
 import IndustryBusiness from "./labels/industryBusiness";
 
@@ -29,30 +26,45 @@ import PopulationMulti from "./charts/dongCharts/populationMulti";
 // 같은 업종, 다른 동 매출 비교 차트
 import IndustrySalesComparison from "./charts/dongComparisonCharts/industrySalesComparison";
 
-const RightSidebar = ({ isSelectedSize, selectedArea, selectCategory }) => {
+const RightSidebar = ({ 
+  selectedArea, 
+  selectCategory, 
+  setCompareArea, 
+  setBaseArea, 
+  baseArea, 
+  compareArea, 
+  compareMode, 
+  setCompareMode,
+}) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [compareMode, setCompareMode] = useState(false);
-  const [baseArea, setBaseArea] = useState(null);
-  const [compareArea, setCompareArea] = useState(null);
 
   useEffect(() => {
-    if (compareMode && selectedArea && selectedArea !== baseArea) {
+    if (compareMode && selectedArea && selectedArea.code !== (baseArea?.code || '')) {
+      console.log("Setting compare area:", selectedArea);
       setCompareArea(selectedArea);
+    } else if (!compareMode) {
+      console.log("Setting base area:", selectedArea);
+      setBaseArea(selectedArea);
     }
-  }, [selectedArea, compareMode, baseArea]);
+    console.log("Base area:", baseArea);
+    console.log("Compare area:", compareArea);
+  }, [selectedArea, compareMode, baseArea, compareArea, setCompareArea, setBaseArea]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
   const handleCompareClick = () => {
-    setCompareMode((prevCompareMode) => !prevCompareMode);
-    if (!compareMode) {
-      setBaseArea(selectedArea);
-    } else {
-      setBaseArea(null);
-      setCompareArea(null);
-    }
+    setCompareMode((prevCompareMode) => {
+      if (!prevCompareMode) {
+        setBaseArea(selectedArea);
+        setCompareArea(null); // 초기화 후 새로운 비교 영역 선택 대기
+      } else {
+        setBaseArea(null);
+        setCompareArea(null);
+      }
+      return !prevCompareMode;
+    });
   };
 
   return (
@@ -118,49 +130,41 @@ const RightSidebar = ({ isSelectedSize, selectedArea, selectCategory }) => {
             </div>
             <div>
               {compareMode ? (
-                baseArea &&
-                compareArea && (
-                  <IndustrySalesComparison
-                    code1={baseArea.code}
-                    code2={compareArea.code}
-                    category={selectCategory}
-                  />
+                baseArea && selectedArea && (
+                  <>
+                    <IndustrySalesComparison
+                      code1={baseArea.code}
+                      code2={selectedArea.code}
+                      category={"패스트푸드점"}
+                    />
+                  </>
                 )
               ) : (
                 <>
-                  {isSelectedSize ? (
+                  {selectCategory ? (
                     <>
-                      {selectCategory ? (
-                        <>
-                          <IndustryMulti
-                            code={selectedArea.code}
-                            category={selectCategory}
-                          />
-                          <IndustrySales
-                            code={selectedArea.code}
-                            category={selectCategory}
-                          />
-                          <IndustryBusiness
-                            code={selectedArea.code}
-                            category={selectCategory}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <PopulationQuarter code={selectedArea.code} />
-                          <PopulationTime code={selectedArea.code} />
-                          <SalesTime code={selectedArea.code} />
-                        </>
-                      )}
-                      <PopulationMulti code={selectedArea.code} />
-                      <TownFacility code={selectedArea.code} />
+                      <IndustryMulti
+                        code={selectedArea.code}
+                        category={selectCategory}
+                      />
+                      <IndustrySales
+                        code={selectedArea.code}
+                        category={selectCategory}
+                      />
+                      <IndustryBusiness
+                        code={selectedArea.code}
+                        category={selectCategory}
+                      />
                     </>
                   ) : (
-                    <GuIndustryRecently
-                      code={selectedArea.code}
-                      category={selectCategory}
-                    />
+                    <>
+                      <PopulationQuarter code={selectedArea.code} />
+                      <PopulationTime code={selectedArea.code} />
+                      <SalesTime code={selectedArea.code} />
+                    </>
                   )}
+                  <PopulationMulti code={selectedArea.code} />
+                  <TownFacility code={selectedArea.code} />
                 </>
               )}
             </div>

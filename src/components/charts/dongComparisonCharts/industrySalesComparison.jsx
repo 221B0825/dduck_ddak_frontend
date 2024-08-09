@@ -23,6 +23,10 @@ const IndustrySalesComparison = ({ code1, code2, category }) => {
         const salesData1 = response1.data.data;
         const salesData2 = response2.data.data;
 
+
+        console.log(salesData1);
+        console.log(salesData2);
+
         if (
           !salesData1 ||
           Object.keys(salesData1).length === 0 ||
@@ -81,14 +85,14 @@ const IndustrySalesComparison = ({ code1, code2, category }) => {
             labels: labels,
             datasets: [
               {
-                label: `이촌1동 매출`,
+                label: `${code1}`,
                 data: counts1,
                 backgroundColor: "rgba(255, 99, 71, 0.6)", // 다홍색 배경
                 borderColor: "rgba(255, 99, 71, 1)", // 다홍색 경계
                 borderWidth: 1,
               },
               {
-                label: `오류2동 매출`,
+                label: `${code2}`,
                 data: counts2,
                 backgroundColor: "rgba(54, 162, 235, 0.6)", // 파란색 배경
                 borderColor: "rgba(54, 162, 235, 1)", // 파란색 경계
