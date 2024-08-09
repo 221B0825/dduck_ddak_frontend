@@ -6,7 +6,6 @@ import KakaoMap from "../mapView/KakaoMap";
 
 function MainView() {
   const [selectedArea, setSelectedArea] = useState(null);
-  const [isSelectedSize, setSelectedSize] = useState(true);
   const [selectQuery, setSelectQuery] = useState([]);
   const [selectCategory, setSelectCategory] = useState("");
   const [compareMode, setCompareMode] = useState(false);
@@ -15,18 +14,13 @@ function MainView() {
 
   return (
     <div>
-      <CustomHeader
-        setSelectedSize={setSelectedSize}
-        setSelectedArea={setSelectedArea}
-      />
+      <CustomHeader />
       <LeftSidebar
-        setSelectedSize={setSelectedSize}
         setSelectQuery={setSelectQuery}
         setSelectCategory={setSelectCategory}
       />
       <RightSidebar
         selectedArea={selectedArea}
-        isSelectedSize={isSelectedSize}
         selectCategory={selectCategory}
         setCompareMode={setCompareMode}
         compareMode={compareMode}
@@ -34,17 +28,14 @@ function MainView() {
         setCompareArea={setCompareArea}
         baseArea={baseArea}
         setSelectedArea={setSelectedArea}
-
       />
       <KakaoMap
         setSelectedArea={setSelectedArea}
-        isSelectedSize={isSelectedSize}
         selectQuery={selectQuery}
         compareMode={compareMode}
         baseArea={baseArea}
         compareArea={compareArea}
         setCompareArea={setCompareArea}
-
       />
     </div>
   );

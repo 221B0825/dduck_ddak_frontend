@@ -4,7 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import searchData from "../apis/searchArea.json";
 import searchCategoryData from "../apis/searchCategory.json";
 
-function LeftSidebar({ setSelectedSize, setSelectQuery, setSelectCategory }) {
+function LeftSidebar({ setSelectQuery, setSelectCategory }) {
   const [isOpen, setIsOpen] = useState(true);
   const [selectInput, setSelectInput] = useState("");
   const [selectedGu, setSelectedGu] = useState("");

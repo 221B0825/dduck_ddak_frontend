@@ -3,14 +3,7 @@ import axios from "axios";
 import dongAreaData from "../../apis/dong.json";
 import guAreaData from "../../apis/gu.json";
 
-const KakaoMap = ({
-  isSelectedSize,
-  setSelectedArea,
-  selectQuery,
-  baseArea,
-  compareArea,
-  
-}) => {
+const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
   const selectedPolygonRef = useRef(null);
   const mapRef = useRef(null);
   const dongPolygonsRef = useRef([]);
@@ -29,7 +22,7 @@ const KakaoMap = ({
         const mapContainer = document.getElementById("map"),
           mapOption = {
             center: new kakao.maps.LatLng(37.532527, 126.99049),
-            level: 6,
+            level: 6, // 초기 줌 레벨 설정
           };
 
         const map = new kakao.maps.Map(mapContainer, mapOption);
@@ -51,6 +44,11 @@ const KakaoMap = ({
         });
 
         updatePolygonsVisibility();
+
+        // 지도 레벨 변경 시 폴리곤 가시성 업데이트
+        kakao.maps.event.addListener(map, "zoom_changed", () => {
+          updatePolygonsVisibility();
+        });
       });
     };
 
@@ -119,11 +117,13 @@ const KakaoMap = ({
     };
 
     const updatePolygonsVisibility = () => {
-      dongPolygonsRef.current.forEach((p) =>
-        p.setMap(isSelectedSize ? mapRef.current : null)
+      const mapLevel = mapRef.current.getLevel(); // 현재 지도 레벨을 가져옵니다.
+
+      dongPolygonsRef.current.forEach(
+        (p) => p.setMap(mapLevel <= 7 ? mapRef.current : null) // 줌 레벨이 7 이하일 때만 행정동 폴리곤을 표시
       );
-      guPolygonsRef.current.forEach((p) =>
-        p.setMap(isSelectedSize ? null : mapRef.current)
+      guPolygonsRef.current.forEach(
+        (p) => p.setMap(mapLevel > 7 ? mapRef.current : null) // 줌 레벨이 7 초과일 때만 구 폴리곤을 표시
       );
     };
 
@@ -135,7 +135,7 @@ const KakaoMap = ({
         document.getElementById("map").innerHTML = "";
       }
     };
-  }, [isSelectedSize]);
+  }, []);
 
   useEffect(() => {
     if (baseArea && compareArea) {
