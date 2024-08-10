@@ -1,5 +1,3 @@
-// src/mapHandlers/dongPolygonHandler.js
-
 import dongCenterData from "../../apis/dongCenter.json";
 
 export const createDongPolygon = (
@@ -20,7 +18,7 @@ export const createDongPolygon = (
     strokeColor: "#3065FA",
     strokeOpacity: 0.8,
     fillColor: "#fff",
-    fillOpacity: 0.2,
+    fillOpacity: 0.2, // 기본 상태의 투명도
     zIndex: 10,
   });
 
@@ -47,35 +45,77 @@ const attachDongPolygonEvents = (
 ) => {
   kakao.maps.event.addListener(polygon, "click", function () {
     if (selectedPolygonRef.current) {
-      selectedPolygonRef.current.setOptions({
-        fillColor: "#fff",
-        strokeWeight: 0,
+      if (selectedPolygonRef.current === polygon) {
+        // 현재 선택된 폴리곤을 다시 클릭한 경우
+        polygon.setOptions({
+          fillColor: "#fff",
+          fillOpacity: 0.2, // 기본 투명도로 복원
+          strokeWeight: 0,
+        });
+
+        // 마커 제거
+        markersRef.current.forEach((marker) => marker.setMap(null));
+        markersRef.current = [];
+
+        // 선택 해제
+        selectedPolygonRef.current = null;
+        setSelectedArea(null); // 선택된 지역 초기화
+      } else {
+        // 다른 폴리곤을 클릭한 경우
+        selectedPolygonRef.current.setOptions({
+          fillColor: "#fff",
+          fillOpacity: 0.2, // 기본 투명도로 복원
+          strokeWeight: 0,
+        });
+
+        polygon.setOptions({
+          fillColor: "#09f",
+          fillOpacity: 0.5, // 선택된 상태의 투명도
+          strokeWeight: 2,
+          strokeColor: "#3065FA",
+          strokeOpacity: 0.8,
+        });
+
+        selectedPolygonRef.current = polygon;
+        setSelectedArea({
+          name: polygon.areaName,
+          code: polygon.code,
+          type: "dong",
+          calculatedArea: Math.floor(polygon.getArea()),
+        });
+
+        addDongMarker(polygon.code, map, markersRef);
+      }
+    } else {
+      // 아무것도 선택되지 않은 상태에서 폴리곤을 처음 클릭한 경우
+      polygon.setOptions({
+        fillColor: "#09f",
+        fillOpacity: 0.5, // 선택된 상태의 투명도
+        strokeWeight: 2,
+        strokeColor: "#3065FA",
+        strokeOpacity: 0.8,
       });
+
+      selectedPolygonRef.current = polygon;
+      setSelectedArea({
+        name: polygon.areaName,
+        code: polygon.code,
+        type: "dong",
+        calculatedArea: Math.floor(polygon.getArea()),
+      });
+
+      addDongMarker(polygon.code, map, markersRef);
     }
-
-    polygon.setOptions({
-      fillColor: "#09f",
-      strokeWeight: 2,
-      strokeColor: "#3065FA",
-      strokeOpacity: 0.8,
-    });
-
-    selectedPolygonRef.current = polygon;
-    setSelectedArea({
-      name: polygon.areaName,
-      code: polygon.code,
-      type: "dong",
-      calculatedArea: Math.floor(polygon.getArea()),
-    });
-
-    addDongMarker(polygon.code, map, markersRef);
   });
 
   kakao.maps.event.addListener(polygon, "mouseover", function () {
-    if (markersRef.current.length === 0) {
+    if (
+      markersRef.current.length === 0 &&
+      selectedPolygonRef.current !== polygon
+    ) {
       polygon.setOptions({
         fillColor: "#FFD700",
-        fillOpacity: 0.5,
+        fillOpacity: 0.5, // 호버 상태의 투명도
         strokeColor: "#ff8e25",
         strokeOpacity: 0.2,
         strokeWeight: 2,
@@ -84,10 +124,13 @@ const attachDongPolygonEvents = (
   });
 
   kakao.maps.event.addListener(polygon, "mouseout", function () {
-    if (markersRef.current.length === 0) {
+    if (
+      markersRef.current.length === 0 &&
+      selectedPolygonRef.current !== polygon
+    ) {
       polygon.setOptions({
         fillColor: "#fff",
-        fillOpacity: 0.2,
+        fillOpacity: 0.2, // 기본 투명도로 복원
         strokeWeight: 0,
       });
     }
