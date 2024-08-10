@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import axios from "axios";
+import { createGuPolygon, createDefaultGuPolygon } from "./guPolygonHandler";
+import { createDongPolygon } from "./dongPolygonHandler";
 import dongAreaData from "../../apis/dong.json";
 import guAreaData from "../../apis/gu.json";
 
@@ -8,7 +9,8 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
   const mapRef = useRef(null);
   const dongPolygonsRef = useRef([]);
   const guPolygonsRef = useRef([]);
-  const defaultPolygonsRef = useRef([]);
+  const defaultGuPolygonsRef = useRef([]); // 기본 구 폴리곤을 저장할 Ref
+  const markersRef = useRef([]);
 
   useEffect(() => {
     const kakaoAPI = import.meta.env.VITE_KAKAO_MAP_API_KEY;
@@ -28,19 +30,32 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
         const map = new kakao.maps.Map(mapContainer, mapOption);
         mapRef.current = map;
 
+        // 기본 구 폴리곤 생성
+        guAreaData.forEach((area) => {
+          const polygon = createDefaultGuPolygon(area, map);
+          defaultGuPolygonsRef.current.push(polygon);
+        });
+
         dongAreaData.forEach((area) => {
-          const polygon = createPolygon(area, map, "dong");
+          const polygon = createDongPolygon(
+            area,
+            map,
+            setSelectedArea,
+            markersRef,
+            selectedPolygonRef
+          );
           dongPolygonsRef.current.push(polygon);
         });
 
         guAreaData.forEach((area) => {
-          const polygon = createPolygon(area, map, "gu");
+          const polygon = createGuPolygon(
+            area,
+            map,
+            setSelectedArea,
+            markersRef,
+            selectedPolygonRef
+          );
           guPolygonsRef.current.push(polygon);
-        });
-
-        guAreaData.forEach((area) => {
-          const polygon = createDefaultPolygon(area, map);
-          defaultPolygonsRef.current.push(polygon);
         });
 
         updatePolygonsVisibility();
@@ -48,70 +63,10 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
         // 지도 레벨 변경 시 폴리곤 가시성 업데이트
         kakao.maps.event.addListener(map, "zoom_changed", () => {
           updatePolygonsVisibility();
-        });
-      });
-    };
-
-    const createDefaultPolygon = (area, map) => {
-      const path = area.path.map(
-        (coords) => new kakao.maps.LatLng(coords.lat, coords.lng)
-      );
-
-      const polygon = new kakao.maps.Polygon({
-        map: map,
-        path: path,
-        strokeWeight: 3,
-        strokeColor: "#000000",
-        strokeOpacity: 0.2,
-        fillColor: "#D9D9D9",
-        fillOpacity: 0.2,
-        zIndex: 1,
-      });
-
-      return polygon;
-    };
-
-    const createPolygon = (area, map, type) => {
-      const path = area.path.map(
-        (coords) => new kakao.maps.LatLng(coords.lat, coords.lng)
-      );
-
-      const polygon = new kakao.maps.Polygon({
-        map: map,
-        path: path,
-        strokeWeight: 0,
-        strokeColor: "#3065FA",
-        strokeOpacity: 0.8,
-        fillColor: "#fff",
-        fillOpacity: 0.2,
-        zIndex: type === "dong" ? 10 : 5,
-      });
-
-      polygon.code = type === "dong" ? area.adm_cd : area.name.split(" ")[1];
-      polygon.areaName = area.name;
-
-      attachPolygonEvents(polygon, area, type, map);
-
-      return polygon;
-    };
-
-    const attachPolygonEvents = (polygon, area, type, map) => {
-      kakao.maps.event.addListener(polygon, "click", function () {
-        if (selectedPolygonRef.current) {
-          selectedPolygonRef.current.setOptions({
-            fillColor: "#fff",
-            strokeWeight: 0,
-          });
-        }
-
-        polygon.setOptions({ fillColor: "#09f", strokeWeight: 2 });
-
-        selectedPolygonRef.current = polygon;
-        setSelectedArea({
-          name: polygon.areaName,
-          code: polygon.code,
-          type: type,
-          calculatedArea: Math.floor(polygon.getArea()),
+          // 현재 선택된 폴리곤이 있으면 그 폴리곤의 색상을 다시 설정
+          if (selectedPolygonRef.current) {
+            selectedPolygonRef.current.setMap(mapRef.current);
+          }
         });
       });
     };
@@ -120,17 +75,18 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
       const mapLevel = mapRef.current.getLevel(); // 현재 지도 레벨을 가져옵니다.
 
       dongPolygonsRef.current.forEach(
-        (p) => p.setMap(mapLevel <= 7 ? mapRef.current : null) // 줌 레벨이 7 이하일 때만 행정동 폴리곤을 표시
+        (p) => p.setMap(mapLevel <= 6 ? mapRef.current : null) // 줌 레벨이 6 이하일 때만 행정동 폴리곤을 표시
       );
       guPolygonsRef.current.forEach(
-        (p) => p.setMap(mapLevel > 7 ? mapRef.current : null) // 줌 레벨이 7 초과일 때만 구 폴리곤을 표시
+        (p) => p.setMap(mapLevel > 6 ? mapRef.current : null) // 줌 레벨이 6 초과일 때만 구 폴리곤을 표시
       );
     };
 
     return () => {
       dongPolygonsRef.current = [];
       guPolygonsRef.current = [];
-      defaultPolygonsRef.current.forEach((p) => p.setMap(null));
+      defaultGuPolygonsRef.current.forEach((p) => p.setMap(null)); // 기본 폴리곤 제거
+      markersRef.current.forEach((marker) => marker.setMap(null));
       if (mapRef.current) {
         document.getElementById("map").innerHTML = "";
       }
@@ -168,7 +124,7 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
     if (targetPolygon) {
       if (selectedPolygonRef.current) {
         selectedPolygonRef.current.setOptions({
-          fillColor: "#fff",
+          fillColor: "none",
           strokeWeight: 0,
         });
         selectedPolygonRef.current.setMap(null);
@@ -183,7 +139,7 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
       const bounds = new kakao.maps.LatLngBounds();
       targetPolygon.getPath().forEach((point) => bounds.extend(point));
       mapRef.current.setBounds(bounds);
-      mapRef.current.setLevel(selectQuery.type === "dongCode" ? 5 : 7);
+      mapRef.current.setLevel(selectQuery.type === "dongCode" ? 4 : 6);
 
       setSelectedArea({
         name: targetPolygon.areaName,
@@ -191,6 +147,12 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
         type: selectQuery.type,
         calculatedArea: Math.floor(targetPolygon.getArea()),
       });
+
+      if (selectQuery.type === "dongCode") {
+        addDongMarker(targetPolygon.code, mapRef.current, markersRef);
+      } else {
+        addGuMarker(targetPolygon.code, mapRef.current, markersRef);
+      }
     }
   }, [selectQuery]);
 
