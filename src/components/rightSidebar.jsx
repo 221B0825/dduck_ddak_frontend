@@ -2,44 +2,35 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-// 행정동 분기별 유동인구수 차트
+// 차트 및 기타 컴포넌트 임포트
 import PopulationQuarter from "./charts/dongCharts/populationQuarter";
-// 행정동 시간별 유동인구수 차트
 import PopulationTime from "./charts/dongCharts/populationTime";
-// 행정동 시간별 매출
 import SalesTime from "./charts/dongCharts/salesTime";
-
-// 행정동 별 업종 매출 추이
 import IndustrySales from "./charts/dongCharts/industrySales";
-
-// 업종 별 영업 시간
 import IndustryBusiness from "./labels/industryBusiness";
-
-// 행정동 별 집객시설 수
 import TownFacility from "./charts/dongCharts/townsFacility";
-
-// 점포 수 / 유사 점포 수 동시 차트
 import IndustryMulti from "./charts/dongCharts/industryMulti";
-// 직장 인구, 거주 인구 수 동시 차트
 import PopulationMulti from "./charts/dongCharts/populationMulti";
-
-// 같은 업종, 다른 동 매출 비교 차트
 import IndustrySalesComparison from "./charts/dongComparisonCharts/industrySalesComparison";
 
-const RightSidebar = ({ 
-  selectedArea, 
-  selectCategory, 
-  setCompareArea, 
-  setBaseArea, 
-  baseArea, 
-  compareArea, 
-  compareMode, 
+const RightSidebar = ({
+  selectedArea,
+  selectCategory,
+  setCompareArea,
+  setBaseArea,
+  baseArea,
+  compareArea,
+  compareMode,
   setCompareMode,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
-    if (compareMode && selectedArea && selectedArea.code !== (baseArea?.code || '')) {
+    if (
+      compareMode &&
+      selectedArea &&
+      selectedArea.code !== (baseArea?.code || "")
+    ) {
       console.log("Setting compare area:", selectedArea);
       setCompareArea(selectedArea);
     } else if (!compareMode) {
@@ -48,7 +39,14 @@ const RightSidebar = ({
     }
     console.log("Base area:", baseArea);
     console.log("Compare area:", compareArea);
-  }, [selectedArea, compareMode, baseArea, compareArea, setCompareArea, setBaseArea]);
+  }, [
+    selectedArea,
+    compareMode,
+    baseArea,
+    compareArea,
+    setCompareArea,
+    setBaseArea,
+  ]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -65,6 +63,17 @@ const RightSidebar = ({
       }
       return !prevCompareMode;
     });
+  };
+
+  const handleScrapClick = () => {
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="));
+    if (token) {
+      alert("엑세스 토큰이 존재합니다: " + token.split("=")[1]);
+    } else {
+      alert("엑세스 토큰이 없습니다.");
+    }
   };
 
   return (
@@ -128,9 +137,17 @@ const RightSidebar = ({
                 {compareMode ? "행정동 비교" : "행정동 정보"}
               </label>
             </div>
+            <button
+              type="button"
+              className="btn btn-warning m-3"
+              onClick={handleScrapClick}
+            >
+              스크랩
+            </button>
             <div>
               {compareMode ? (
-                baseArea && selectedArea && (
+                baseArea &&
+                selectedArea && (
                   <>
                     <IndustrySalesComparison
                       code1={baseArea.code}
