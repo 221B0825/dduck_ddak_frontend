@@ -66,13 +66,35 @@ const RightSidebar = ({
   };
 
   const handleScrapClick = () => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="));
-    if (token) {
-      alert("엑세스 토큰이 존재합니다: " + token.split("=")[1]);
-    } else {
-      alert("엑세스 토큰이 없습니다.");
+    sendScrapRequest(); // 함수 호출
+  };
+
+  const sendScrapRequest = async () => {
+    try {
+      const response = await fetch("https://api.gadduck.info/scraps", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // 쿠키를 포함시키기 위해 credentials 설정
+        body: JSON.stringify({
+          "email": "hyeri0603@naver.com",
+          "town-code": selectedArea.code,
+          "industry-name": selectCategory,
+          "quarter": 20241,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+      alert("스크랩 요청이 성공적으로 처리되었습니다.");
+    } catch (error) {
+      console.error("스크랩 요청 중 에러가 발생했습니다:", error);
+      alert("스크랩 요청에 실패했습니다.");
     }
   };
 
@@ -152,7 +174,7 @@ const RightSidebar = ({
                     <IndustrySalesComparison
                       code1={baseArea.code}
                       code2={selectedArea.code}
-                      category={"패스트푸드점"}
+                      category={selectCategory}
                     />
                   </>
                 )
