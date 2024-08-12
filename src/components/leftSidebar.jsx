@@ -4,6 +4,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import searchData from "../apis/searchArea.json";
 import searchCategoryData from "../apis/searchCategory.json";
 
+import RankingArea from "./rankingArea";
+
 function LeftSidebar({ setSelectQuery, setSelectCategory }) {
   const [isOpen, setIsOpen] = useState(true);
   const [selectInput, setSelectInput] = useState("");
@@ -12,10 +14,6 @@ function LeftSidebar({ setSelectQuery, setSelectCategory }) {
   const [selectedDongCode, setSelectedDongCode] = useState("");
   const [filteredDongList, setFilteredDongList] = useState([]);
   const contentRef = useRef(null);
-
-  const [inputCategory, setinputCategory] = useState("");
-  const [inputDetailCategory, setInputDetailCategory] = useState("");
-  const [filteredCategoryList, setFilteredCategoryList] = useState([]);
 
   useEffect(() => {
     if (selectedGu) {
@@ -30,19 +28,6 @@ function LeftSidebar({ setSelectQuery, setSelectCategory }) {
     setSelectedDongCode("");
   }, [selectedGu]);
 
-  useEffect(() => {
-    if (inputCategory) {
-      const detailList = searchCategoryData.하위카테고리[inputCategory] || [];
-      setFilteredCategoryList(detailList);
-      setinputCategory(inputCategory);
-    } else {
-      setFilteredCategoryList([]);
-      setinputCategory("");
-    }
-    setInputDetailCategory("");
-    setSelectCategory("");
-  }, [inputCategory]);
-
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
@@ -56,15 +41,6 @@ function LeftSidebar({ setSelectQuery, setSelectCategory }) {
     setSelectedDong(e.target.value);
     setSelectedDongCode(dong ? dong.adm_cd : "");
     setSelectInput(selectedGu + " " + e.target.value);
-  };
-
-  const handleCategoryChange = (e) => {
-    setinputCategory(e.target.value);
-  };
-
-  const handleDetailCategoryChange = (e) => {
-    setInputDetailCategory(e.target.value);
-    setSelectCategory(e.target.value);
   };
 
   useEffect(() => {
@@ -136,7 +112,27 @@ function LeftSidebar({ setSelectQuery, setSelectCategory }) {
         ref={contentRef}
         style={{ marginTop: "80px", padding: "20px" }}
       >
-        <h3 className="md-2">검색조건</h3>
+        <div className="d-flex" style={{ justifyContent: "space-between" }}>
+          <h3 className="md-2">검색조건</h3>
+          <button
+            id="resetBtn"
+            className="btn btn-secondary"
+            onClick={() => {
+              setSelectInput("");
+              setSelectedGu("");
+              setSelectedDong("");
+              setSelectedDongCode("");
+              setFilteredDongList([]);
+              setSelectCategory("");
+              setinputCategory("");
+              setInputDetailCategory("");
+            }}
+            style={{ margin: "0 10px 10px 10px" }}
+            disabled={!isOpen} // 사이드바가 닫혀 있으면 작동하지 않도록 설정
+          >
+            초기화
+          </button>
+        </div>
         <hr />
         <div className="d-flex justify-content-between">
           <input
@@ -197,64 +193,9 @@ function LeftSidebar({ setSelectQuery, setSelectCategory }) {
           ))}
         </select>
 
-        {/* 카테고리 선택 */}
-        <hr />
-        <select
-          className="form-select"
-          value={inputCategory}
-          onChange={handleCategoryChange}
-          style={{ marginBottom: "10px" }}
-          disabled={!isOpen} // 사이드바가 닫혀 있으면 선택 불가
-        >
-          <option value="">카테고리 선택</option>
-          {searchCategoryData.상위카테고리.map((상위카테고리) => (
-            <option key={상위카테고리} value={상위카테고리}>
-              {상위카테고리}
-            </option>
-          ))}
-        </select>
-
-        {/* 하위 카테고리 선택 */}
-        <select
-          className="form-select"
-          value={inputDetailCategory}
-          onChange={handleDetailCategoryChange}
-          style={{ marginBottom: "10px" }}
-          disabled={!inputCategory || !isOpen} // 상위 카테고리가 선택되지 않았거나 사이드바가 닫혀 있으면 선택 불가
-        >
-          <option value="">하위 카테고리 선택</option>
-          {filteredCategoryList.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-
-        <div id="resetBtnArea">
-          <button
-            id="resetBtn"
-            className="btn btn-secondary"
-            onClick={() => {
-              setSelectInput("");
-              setSelectedGu("");
-              setSelectedDong("");
-              setSelectedDongCode("");
-              setFilteredDongList([]);
-              setSelectCategory("");
-              setinputCategory("");
-              setInputDetailCategory("");
-            }}
-            style={{ margin: "0 10px 10px 10px" }}
-            disabled={!isOpen} // 사이드바가 닫혀 있으면 작동하지 않도록 설정
-          >
-            초기화
-          </button>
-        </div>
-
-        <div>
-            <h3>TOP 10 지역</h3>
-          
-        </div>
+        <>
+          <RankingArea isOpen={isOpen} />
+        </>
       </div>
     </div>
   );

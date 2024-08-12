@@ -30,7 +30,6 @@ const RightSidebar = ({
   const [inputDetailCategory, setInputDetailCategory] = useState("");
   const [filteredCategoryList, setFilteredCategoryList] = useState([]);
 
-
   const handleCategoryChange = (e) => {
     setinputCategory(e.target.value);
   };
@@ -46,12 +45,9 @@ const RightSidebar = ({
       setinputCategory(inputCategory);
     } else {
       setFilteredCategoryList([]);
-     
     }
     setInputDetailCategory("");
-
   }, [inputCategory]);
-
 
   useEffect(() => {
     if (
@@ -106,10 +102,10 @@ const RightSidebar = ({
         },
         credentials: "include", // 쿠키를 포함시키기 위해 credentials 설정
         body: JSON.stringify({
-          "email": "hyeri0603@naver.com",
+          email: "hyeri0603@naver.com",
           "town-code": selectedArea.code,
           "industry-name": selectCategory,
-          "quarter": 20241,
+          quarter: 20241,
         }),
       });
 
@@ -195,39 +191,39 @@ const RightSidebar = ({
               스크랩
             </button>
             <div>
-{/* 카테고리 선택 */}
-            <div>
-            <select
-          className="form-select"
-          value={inputCategory}
-          onChange={handleCategoryChange}
-          style={{ marginBottom: "10px" }}
-          disabled={!isOpen} // 사이드바가 닫혀 있으면 선택 불가
-        >
-          <option value="">카테고리 선택</option>
-          {categoryData.상위카테고리.map((상위카테고리) => (
-            <option key={상위카테고리} value={상위카테고리}>
-              {상위카테고리}
-            </option>
-          ))}
-        </select>
+              {/* 카테고리 선택 */}
+              <div>
+                <select
+                  className="form-select"
+                  value={inputCategory}
+                  onChange={handleCategoryChange}
+                  style={{ marginBottom: "10px" }}
+                  disabled={!isOpen} // 사이드바가 닫혀 있으면 선택 불가
+                >
+                  <option value="">카테고리 선택</option>
+                  {categoryData.상위카테고리.map((상위카테고리) => (
+                    <option key={상위카테고리} value={상위카테고리}>
+                      {상위카테고리}
+                    </option>
+                  ))}
+                </select>
 
-        {/* 하위 카테고리 선택 */}
-        <select
-          className="form-select"
-          value={inputDetailCategory}
-          onChange={handleDetailCategoryChange}
-          style={{ marginBottom: "10px" }}
-          disabled={!inputCategory || !isOpen} // 상위 카테고리가 선택되지 않았거나 사이드바가 닫혀 있으면 선택 불가
-        >
-          <option value="">하위 카테고리 선택</option>
-          {filteredCategoryList.map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-            </div>
+                {/* 하위 카테고리 선택 */}
+                <select
+                  className="form-select"
+                  value={inputDetailCategory}
+                  onChange={handleDetailCategoryChange}
+                  style={{ marginBottom: "10px" }}
+                  disabled={!inputCategory || !isOpen} // 상위 카테고리가 선택되지 않았거나 사이드바가 닫혀 있으면 선택 불가
+                >
+                  <option value="">하위 카테고리 선택</option>
+                  {filteredCategoryList.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
               {compareMode ? (
                 baseArea &&
