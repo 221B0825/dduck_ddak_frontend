@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import { createGuPolygon, createDefaultGuPolygon } from "./guPolygonHandler";
-import { createDongPolygon } from "./dongPolygonHandler";
+import { createGuPolygon, createDefaultGuPolygon, addGuMarker } from "./guPolygonHandler";
+import { createDongPolygon, addDongMarker } from "./dongPolygonHandler";
 import dongAreaData from "../../apis/dong.json";
 import guAreaData from "../../apis/gu.json";
 
