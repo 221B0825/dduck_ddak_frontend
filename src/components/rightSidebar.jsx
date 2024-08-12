@@ -13,6 +13,8 @@ import IndustryMulti from "./charts/dongCharts/industryMulti";
 import PopulationMulti from "./charts/dongCharts/populationMulti";
 import IndustrySalesComparison from "./charts/dongComparisonCharts/industrySalesComparison";
 
+import categoryData from "../apis/searchCategory.json";
+
 const RightSidebar = ({
   selectedArea,
   selectCategory,
@@ -24,6 +26,32 @@ const RightSidebar = ({
   setCompareMode,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [inputCategory, setinputCategory] = useState("");
+  const [inputDetailCategory, setInputDetailCategory] = useState("");
+  const [filteredCategoryList, setFilteredCategoryList] = useState([]);
+
+
+  const handleCategoryChange = (e) => {
+    setinputCategory(e.target.value);
+  };
+
+  const handleDetailCategoryChange = (e) => {
+    setInputDetailCategory(e.target.value);
+  };
+
+  useEffect(() => {
+    if (inputCategory) {
+      const detailList = categoryData.하위카테고리[inputCategory] || [];
+      setFilteredCategoryList(detailList);
+      setinputCategory(inputCategory);
+    } else {
+      setFilteredCategoryList([]);
+     
+    }
+    setInputDetailCategory("");
+
+  }, [inputCategory]);
+
 
   useEffect(() => {
     if (
@@ -167,6 +195,40 @@ const RightSidebar = ({
               스크랩
             </button>
             <div>
+{/* 카테고리 선택 */}
+            <div>
+            <select
+          className="form-select"
+          value={inputCategory}
+          onChange={handleCategoryChange}
+          style={{ marginBottom: "10px" }}
+          disabled={!isOpen} // 사이드바가 닫혀 있으면 선택 불가
+        >
+          <option value="">카테고리 선택</option>
+          {categoryData.상위카테고리.map((상위카테고리) => (
+            <option key={상위카테고리} value={상위카테고리}>
+              {상위카테고리}
+            </option>
+          ))}
+        </select>
+
+        {/* 하위 카테고리 선택 */}
+        <select
+          className="form-select"
+          value={inputDetailCategory}
+          onChange={handleDetailCategoryChange}
+          style={{ marginBottom: "10px" }}
+          disabled={!inputCategory || !isOpen} // 상위 카테고리가 선택되지 않았거나 사이드바가 닫혀 있으면 선택 불가
+        >
+          <option value="">하위 카테고리 선택</option>
+          {filteredCategoryList.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+            </div>
+
               {compareMode ? (
                 baseArea &&
                 selectedArea && (
@@ -174,7 +236,7 @@ const RightSidebar = ({
                     <IndustrySalesComparison
                       code1={baseArea.code}
                       code2={selectedArea.code}
-                      category={selectCategory}
+                      category={"패스트푸드점"}
                     />
                   </>
                 )

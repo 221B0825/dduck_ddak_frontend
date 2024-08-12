@@ -75,10 +75,10 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
       const mapLevel = mapRef.current.getLevel(); // 현재 지도 레벨을 가져옵니다.
 
       dongPolygonsRef.current.forEach(
-        (p) => p.setMap(mapLevel <= 6 ? mapRef.current : null) // 줌 레벨이 6 이하일 때만 행정동 폴리곤을 표시
+        (p) => p.setMap(mapLevel <= 7 ? mapRef.current : null) // 줌 레벨이 6 이하일 때만 행정동 폴리곤을 표시
       );
       guPolygonsRef.current.forEach(
-        (p) => p.setMap(mapLevel > 6 ? mapRef.current : null) // 줌 레벨이 6 초과일 때만 구 폴리곤을 표시
+        (p) => p.setMap(mapLevel > 7 ? mapRef.current : null) // 줌 레벨이 6 초과일 때만 구 폴리곤을 표시
       );
     };
 
@@ -139,7 +139,7 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
       const bounds = new kakao.maps.LatLngBounds();
       targetPolygon.getPath().forEach((point) => bounds.extend(point));
       mapRef.current.setBounds(bounds);
-      mapRef.current.setLevel(selectQuery.type === "dongCode" ? 4 : 6);
+      mapRef.current.setLevel(selectQuery.type === "dongCode" ? 3 : 7);
 
       setSelectedArea({
         name: targetPolygon.areaName,

@@ -230,8 +230,30 @@ function LeftSidebar({ setSelectQuery, setSelectCategory }) {
           ))}
         </select>
 
-        <div className="d-flex justify-content-between">
-          <div className="badgeArea"></div>
+        <div id="resetBtnArea">
+          <button
+            id="resetBtn"
+            className="btn btn-secondary"
+            onClick={() => {
+              setSelectInput("");
+              setSelectedGu("");
+              setSelectedDong("");
+              setSelectedDongCode("");
+              setFilteredDongList([]);
+              setSelectCategory("");
+              setinputCategory("");
+              setInputDetailCategory("");
+            }}
+            style={{ margin: "0 10px 10px 10px" }}
+            disabled={!isOpen} // 사이드바가 닫혀 있으면 작동하지 않도록 설정
+          >
+            초기화
+          </button>
+        </div>
+
+        <div>
+            <h3>TOP 10 지역</h3>
+          
         </div>
       </div>
     </div>
