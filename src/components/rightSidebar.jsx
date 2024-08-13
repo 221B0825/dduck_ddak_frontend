@@ -53,6 +53,10 @@ const RightSidebar = ({
   };
 
   useEffect(() => {
+    selectCategory = inputDetailCategory;
+  }, [inputDetailCategory]);
+
+  useEffect(() => {
     if (inputCategory) {
       const detailList = categoryData.하위카테고리[inputCategory] || [];
       setFilteredCategoryList(detailList);
@@ -148,6 +152,11 @@ const RightSidebar = ({
 
   const handleScrapClick = () => {
     sendScrapRequest(); // 함수 호출
+  };
+
+  const resetCategory = () => {
+    setinputCategory("");
+    setInputDetailCategory("");
   };
 
   const sendScrapRequest = async () => {
@@ -248,7 +257,7 @@ const RightSidebar = ({
               스크랩
             </button>
             <button type="button" className="btn btn-primary m-3" onClick={exportPDF}>보고서 다운받기</button>
-            
+
             <div>
               {/* 카테고리 선택 */}
               <div>
@@ -283,6 +292,8 @@ const RightSidebar = ({
                   ))}
                 </select>
               </div>
+              <button type="button" className="btn btn-secondary btn-sm m-3" onClick={resetCategory}>카테고리 선택 초기화</button>
+            
               {compareMode ? (
                 baseArea &&
                 selectedArea && (
@@ -299,22 +310,22 @@ const RightSidebar = ({
                 )
               ) : (
                 <>
-                  {selectCategory ? (
+                  {inputDetailCategory ? (
                     <>
                       <div className="chart-container">
                       <IndustryMulti
                         code={selectedArea.code}
-                        category={selectCategory}
+                        category={inputDetailCategory}
                       /><div>{IndustryMulti.summary}</div></div>
                       <div className="chart-container">
                       <IndustrySales
                         code={selectedArea.code}
-                        category={selectCategory}
+                        category={inputDetailCategory}
                       /></div>
                       <div className="chart-container">
                       <IndustryBusiness
                         code={selectedArea.code}
-                        category={selectCategory}
+                        category={inputDetailCategory}
                       /></div>
                     </>
                   ) : (
