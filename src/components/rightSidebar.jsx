@@ -198,7 +198,7 @@ const RightSidebar = ({
         top: 0,
         height: "100vh",
         zIndex: 2000,
-        width: isOpen ? "550px" : "50px",
+        width: isOpen ? "500px" : "50px",
         transition: "width 0.3s ease-in-out",
       }}
     >
@@ -260,7 +260,8 @@ const RightSidebar = ({
 
             <div>
               {/* 카테고리 선택 */}
-              <div>
+              <div className="ms-3 me-3">
+                <hr></hr>
                 <select
                   className="form-select"
                   value={inputCategory}

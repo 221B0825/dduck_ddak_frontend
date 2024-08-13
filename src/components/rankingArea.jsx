@@ -135,7 +135,7 @@ const RankingArea = (isOpen) => {
           }else if(selectedGender == "여자"){
             topDetailGender = "women"
           }
-          
+          // fix
           const response = await axios.get(`https://api.gadduck.info/towns/populations/resident/top10?orderCriteria=${topOrderCriteria}&gender=${topDetailGender}&`)
         }catch(error){
           console.error("Failed to fetch area data", error);
@@ -145,6 +145,18 @@ const RankingArea = (isOpen) => {
 
       fetchData();
     }else if(selectedMainCategory === "매출"){
+      console.log("매출");
+      const fetchData = async () => {
+        if(inputCategory){
+          const response = await axios.get(`https://api.gadduck.info/towns/sales/top10?orderCriteria=sales20241`);
+          setData(response.data.data);
+        }else{
+          const response = await axios.get(`https://api.gadduck.info/towns/industries/sales/top10?orderCriteria=sales20241&industry=${inputDetailCategory}`);
+          setData(response.data.data);
+        }
+      }
+     
+      fetchData();
 
     }else if(selectedMainCategory === "점포"){
 
@@ -290,29 +302,27 @@ const RankingArea = (isOpen) => {
     </div>
 
     <div className="table-responsive scrollable">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>순위</th>
-              <th>동 이름</th>
-              <th>인구 수</th>
-              {/* <th>인구 차이</th> */}
-              <th>증가율 (%)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{item.townName}</td>
-                <td>{item.populations  % 1000} 만명</td>
-                {/* <td>{item.populationsDifference}</td> */}
-                <td>{item.increaseRate.toFixed(2)}%</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+  <table className="table">
+    <thead>
+      <tr>
+        {data.length > 0 && Object.keys(data[0]).map((key, idx) => (
+          <th key={idx}>{key}</th> // 키를 기반으로 헤더 생성
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {data.map((item, index) => (
+        <tr key={index}>
+          {Object.values(item).map((value, idx) => (
+            <td key={idx}>
+              {typeof value === 'number' && idx !== 0 ? value.toLocaleString() + (idx === 1 ? ' 만명' : idx === 3 ? '%' : '') : value}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
 
     </div>
     
