@@ -85,7 +85,7 @@ const RightSidebar = ({
   const exportPDF = async () => {
     const containers = document.querySelectorAll('.chart-container');
     const doc = new jsPDF('p', 'mm', 'a4');
-    const docName = baseArea.name + ' 2024년 1분기 상권 분석 보고서';
+    const docName = baseArea.name;
     doc.addFileToVFS('pretendard.ttf', pretendard);
     doc.addFont('pretendard.ttf', 'pretendard', 'normal');
     doc.setFont('pretendard'); // set font
@@ -102,9 +102,10 @@ const RightSidebar = ({
     // 첫 페이지에 제목 추가
     doc.setFontSize(17);
     doc.text(docName, 105, 130, null, null, 'center'); // 105는 A4 가운데, 20은 위에서부터의 거리
-    doc.text('가게 뚝딱 팀 드림', 105, 140, null, null, 'center');
+    doc.text('2024년 1분기 상권 분석 보고서', 105, 140, null, null, 'center');
+    doc.text('가게 뚝딱 팀 드림', 105, 150, null, null, 'center');
     // 발행일자 추가 (발급 시간대) ex) 2024년 8월 3일
-    doc.text(new Date().toLocaleDateString(), 105, 150, null, null, 'center');
+    doc.text(new Date().toLocaleDateString(), 105, 160, null, null, 'center');
     doc.addPage();
 
     let yPos = 0; // 첫 차트의 시작 위치 설정
