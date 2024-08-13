@@ -137,9 +137,13 @@ const attachDongPolygonEvents = (
   });
 };
 
-export const addDongMarker = (code, map, markersRef) => {
-  markersRef.current.forEach((marker) => marker.setMap(null));
-  markersRef.current = [];
+export const addDongMarker = (code, map, markersRef, scrapMarkersRef) => {
+  // markersRef.current = [];
+  markersRef.current.forEach(marker => {
+    if (!scrapMarkersRef.current.includes(marker)) {
+        marker.setMap(null);
+    }
+  });
 
   const dongCenter = dongCenterData.find((dong) => dong.adm_cd === code);
 

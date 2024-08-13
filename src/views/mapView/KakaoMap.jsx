@@ -1,8 +1,11 @@
 import React, { useEffect, useRef } from "react";
+import axios from 'axios';
 import { createGuPolygon, createDefaultGuPolygon, addGuMarker } from "./guPolygonHandler";
 import { createDongPolygon, addDongMarker } from "./dongPolygonHandler";
 import dongAreaData from "../../apis/dong.json";
 import guAreaData from "../../apis/gu.json";
+
+import dongCenterData from "../../apis/dongCenter.json";
 
 const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
   const selectedPolygonRef = useRef(null);
@@ -11,6 +14,34 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
   const guPolygonsRef = useRef([]);
   const defaultGuPolygonsRef = useRef([]); // 기본 구 폴리곤을 저장할 Ref
   const markersRef = useRef([]);
+  const scrapMarkersRef = useRef([]);
+
+  const scrapMarkers = async () => {
+    try {
+      const response = await axios.get('https://api.gadduck.info/scraps/list?email=hyeri0603@naver.com');
+      if (response.status !== 200) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const newScrapMarkers = []; // 새로운 스크랩 마커 저장 배열
+      response.data.data.forEach(scrap => {
+        const matchingDong = dongCenterData.find(dong => parseInt(dong.adm_cd) === scrap.townCode);
+        if (matchingDong) {
+          const markerPosition = new kakao.maps.LatLng(matchingDong.lat, matchingDong.lng);
+          const marker = new kakao.maps.Marker({
+            position: markerPosition,
+            map: mapRef.current
+          });
+          newScrapMarkers.push(marker);
+        }
+      });
+  
+      // 기존 스크랩 마커를 유지하면서 새로운 마커만 추가
+      scrapMarkersRef.current.push(...newScrapMarkers);
+    } catch (error) {
+      console.error("스크랩 조회 중 에러가 발생했습니다:", error);
+    }
+  };
 
   useEffect(() => {
     const kakaoAPI = import.meta.env.VITE_KAKAO_MAP_API_KEY;
@@ -82,11 +113,17 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
       );
     };
 
+    scrapMarkers(); 
+
     return () => {
       dongPolygonsRef.current = [];
       guPolygonsRef.current = [];
       defaultGuPolygonsRef.current.forEach((p) => p.setMap(null)); // 기본 폴리곤 제거
-      markersRef.current.forEach((marker) => marker.setMap(null));
+      markersRef.current.forEach(marker => {
+        if (!scrapMarkersRef.current.includes(marker) && !selectedMarkersRef.current.includes(marker)) {
+            marker.setMap(null);
+        }
+      });
       if (mapRef.current) {
         document.getElementById("map").innerHTML = "";
       }
@@ -121,6 +158,10 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
       (p) => p.code === selectQuery.data
     );
 
+    kakao.maps.event.addListener(map, 'click', function() {
+      addDongMarker(targetPolygon.code, mapRef.current, markersRef, scrapMarkersRef);
+    });
+
     if (targetPolygon) {
       if (selectedPolygonRef.current) {
         selectedPolygonRef.current.setOptions({
@@ -149,7 +190,7 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
       });
 
       if (selectQuery.type === "dongCode") {
-        addDongMarker(targetPolygon.code, mapRef.current, markersRef);
+        addDongMarker(targetPolygon.code, mapRef.current, markersRef, scrapMarkersRef);
       } else {
         addGuMarker(targetPolygon.code, mapRef.current, markersRef);
       }

@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import shopLogoWithoutText from "../assets/icons/shopLogoWithoutText.png";
 import LoginModal from "./loginModal";
 
-const CustomHeader = () => {
+const CustomHeader = (selectedArea) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleLoginClick = () => {
@@ -16,6 +16,7 @@ const CustomHeader = () => {
 
   const sendScrapRequest = async () => {
     try {
+      console.log(selectedArea);
       const response = await fetch("https://api.gadduck.info/scraps", {
         method: "POST",
         headers: {
@@ -24,7 +25,7 @@ const CustomHeader = () => {
         body: JSON.stringify({
           email: "hyeri0603@naver.com",
           "town-code": selectedArea.code,
-          "industry-name": '편의점',
+          "industry-name": selectedArea,
           quarter: 20241,
         }),
       });

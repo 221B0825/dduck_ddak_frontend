@@ -14,7 +14,9 @@ function MainView() {
 
   return (
     <div>
-      <CustomHeader />
+      <CustomHeader 
+        selectedArea={selectedArea}
+      />
       <LeftSidebar
         setSelectQuery={setSelectQuery}
         setSelectCategory={setSelectCategory}
