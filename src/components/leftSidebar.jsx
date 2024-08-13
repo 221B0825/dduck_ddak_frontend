@@ -83,7 +83,7 @@ function LeftSidebar({ setSelectQuery, setSelectCategory }) {
         top: 0,
         height: "100vh",
         zIndex: 2000,
-        width: isOpen ? "350px" : "50px",
+        width: isOpen ? "450px" : "50px",
         transition: "width 0.3s ease-in-out",
       }}
     >

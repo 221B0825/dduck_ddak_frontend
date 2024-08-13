@@ -139,7 +139,7 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
       const bounds = new kakao.maps.LatLngBounds();
       targetPolygon.getPath().forEach((point) => bounds.extend(point));
       mapRef.current.setBounds(bounds);
-      mapRef.current.setLevel(selectQuery.type === "dongCode" ? 3 : 7);
+      mapRef.current.setLevel(selectQuery.type === "dongCode" ? 5 : 7);
 
       setSelectedArea({
         name: targetPolygon.areaName,
