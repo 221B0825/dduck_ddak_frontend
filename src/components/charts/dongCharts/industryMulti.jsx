@@ -5,6 +5,7 @@ import axios from "axios";
 const IndustryComparison = ({ code, category }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
+  const [isEmpty, setIsEmpty] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -14,30 +15,35 @@ const IndustryComparison = ({ code, category }) => {
           `https://api.gadduck.info/towns/industry/recently?code=${code}&name=${category}`
         );
         const recentlyData = recentlyResponse.data.data;
+        console.log("recent", recentlyData);
 
         // Fetch data for IndustrySimilar
         const similarResponse = await axios.get(
           `https://api.gadduck.info/towns/industry/similar?code=${code}&name=${category}`
         );
         const similarData = similarResponse.data.data;
-
+        console.log("similar", similarData);
         // Define the order of quarters
         const quarterOrder = [
           "2023년 1분기",
           "2023년 2분기",
           "2023년 3분기",
           "2023년 4분기",
-          "2024년 1분기"
+          "2024년 1분기",
         ];
 
         // Convert data to chart-compatible format and order it
         const recentlyMapped = recentlyData.map((item) => ({
-          quarter: `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기`,
+          quarter: `${Math.floor(item.quarter / 10)}년 ${
+            item.quarter % 10
+          }분기`,
           count: item.count,
         }));
 
         const similarMapped = similarData.map((item) => ({
-          quarter: `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기`,
+          quarter: `${Math.floor(item.quarter / 10)}년 ${
+            item.quarter % 10
+          }분기`,
           count: item.count,
         }));
 
@@ -96,15 +102,20 @@ const IndustryComparison = ({ code, category }) => {
         setChart(newChart);
       } catch (error) {
         console.error("Failed to fetch area data", error);
+        setIsEmpty(true);
       }
     };
 
     fetchData();
-  }, [code, category]);
+  }, [code, category, isEmpty]);
 
   return (
     <div style={{ margin: "40px" }}>
-      <canvas ref={chartRef}></canvas>
+      {isEmpty ? (
+        <p>No data available for {category} in these regions.</p>
+      ) : (
+        <canvas ref={chartRef}></canvas>
+      )}
     </div>
   );
 };

@@ -2,7 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const IndustrySalesComparison = ({ code1, code2, category, setSummary }) => {
+const IndustrySalesComparison = ({
+  name1,
+  code1,
+  name2,
+  code2,
+  category,
+  setSummary,
+}) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
@@ -10,14 +17,13 @@ const IndustrySalesComparison = ({ code1, code2, category, setSummary }) => {
   //같은 업종 매출 비교
   useEffect(() => {
     const fetchData = async () => {
-      
       let salesData1;
       let salesData2;
-      let labels; 
+      let labels;
 
       try {
-        if(category == ""){
-          category = "전체"
+        if (category == "") {
+          category = "전체";
           const [response1, response2] = await Promise.all([
             axios.get(
               `https://api.gadduck.info/towns/sales/time?code=${code1}`
@@ -27,12 +33,12 @@ const IndustrySalesComparison = ({ code1, code2, category, setSummary }) => {
             ),
           ]);
 
-            salesData1 = response1.data.data;
-            salesData2 = response2.data.data;
-            labels = Object.keys(salesData1).map((key) =>
-              key.replace("hour_", "").replace("_", "~")
-            );
-        } else{
+          salesData1 = response1.data.data;
+          salesData2 = response2.data.data;
+          labels = Object.keys(salesData1).map((key) =>
+            key.replace("hour_", "").replace("_", "~")
+          );
+        } else {
           const [response1, response2] = await Promise.all([
             axios.get(
               `https://api.gadduck.info/towns/industry/sales?code=${code1}&name=${category}`
@@ -42,21 +48,20 @@ const IndustrySalesComparison = ({ code1, code2, category, setSummary }) => {
             ),
           ]);
 
-            salesData1 = response1.data.data;
-            salesData2 = response2.data.data;
-            labels = [
-              "월요일",
-              "화요일",
-              "수요일",
-              "목요일",
-              "금요일",
-              "토요일",
-              "일요일",
-            ];
-          }
-       
+          salesData1 = response1.data.data;
+          salesData2 = response2.data.data;
+          labels = [
+            "월요일",
+            "화요일",
+            "수요일",
+            "목요일",
+            "금요일",
+            "토요일",
+            "일요일",
+          ];
+        }
 
-          // 요약 메시지
+        // 요약 메시지
         setSummary(``);
 
         const counts1 = Object.values(salesData1);
@@ -73,14 +78,14 @@ const IndustrySalesComparison = ({ code1, code2, category, setSummary }) => {
             labels: labels,
             datasets: [
               {
-                label: `${code1}`,
+                label: name1,
                 data: counts1,
                 backgroundColor: "rgba(255, 99, 71, 0.6)", // 다홍색 배경
                 borderColor: "rgba(255, 99, 71, 1)", // 다홍색 경계
                 borderWidth: 1,
               },
               {
-                label: `${code2}`,
+                label: name2,
                 data: counts2,
                 backgroundColor: "rgba(54, 162, 235, 0.6)", // 파란색 배경
                 borderColor: "rgba(54, 162, 235, 1)", // 파란색 경계
@@ -107,8 +112,10 @@ const IndustrySalesComparison = ({ code1, code2, category, setSummary }) => {
           },
         });
         setChart(newChart);
+        setIsEmpty(false);
       } catch (error) {
         console.error("Failed to fetch area data", error);
+        setIsEmpty(true);
       }
     };
 

@@ -124,7 +124,6 @@ function LeftSidebar({ setSelectQuery, setSelectCategory }) {
               setSelectedDongCode("");
               setFilteredDongList([]);
               setSelectCategory("");
-              setinputCategory("");
               setInputDetailCategory("");
             }}
             style={{ margin: "0 10px 10px 10px" }}

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const PopulationComparison = ({ code }) => {
+const PopulationMulti = ({ code }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
 
@@ -62,13 +62,14 @@ const PopulationComparison = ({ code }) => {
         if (chartRef.current) {
           const ctx = chartRef.current.getContext("2d");
           const newChart = new Chart(ctx, {
-            type: "line",
+            type: "bar",
             data: {
-              labels: labels,
+              // labels: labels,
+              labels: ["2024년 1분기"],
               datasets: [
                 {
-                  label: "행정동 분기별 직장 인구수",
-                  data: workingCounts,
+                  label: "직장 유동 인구수",
+                  data: [workingCounts[4]],
                   tension: 0.2,
                   backgroundColor: "rgba(54, 162, 235, 0.2)", // 파란색 배경
                   borderColor: "rgba(54, 162, 235, 1)", // 파란색 경계
@@ -76,8 +77,8 @@ const PopulationComparison = ({ code }) => {
                   fill: false,
                 },
                 {
-                  label: "행정동 분기별 주거 인구수",
-                  data: residentCounts,
+                  label: "주거 유동 인구수",
+                  data: [residentCounts[4]],
                   tension: 0.2,
                   backgroundColor: "rgba(255, 159, 64, 0.2)", // 주황색 배경
                   borderColor: "rgba(255, 159, 64, 1)", // 주황색 경계
@@ -119,4 +120,4 @@ const PopulationComparison = ({ code }) => {
   );
 };
 
-export default PopulationComparison;
+export default PopulationMulti;

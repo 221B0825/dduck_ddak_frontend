@@ -42,7 +42,7 @@ const IndustrySales = ({ code, category }) => {
 
         const ctx = chartRef.current.getContext("2d");
         const newChart = new Chart(ctx, {
-          type: "doughnut",
+          type: "bar",
           data: {
             labels: labels,
             datasets: [
@@ -64,6 +64,7 @@ const IndustrySales = ({ code, category }) => {
         setChart(newChart);
       } catch (error) {
         console.error("Failed to fetch area data", error);
+        setIsEmpty(true);
       }
     };
 

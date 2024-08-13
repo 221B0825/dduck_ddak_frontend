@@ -4,10 +4,35 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import categoryData from "../apis/searchCategory.json";
 import axios from "axios";
 
-const selectedDetailCategoryLabelPop = ["age10s_population", "age20s_population",     "age30s_population", "age40s_population", "age50s_population", "age60sAndMore_population"]
-const selectedDetailCategoryLabelDay = ["monday_population", "tuesday_population", "wednesday_population", "thursday_population", "friday_population", "saturday_population", "sunday_population"]
-const selectedDetailCategoryLabelGender = ["men_population", "women_population"]
-const selectedDetailCategoryLabelHour = ["hour_0_6", "hour_6_11", "hour_11_14","hour_14_17","hour_17_21","hour_21_24"]
+const selectedDetailCategoryLabelPop = [
+  "age10s_population",
+  "age20s_population",
+  "age30s_population",
+  "age40s_population",
+  "age50s_population",
+  "age60sAndMore_population",
+];
+const selectedDetailCategoryLabelDay = [
+  "monday_population",
+  "tuesday_population",
+  "wednesday_population",
+  "thursday_population",
+  "friday_population",
+  "saturday_population",
+  "sunday_population",
+];
+const selectedDetailCategoryLabelGender = [
+  "men_population",
+  "women_population",
+];
+const selectedDetailCategoryLabelHour = [
+  "hour_0_6",
+  "hour_6_11",
+  "hour_11_14",
+  "hour_14_17",
+  "hour_17_21",
+  "hour_21_24",
+];
 
 const RankingArea = (isOpen) => {
   const [selectedMainCategory, setSelectedMainCategory] = useState("");
@@ -85,87 +110,118 @@ const RankingArea = (isOpen) => {
   const [data, setData] = useState([]); // API에서 받은 데이터를 저장할 상태
 
   function handleTopTen() {
-
-    let topOrderCriteria = "";
-    if(selectedSubCategory == "최고순위"){
-      topOrderCriteria = "populations";
-    }else if(selectedSubCategory == "비교증가율"){
-      topOrderCriteria ="increaseRate";
-    }
-
     // 유동인구 선택 시 조회
-    if(selectedMainCategory === "유동인구"){
-      const fetchData = async () => {
-        try{
-         // init condition
-         let topDetailCondition = "";
-         if(selectedDetailCategory === "시간대별"){
-           const index = ["00-06시", "06-11시", "11-14시", "14-17시", "17-21시", "21-24시"].indexOf(selectedDetail);
-           topDetailCondition = selectedDetailCategoryLabelHour[index];
-         } else if(selectedDetailCategory === "요일별"){
-           const index = ["월", "화", "수", "목", "금", "토", "일"].indexOf(selectedDetail);
-           topDetailCondition = selectedDetailCategoryLabelDay[index];
-         } else if(selectedDetailCategory === "연령대별"){
-           const index = ["10대", "20대", "30대", "40대", "50대", "60대 이상"].indexOf(selectedDetail);
-           topDetailCondition = selectedDetailCategoryLabelPop[index];
-         } else if(selectedDetailCategory === "성별"){
-           const index = ["남자", "여자"].indexOf(selectedDetail);
-           topDetailCondition = selectedDetailCategoryLabelGender[index];
-         }
- 
-         // Fetch data
-         const response = await axios.get(`https://api.gadduck.info/towns/populations/floating/top10?orderCriteria=${topOrderCriteria}&selectCriteria=${topDetailCondition}`);
-         setData(response.data.data);
+    if (selectedMainCategory === "유동인구") {
+      let topOrderCriteria = "";
+      if (selectedSubCategory == "최고순위") {
+        topOrderCriteria = "populations";
+      } else if (selectedSubCategory == "비교증가율") {
+        topOrderCriteria = "increaseRate";
+      }
 
-       } catch(error){
-         console.error("Failed to fetch area data", error);
-       }
-     };
-     
-     fetchData();
-     // 주거인구 클릭 시
-    }else if(selectedMainCategory === "주거인구"){
       const fetchData = async () => {
-        let topDetailGender = "";
-        try{
-          if(selectedGender == "전체"){
-            topDetailGender = "all";
-          }else if(selectedGender == "남자"){
-            topDetailGender = "men";
-          }else if(selectedGender == "여자"){
-            topDetailGender = "women"
+        try {
+          // init condition
+          let topDetailCondition = "";
+          if (selectedDetailCategory === "시간대별") {
+            const index = [
+              "00-06시",
+              "06-11시",
+              "11-14시",
+              "14-17시",
+              "17-21시",
+              "21-24시",
+            ].indexOf(selectedDetail);
+            topDetailCondition = selectedDetailCategoryLabelHour[index];
+          } else if (selectedDetailCategory === "요일별") {
+            const index = ["월", "화", "수", "목", "금", "토", "일"].indexOf(
+              selectedDetail
+            );
+            topDetailCondition = selectedDetailCategoryLabelDay[index];
+          } else if (selectedDetailCategory === "연령대별") {
+            const index = [
+              "10대",
+              "20대",
+              "30대",
+              "40대",
+              "50대",
+              "60대 이상",
+            ].indexOf(selectedDetail);
+            topDetailCondition = selectedDetailCategoryLabelPop[index];
+          } else if (selectedDetailCategory === "성별") {
+            const index = ["남자", "여자"].indexOf(selectedDetail);
+            topDetailCondition = selectedDetailCategoryLabelGender[index];
           }
-          // fix
-          const response = await axios.get(`https://api.gadduck.info/towns/populations/resident/top10?orderCriteria=${topOrderCriteria}&gender=${topDetailGender}&`)
-        }catch(error){
+
+          // Fetch data
+          const response = await axios.get(
+            `https://api.gadduck.info/towns/populations/floating/top10?orderCriteria=${topOrderCriteria}&selectCriteria=${topDetailCondition}`
+          );
+          setData(response.data.data);
+        } catch (error) {
           console.error("Failed to fetch area data", error);
         }
-
-      }
+      };
 
       fetchData();
-    }else if(selectedMainCategory === "매출"){
-      console.log("매출");
+      // 주거인구 클릭 시
+    } else if (selectedMainCategory === "주거인구") {
       const fetchData = async () => {
-        if(inputCategory){
-          const response = await axios.get(`https://api.gadduck.info/towns/sales/top10?orderCriteria=sales20241`);
+        let topDetailGender = "";
+        try {
+          if (selectedGender == "전체") {
+            topDetailGender = "all";
+          } else if (selectedGender == "남자") {
+            topDetailGender = "men";
+          } else if (selectedGender == "여자") {
+            topDetailGender = "women";
+          }
+          // fix
+          const response = await axios.get(
+            `https://api.gadduck.info/towns/populations/resident/top10?orderCriteria=${topOrderCriteria}&gender=${topDetailGender}&`
+          );
+        } catch (error) {
+          console.error("Failed to fetch area data", error);
+        }
+      };
+
+      fetchData();
+      // 매출 클릭 시
+    } else if (selectedMainCategory === "매출") {
+      let topOrderCriteria = "";
+      if (selectedSubCategory == "최고순위") {
+        topOrderCriteria = "sales20241";
+      } else if (selectedSubCategory == "비교증가율") {
+        topOrderCriteria = "increaseRate";
+      }
+
+      const fetchData = async () => {
+        if (!inputCategory) {
+          const response = await axios.get(
+            `https://api.gadduck.info/towns/sales/top10?orderCriteria=${topOrderCriteria}`
+          );
           setData(response.data.data);
-        }else{
-          const response = await axios.get(`https://api.gadduck.info/towns/industries/sales/top10?orderCriteria=sales20241&industry=${inputDetailCategory}`);
+        } else {
+          const response = await axios.get(
+            `https://api.gadduck.info/towns/industries/sales/top10?orderCriteria=${topOrderCriteria}&industryName=${inputDetailCategory}`
+          );
+          console.log(response);
           setData(response.data.data);
         }
-      }
-     
+      };
+
       fetchData();
-
-    }else if(selectedMainCategory === "점포"){
-
+    } else if (selectedMainCategory === "점포") {
     }
-}
+  }
   //----------------------------------------
 
   return (
-    <div id="rankingArea" className="mt-3" style={{ overflowY: "auto", maxHeight: "600px" }} >
+    <div
+      id="rankingArea"
+      className="mt-3"
+      style={{ overflowY: "auto", maxHeight: "600px" }}
+    >
       <hr></hr>
       <h5>상위권 순위 TOP 10</h5>
       <div className="btn-group" role="group" aria-label="Reference">
@@ -297,35 +353,39 @@ const RankingArea = (isOpen) => {
           />
         </>
       )}
-    <div className="row m-3">
-      <button className="btn btn-primary" onClick={handleTopTen}>조회</button>
-    </div>
+      <div className="row m-3">
+        <button className="btn btn-primary" onClick={handleTopTen}>
+          조회
+        </button>
+      </div>
 
-    <div className="table-responsive scrollable">
-  <table className="table">
-    <thead>
-      <tr>
-        {data.length > 0 && Object.keys(data[0]).map((key, idx) => (
-          <th key={idx}>{key}</th> // 키를 기반으로 헤더 생성
-        ))}
-      </tr>
-    </thead>
-    <tbody>
-      {data.map((item, index) => (
-        <tr key={index}>
-          {Object.values(item).map((value, idx) => (
-            <td key={idx}>
-              {typeof value === 'number' && idx !== 0 ? value.toLocaleString() + (idx === 1 ? ' 만명' : idx === 3 ? '%' : '') : value}
-            </td>
-          ))}
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-
+      <div className="table-responsive scrollable">
+        <table className="table">
+          <thead>
+            <tr>
+              {data.length > 0 &&
+                Object.keys(data[0]).map((key, idx) => (
+                  <th key={idx}>{key}</th> // 키를 기반으로 헤더 생성
+                ))}
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((item, index) => (
+              <tr key={index}>
+                {Object.values(item).map((value, idx) => (
+                  <td key={idx}>
+                    {typeof value === "number" && idx !== 0
+                      ? value.toLocaleString() +
+                        (idx === 1 ? " 만명" : idx === 3 ? "%" : "")
+                      : value}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
-    
   );
 };
 
