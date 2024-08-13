@@ -4,6 +4,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import categoryData from "../apis/searchCategory.json";
 import axios from "axios";
 
+import SalesDataTable from "./tables/SalesDataTable";
+
 const selectedDetailCategoryLabelPop = [
   "age10s_population",
   "age20s_population",
@@ -359,31 +361,8 @@ const RankingArea = (isOpen) => {
         </button>
       </div>
 
-      <div className="table-responsive scrollable">
-        <table className="table">
-          <thead>
-            <tr>
-              {data.length > 0 &&
-                Object.keys(data[0]).map((key, idx) => (
-                  <th key={idx}>{key}</th> // 키를 기반으로 헤더 생성
-                ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, index) => (
-              <tr key={index}>
-                {Object.values(item).map((value, idx) => (
-                  <td key={idx}>
-                    {typeof value === "number" && idx !== 0
-                      ? value.toLocaleString() +
-                        (idx === 1 ? " 만명" : idx === 3 ? "%" : "")
-                      : value}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div>
+        {selectedMainCategory === "매출" && <SalesDataTable data={data} />}
       </div>
     </div>
   );
