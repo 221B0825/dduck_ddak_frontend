@@ -329,7 +329,7 @@ const RightSidebar = ({
                       <div className="chart-container">
                       <PopulationTime code={selectedArea.code} setSummary={setSummaryTime}/>
                       <div style={{ textAlign: 'center' }}>
-                        <h5>매출이 가장 많은 시간대는 <strong className="text-primary">{summary}</strong> 입니다.</h5>
+                        <h5>매출이 가장 많은 시간대는 <strong className="text-primary">{summaryTime}</strong> 입니다.</h5>
                       </div>
                       </div>
                       <hr></hr>
