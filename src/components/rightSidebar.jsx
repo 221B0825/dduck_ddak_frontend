@@ -302,7 +302,7 @@ const RightSidebar = ({
                     <IndustrySalesComparison
                       code1={baseArea.code}
                       code2={selectedArea.code}
-                      category={"패스트푸드점"}
+                      category={inputDetailCategory}
                       setSummary={setSummary}
                     />
                     <div>{summary}</div></div>
