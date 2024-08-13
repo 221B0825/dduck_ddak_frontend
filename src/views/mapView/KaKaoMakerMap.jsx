@@ -25,6 +25,7 @@ const KakaoMarkerMap = () => {
                     displayMarker(area, map, infowindow);
                 });
             });
+            scrapMarkers();
         }
     }, []);
 
@@ -49,6 +50,26 @@ const KakaoMarkerMap = () => {
     };
 
     return <div id="map" style={{ width: '100%', height: '1000px' }}></div>;
+};
+
+const scrapMarkers = async () => {
+    try {
+        const response = await axios.get(
+            `https://api.gadduck.info/scraps/list?email=hyeri0603@naver.com`
+          );
+        
+        if (response.status != 200) {
+          console.log(response);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+  
+        console.log(response);
+  
+        alert("스크랩 조회이 성공적으로 처리되었습니다.");
+    } catch (error) {
+    console.error("스크랩 조회 중 에러가 발생했습니다:", error);
+    alert("스크랩 조회에 실패했습니다.");
+    }
 };
 
 export default KakaoMarkerMap;

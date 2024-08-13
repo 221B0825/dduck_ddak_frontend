@@ -150,42 +150,9 @@ const RightSidebar = ({
     });
   };
 
-  const handleScrapClick = () => {
-    sendScrapRequest(); // 함수 호출
-  };
-
   const resetCategory = () => {
     setinputCategory("");
     setInputDetailCategory("");
-  };
-
-  const sendScrapRequest = async () => {
-    try {
-      const response = await fetch("https://api.gadduck.info/scraps", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // 쿠키를 포함시키기 위해 credentials 설정
-        body: JSON.stringify({
-          email: "hyeri0603@naver.com",
-          "town-code": selectedArea.code,
-          "industry-name": selectCategory,
-          quarter: 20241,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log(data);
-      alert("스크랩 요청이 성공적으로 처리되었습니다.");
-    } catch (error) {
-      console.error("스크랩 요청 중 에러가 발생했습니다:", error);
-      alert("스크랩 요청에 실패했습니다.");
-    }
   };
 
   return (
@@ -230,6 +197,7 @@ const RightSidebar = ({
       >
         {selectedArea ? (
           <>
+            <div className="mt-3"></div>
             <div className="list-group-item list-group-item-action bg-light mt-5">
               <strong>{selectedArea.name} 분석 보고서</strong>
               <br />
@@ -249,13 +217,7 @@ const RightSidebar = ({
                 {compareMode ? "행정동 비교" : "행정동 정보"}
               </label>
             </div>
-            <button
-              type="button"
-              className="btn btn-warning m-3"
-              onClick={handleScrapClick}
-            >
-              스크랩
-            </button>
+            
             <button type="button" className="btn btn-primary m-3" onClick={exportPDF}>보고서 다운받기</button>
 
             <div>
