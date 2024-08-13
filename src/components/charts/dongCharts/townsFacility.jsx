@@ -2,7 +2,32 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const TownFacility = ({ code }) => {
+const labels = {
+  governmentOfficeCnt: "정부 기관 수",
+  bankCnt: "은행 수",
+  hospitalCnt: "병원 수",
+  pharmacyCnt: "약국 수",
+  departmentStore: "백화점 수",
+  schoolCnt: "학교 수",
+  accommodationFacilityCnt: "숙박 시설 수",
+  transportationFacilityCnt: "교통 시설 수"
+};
+
+const findMaxFacility = (facilities) => {
+  let maxCount = 0;
+  let maxFacility = "";
+
+  for (const [key, value] of Object.entries(facilities)) {
+    if (value > maxCount) {
+      maxCount = value;
+      maxFacility = key;
+    }
+  }
+
+  return labels[maxFacility]; // 한글 레이블 반환
+};
+
+const TownFacility = ({ code, setSummary }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
 
@@ -13,6 +38,9 @@ const TownFacility = ({ code }) => {
           `https://api.gadduck.info/towns/facility?code=${code}`
         );
         const data = response.data.data;
+
+        const summaryText = findMaxFacility(data);
+        setSummary(summaryText);
 
         // 데이터를 차트에 맞게 변환
         const labels = [

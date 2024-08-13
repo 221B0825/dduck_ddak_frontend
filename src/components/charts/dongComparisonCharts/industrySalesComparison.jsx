@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const IndustrySalesComparison = ({ code1, code2, category }) => {
+const IndustrySalesComparison = ({ code1, code2, category, setSummary }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
@@ -23,9 +23,9 @@ const IndustrySalesComparison = ({ code1, code2, category }) => {
         const salesData1 = response1.data.data;
         const salesData2 = response2.data.data;
 
-
         console.log(salesData1);
         console.log(salesData2);
+        setSummary(`${code}`);
 
         if (
           !salesData1 ||

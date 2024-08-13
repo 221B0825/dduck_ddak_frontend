@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+// pdf 
+import { jsPDF } from "jspdf";
+import html2canvas from 'html2canvas';
+import pretendard from '../assets/fonts/pretendard';
+
 // 차트 및 기타 컴포넌트 임포트
 import PopulationQuarter from "./charts/dongCharts/populationQuarter";
 import PopulationTime from "./charts/dongCharts/populationTime";
@@ -30,6 +35,15 @@ const RightSidebar = ({
   const [inputDetailCategory, setInputDetailCategory] = useState("");
   const [filteredCategoryList, setFilteredCategoryList] = useState([]);
 
+  // 분기별 유동인구
+  const [summaryQuarter, setSummaryQuarter] = useState('');
+  // 시간별 유동인구
+  const [summaryTime, setSummaryTime] = useState('');
+  // 시간별 매출
+  const [summary, setSummary] = useState('');
+  // 시설 갯수
+  const [summaryFacility, setSummaryFacility] = useState('');
+
   const handleCategoryChange = (e) => {
     setinputCategory(e.target.value);
   };
@@ -55,14 +69,10 @@ const RightSidebar = ({
       selectedArea &&
       selectedArea.code !== (baseArea?.code || "")
     ) {
-      console.log("Setting compare area:", selectedArea);
       setCompareArea(selectedArea);
     } else if (!compareMode) {
-      console.log("Setting base area:", selectedArea);
       setBaseArea(selectedArea);
     }
-    console.log("Base area:", baseArea);
-    console.log("Compare area:", compareArea);
   }, [
     selectedArea,
     compareMode,
@@ -71,6 +81,52 @@ const RightSidebar = ({
     setCompareArea,
     setBaseArea,
   ]);
+
+  const exportPDF = async () => {
+    const containers = document.querySelectorAll('.chart-container');
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const docName = baseArea.name + ' 2024년 1분기 상권 분석 보고서';
+    doc.addFileToVFS('pretendard.ttf', pretendard);
+    doc.addFont('pretendard.ttf', 'pretendard', 'normal');
+    doc.setFont('pretendard'); // set font
+
+    // logo
+    let logoUrl = 'https://raw.githubusercontent.com/Lazy-Mechanics/dduck_ddak_backend/main/src/main/resources/gadduck.png';
+    const imgProps = doc.getImageProperties(logoUrl);
+    const logoWidth = 30; // 로고의 폭
+    const logoHeight = imgProps.height * logoWidth / imgProps.width; // 비율 유지를 위한 높이 계산
+    const logoX = (doc.internal.pageSize.getWidth() / 2) - (logoWidth / 2); // 중앙 정렬
+    const logoY = 80; // 상단에서부터의 거리
+    doc.addImage(logoUrl, 'PNG', logoX, logoY, logoWidth, logoHeight);
+
+    // 첫 페이지에 제목 추가
+    doc.setFontSize(17);
+    doc.text(docName, 105, 130, null, null, 'center'); // 105는 A4 가운데, 20은 위에서부터의 거리
+    doc.text('가게 뚝딱 팀 드림', 105, 140, null, null, 'center');
+    // 발행일자 추가 (발급 시간대) ex) 2024년 8월 3일
+    doc.text(new Date().toLocaleDateString(), 105, 150, null, null, 'center');
+    doc.addPage();
+
+    let yPos = 0; // 첫 차트의 시작 위치 설정
+
+    for (let i = 0; i < containers.length; i++) {
+        const canvas = await html2canvas(containers[i]);
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210; // A4 폭 mm
+        const scaledHeight = canvas.height * imgWidth / canvas.width;
+        const imgHeight = scaledHeight > 125 ? 125 : scaledHeight; // 차트 높이 조정 (최대 125mm)
+
+        if (i > 0 && i % 2 === 0) { // 페이지를 넘기는 조건 (i가 0이 아니고, 짝수일 때)
+            doc.addPage();
+            yPos = 10; // 새 페이지에서의 시작 높이 설정
+        }
+
+        doc.addImage(imgData, 'PNG', 0, yPos, imgWidth, imgHeight);
+        yPos += imgHeight + 10; // 다음 차트의 시작 위치 업데이트 (차트 사이의 여백 10mm)
+    }
+
+    doc.save(docName + '.pdf');
+  };
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -190,6 +246,8 @@ const RightSidebar = ({
             >
               스크랩
             </button>
+            <button type="button" className="btn btn-primary m-3" onClick={exportPDF}>보고서 다운받기</button>
+            
             <div>
               {/* 카테고리 선택 */}
               <div>
@@ -224,44 +282,68 @@ const RightSidebar = ({
                   ))}
                 </select>
               </div>
-
               {compareMode ? (
                 baseArea &&
                 selectedArea && (
                   <>
+                    <div className="chart-container">
                     <IndustrySalesComparison
                       code1={baseArea.code}
                       code2={selectedArea.code}
                       category={"패스트푸드점"}
+                      setSummary={setSummary}
                     />
+                    <div>{summary}</div></div>
                   </>
                 )
               ) : (
                 <>
                   {selectCategory ? (
                     <>
+                      <div className="chart-container">
                       <IndustryMulti
                         code={selectedArea.code}
                         category={selectCategory}
-                      />
+                      /><div>{IndustryMulti.summary}</div></div>
+                      <div className="chart-container">
                       <IndustrySales
                         code={selectedArea.code}
                         category={selectCategory}
-                      />
+                      /></div>
+                      <div className="chart-container">
                       <IndustryBusiness
                         code={selectedArea.code}
                         category={selectCategory}
-                      />
+                      /></div>
                     </>
                   ) : (
                     <>
-                      <PopulationQuarter code={selectedArea.code} />
-                      <PopulationTime code={selectedArea.code} />
-                      <SalesTime code={selectedArea.code} />
+                      <div className="chart-container">
+                      <PopulationQuarter code={selectedArea.code} setSummary={setSummaryQuarter}/>
+                      <div style={{ textAlign: 'center' }}>
+                        <h5>현재 동의 분기별 유동인구는 <br></br>전분기 대비 <strong className="text-primary">{summaryQuarter}</strong> 입니다.</h5>
+                      </div>
+                      </div>
+                      <hr></hr>
+                      <div className="chart-container">
+                      <PopulationTime code={selectedArea.code} setSummary={setSummaryTime}/>
+                      <div style={{ textAlign: 'center' }}>
+                        <h5>매출이 가장 많은 시간대는 <strong className="text-primary">{summary}</strong> 입니다.</h5>
+                      </div>
+                      </div>
+                      <hr></hr>
                     </>
                   )}
+                  <div className="chart-container">
                   <PopulationMulti code={selectedArea.code} />
-                  <TownFacility code={selectedArea.code} />
+                  </div>
+                  <div className="chart-container">
+                  <TownFacility code={selectedArea.code} setSummary={setSummaryFacility} />
+                  <div style={{ textAlign: 'center' }}>
+                    <h5>선택상권은 <strong className="text-primary">{summaryFacility}</strong> 비율이 가장 높습니다.</h5>
+                  </div>
+                  </div>
+                  <hr></hr>
                 </>
               )}
             </div>
