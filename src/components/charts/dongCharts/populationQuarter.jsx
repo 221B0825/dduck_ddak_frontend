@@ -28,9 +28,9 @@ const PopulationQuarter = ({ code, setSummary }) => {
         
         // 감소 여부를 확인
         if (last < secondLast) {
-          var summary =  "감소중";
+          var summary =  "감소 중";
         } else {
-          var summary =  "증가중 또는 안정";
+          var summary =  "증가 중 또는 안정";
         }
         setSummary(`${summary}`)
 

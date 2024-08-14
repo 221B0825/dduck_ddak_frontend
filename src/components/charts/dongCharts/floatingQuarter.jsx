@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const FloatingQuarter = ({ code }) => {
+const FloatingQuarter = ({ code, setSummaryRank }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
@@ -39,6 +39,9 @@ const FloatingQuarter = ({ code }) => {
           const record = floatingData.find(item => `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기` === q);
           return record ? record.populationAvgOfDistrict : null;
         });
+        // 구 내 순위, 자치구 내의 동 개수, 서울시 순위, 서울시 동 개수
+        let rankingList = [floatingData[4].rankAtDistrict, response.data.data.districtCount, floatingData[4].rankAtCity, 426];
+        setSummaryRank(rankingList);
 
         if (chart) {
           chart.destroy();

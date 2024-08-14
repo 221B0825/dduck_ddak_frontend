@@ -125,7 +125,7 @@ const RightSidebar = ({
     for (let i = 0; i < containers.length; i++) {
       const canvas = await html2canvas(containers[i]);
       const imgData = canvas.toDataURL("image/png");
-      const imgWidth = 210; // A4 폭 mm
+      const imgWidth = 190; // A4 폭 mm
       const scaledHeight = (canvas.height * imgWidth) / canvas.width;
       const imgHeight = scaledHeight > 125 ? 125 : scaledHeight; // 차트 높이 조정 (최대 125mm)
 
@@ -135,7 +135,7 @@ const RightSidebar = ({
         yPos = 10; // 새 페이지에서의 시작 높이 설정
       }
 
-      doc.addImage(imgData, "PNG", 0, yPos, imgWidth, imgHeight);
+      doc.addImage(imgData, "PNG", 10, yPos, imgWidth, imgHeight);
       yPos += imgHeight + 10; // 다음 차트의 시작 위치 업데이트 (차트 사이의 여백 10mm)
     }
 
@@ -346,9 +346,9 @@ const RightSidebar = ({
                     <>
                       {/* 업종을 선택하지 않았을 때 */}
                       {/* 점포 영업기간 */}
-                      <div className="chart-container mt-3">
+                      <div className="chart-container">
                         <div
-                          className="col-7"
+                          className="col-7 mt-3"
                           style={{
                             border: "1px solid #D9D9D9",
                             borderRadius: "5px",
@@ -365,7 +365,42 @@ const RightSidebar = ({
                         <h5 className="ms-3" style={{ fontWeight: "bold" }}>
                             분기별 유동인구
                         </h5>
-                        <FloatingQuarter code={selectedArea.code} />
+                        <div style={{display: "flex",  marginLeft: "20px", marginRight: "35px"}}>
+                        <div
+                          className="col-6 mt-3"
+                          style={{
+                            border: "1px solid #D9D9D9",
+                            borderRadius: "5px",
+                            margin: "5px",
+                            padding: "5px",
+                            textAlign: "left",
+                            display: "flex",
+                            justifyContent: "space-between",
+                          
+                          }}
+                        >
+                          
+                          <span>구 내 행정동 순위 </span>
+                          
+                        <span style={{fontWeight: "bold", color: "#3065FA"}}>{summaryRank[0]} </span> / {summaryRank[1]}
+                      </div>
+                      <div
+                          className="col-6 mt-3"
+                          style={{
+                            border: "1px solid #D9D9D9",
+                            borderRadius: "5px",
+                            margin: "5px",
+                            padding: "5px",
+                            textAlign: "left",
+                            display: "flex",
+                            justifyContent: "space-between"
+                          }}
+                        >
+                        <span>시 내 행정동 순위 </span>
+                        <span style={{fontWeight: "bold", color: "#3065FA"}}> {summaryRank[2]}</span> / {summaryRank[3]}
+                        </div>
+                        </div>
+                        <FloatingQuarter code={selectedArea.code} setSummaryRank={setSummaryRank} />
                         {/* summary를 위한 보이지 않는 차트 */}
                         <div style={{display: "none"}}>
                           <PopulationQuarter code={selectedArea.code}
@@ -387,7 +422,7 @@ const RightSidebar = ({
                       {/* 분기별 매출 구/시 합본 */}
                       <div className="chart-container">
                         <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                            분기별 매출 추이
+                            분기별 매출
                         </h5>
                        <SalesQuater code={selectedArea.code} setSummary={setSummaryQuarter} />
                         <hr></hr>
