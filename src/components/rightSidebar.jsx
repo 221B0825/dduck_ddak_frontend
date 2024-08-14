@@ -17,6 +17,8 @@ import TownFacility from "./charts/dongCharts/townsFacility";
 import IndustryMulti from "./charts/dongCharts/industryMulti";
 import PopulationMulti from "./charts/dongCharts/populationMulti";
 import IndustrySalesComparison from "./charts/dongComparisonCharts/industrySalesComparison";
+import SalesQuater from "./charts/dongCharts/salesQuater";
+import FloatingQuarter from "./charts/dongCharts/floatingQuarter";
 
 import PopulationTimeComparison from "./charts/dongComparisonCharts/populationTimeComparison";
 
@@ -100,7 +102,7 @@ const RightSidebar = ({
     let logoUrl =
       "https://raw.githubusercontent.com/Lazy-Mechanics/dduck_ddak_backend/main/src/main/resources/gadduck.png";
     const imgProps = doc.getImageProperties(logoUrl);
-    const logoWidth = 30; // 로고의 폭
+    const logoWidth = 30; // 로고의 폭 
     const logoHeight = (imgProps.height * logoWidth) / imgProps.width; // 비율 유지를 위한 높이 계산
     const logoX = doc.internal.pageSize.getWidth() / 2 - logoWidth / 2; // 중앙 정렬
     const logoY = 80; // 상단에서부터의 거리
@@ -341,23 +343,29 @@ const RightSidebar = ({
                     <>
                       {/* 업종을 선택하지 않았을 때 */}
                       {/* 점포 영업기간 */}
-                      <div
-                        className="chart-container col-7"
-                        style={{
-                          border: "1px solid #D9D9D9",
-                          borderRadius: "5px",
-                          margin: "10px",
-                          marginLeft: "100px",
-                          textAlign: "center",
-                        }}
-                      >
+                      <div className="chart-container">
+                        <FloatingQuarter code={selectedArea.code} />
+                      </div>
+                      <div className="chart-container">
+                        <div
+                          className="col-7"
+                          style={{
+                            border: "1px solid #D9D9D9",
+                            borderRadius: "5px",
+                            margin: "10px",
+                            marginLeft: "100px",
+                            textAlign: "center",
+                          }}
+                        >
                         <IndustryBusiness code={selectedArea.code} />
                       </div>
+                        <SalesQuater code={selectedArea.code} />
+                      </div>
                       {/* 분기별 유동인구 */}
-                      <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                        분기별 유동인구
-                      </h5>
                       <div className="chart-container">
+                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+                          분기별 유동인구
+                        </h5>
                         <PopulationQuarter
                           code={selectedArea.code}
                           setSummary={setSummaryQuarter}
@@ -374,10 +382,10 @@ const RightSidebar = ({
                         </div>
                       </div>
                       {/* 시간대별 유동인구 */}
-                      <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                        시간대별 유동인구
-                      </h5>
                       <div className="chart-container">
+                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+                          시간대별 유동인구
+                        </h5>
                         <PopulationTime
                           code={selectedArea.code}
                           setSummary={setSummaryTime}
@@ -397,19 +405,19 @@ const RightSidebar = ({
                       </div>
 
                       {/* 직장유동인구/주거 인구 2024년1분기만 */}
-                      <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                        직장/주거 인구
-                      </h5>
                       <div className="chart-container">
+                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+                          직장/주거 인구
+                        </h5>
                         <PopulationMulti code={selectedArea.code} />
                       </div>
                       <hr></hr>
 
                       {/* 시간대별 매출 - 업종 전체 */}
-                      <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                        시간대별 매출
-                      </h5>
                       <div className="chart-container">
+                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+                          시간대별 매출
+                        </h5>
                         <SalesTime
                           code={selectedArea.code}
                           setSummary={setSummary}
@@ -426,10 +434,10 @@ const RightSidebar = ({
                       </div>
 
                       {/* 집객시설 */}
-                      <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                        집객 시설 개수
-                      </h5>
                       <div className="chart-container">
+                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+                          집객 시설 개수
+                        </h5>
                         <TownFacility
                           code={selectedArea.code}
                           setSummary={setSummaryFacility}

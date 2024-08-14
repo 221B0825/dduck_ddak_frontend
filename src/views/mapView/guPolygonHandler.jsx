@@ -159,8 +159,12 @@ const attachGuPolygonEvents = (
 };
 
 // 구 중심에 마커를 추가하는 함수
-export const addGuMarker = (code, map, markersRef) => {
-  markersRef.current.forEach((marker) => marker.setMap(null));
+export const addGuMarker = (code, map, markersRef, scrapMarkersRef) => {
+  markersRef.current.forEach((marker) => {
+    if (!scrapMarkersRef.current.includes(marker)) {
+      marker.setMap(null);
+    }
+  });
   markersRef.current = [];
 
   const guCenter = guCenterData.find((gu) => gu.name === "서울특별시 " + code);

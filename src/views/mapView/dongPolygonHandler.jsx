@@ -138,7 +138,6 @@ const attachDongPolygonEvents = (
 };
 
 export const addDongMarker = (code, map, markersRef, scrapMarkersRef) => {
-  // markersRef.current = [];
   markersRef.current.forEach(marker => {
     if (!scrapMarkersRef.current.includes(marker)) {
         marker.setMap(null);

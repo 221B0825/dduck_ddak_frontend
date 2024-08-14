@@ -23,6 +23,7 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
   
+      console.log("스크랩 조회 결과:", response.data.data);
       const newScrapMarkers = []; // 새로운 스크랩 마커 저장 배열
       response.data.data.forEach(scrap => {
         const matchingDong = dongCenterData.find(dong => parseInt(dong.adm_cd) === scrap.townCode);
@@ -47,6 +48,7 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
     const kakaoAPI = import.meta.env.VITE_KAKAO_MAP_API_KEY;
     const script = document.createElement("script");
     script.onload = () => initMap();
+    
     script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoAPI}&autoload=false`;
     document.head.appendChild(script);
 
@@ -73,7 +75,8 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
             map,
             setSelectedArea,
             markersRef,
-            selectedPolygonRef
+            selectedPolygonRef,
+            scrapMarkersRef
           );
           dongPolygonsRef.current.push(polygon);
         });
@@ -113,7 +116,7 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
       );
     };
 
-    scrapMarkers(); 
+    scrapMarkers();
 
     return () => {
       dongPolygonsRef.current = [];
@@ -158,10 +161,6 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
       (p) => p.code === selectQuery.data
     );
 
-    kakao.maps.event.addListener(map, 'click', function() {
-      addDongMarker(targetPolygon.code, mapRef.current, markersRef, scrapMarkersRef);
-    });
-
     if (targetPolygon) {
       if (selectedPolygonRef.current) {
         selectedPolygonRef.current.setOptions({
@@ -192,7 +191,7 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
       if (selectQuery.type === "dongCode") {
         addDongMarker(targetPolygon.code, mapRef.current, markersRef, scrapMarkersRef);
       } else {
-        addGuMarker(targetPolygon.code, mapRef.current, markersRef);
+        addGuMarker(targetPolygon.code, mapRef.current, markersRef, scrapMarkersRef);
       }
     }
   }, [selectQuery]);

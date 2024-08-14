@@ -16,7 +16,6 @@ const CustomHeader = (selectedArea) => {
 
   const sendScrapRequest = async () => {
     try {
-      console.log(selectedArea);
       const response = await fetch("https://api.gadduck.info/scraps", {
         method: "POST",
         headers: {
@@ -24,8 +23,7 @@ const CustomHeader = (selectedArea) => {
         },
         body: JSON.stringify({
           email: "hyeri0603@naver.com",
-          "town-code": selectedArea.code,
-          "industry-name": selectedArea,
+          townCode: parseInt(selectedArea.selectedArea.code),
           quarter: 20241,
         }),
       });
