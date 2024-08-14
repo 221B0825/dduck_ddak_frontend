@@ -55,18 +55,21 @@ const SalesQuater = ({ code }) => {
                 label: `${salesData[0].townName}`,
                 data: salesOfTown,
                 borderColor: "rgba(75, 192, 192, 1)",
+                backgroundColor: "rgba(75, 192, 192, 0.6)",
                 fill: false
               },
               {
                 label: '자치구',
                 data: salesAvgOfDistrict,
                 borderColor: "rgba(255, 205, 86, 1)",
+                backgroundColor: "rgba(255, 205, 86, 0.6)", 
                 fill: false
               },
               {
                 label: '서울시',
                 data: salesAvgOfCity,
                 borderColor: "rgba(92,92,92, 1)",
+                backgroundColor: "#838383",
                 fill: false
               }
             ]
@@ -100,7 +103,7 @@ const SalesQuater = ({ code }) => {
   return (
     <div style={{ margin: "40px" }}>
       {isEmpty ? (
-        <p>No data available for {category} in these regions.</p>
+        <p>No data available in these regions.</p>
       ) : (
         <canvas ref={chartRef}></canvas>
       )}

@@ -54,18 +54,21 @@ const FloatingQuarter = ({ code }) => {
                 label: `${floatingData[0].townName}`,
                 data: populationOfTown,
                 borderColor: "rgba(75, 192, 192, 1)",
+                backgroundColor: "rgba(75, 192, 192, 0.6)",
                 fill: false
               },
               {
                 label: '자치구',
                 data: populationAvgOfDistrict,
                 borderColor: "rgba(255, 205, 86, 1)",
+                backgroundColor: "rgba(255, 205, 86, 0.6)", 
                 fill: false
               },
               {
                 label: '서울시',
                 data: populationAvgOfCity,
                 borderColor: "rgba(92,92,92, 1)",
+                backgroundColor: "#838383",
                 fill: false
               }
             ]
