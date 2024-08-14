@@ -4,7 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import categoryData from "../apis/searchCategory.json";
 import axios from "axios";
 
-import SalesDataTable from "./tables/SalesDataTable";
+import SalesDataTable from "./tables/salesDataTable";
 
 const selectedDetailCategoryLabelPop = [
   "age10s_population",
