@@ -14,7 +14,7 @@ import SalesTime from "./charts/dongCharts/salesTime";
 import IndustrySales from "./charts/dongCharts/industrySales";
 import IndustryBusiness from "./labels/industryBusiness";
 import TownFacility from "./charts/dongCharts/townsFacility";
-import IndustryMulti from "./charts/dongCharts/industryMulti";
+import IndustryMulti from "./charts/dongCharts/industryStore";
 import PopulationMulti from "./charts/dongCharts/populationMulti";
 import IndustrySalesComparison from "./charts/dongComparisonCharts/industrySalesComparison";
 import SalesQuater from "./charts/dongCharts/salesQuater";
@@ -50,6 +50,10 @@ const RightSidebar = ({
   const [summary, setSummary] = useState("");
   // 시설 개수
   const [summaryFacility, setSummaryFacility] = useState("");
+  // 점포수 비교
+  const [summaryStore, setSummaryStore] = useState("");
+  // 요일별 매출
+  const [summarySales, setSummarySales] = useState("");
 
   const handleCategoryChange = (e) => {
     setinputCategory(e.target.value);
@@ -328,17 +332,33 @@ const RightSidebar = ({
                   {inputDetailCategory ? (
                     <>
                       <div className="chart-container">
+                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+                          분기별 점포수
+                        </h5>
                         <IndustryMulti
                           code={selectedArea.code}
                           category={inputDetailCategory}
+                          setSummaryStore={setSummaryStore}
                         />
-                        <hr></hr>
-                        <div>{IndustryMulti.summary}</div>
+                        <div style={{ textAlign: "center" }}>
+                          <h5>
+                            현 분기의 점포수는{" "}
+                            <strong className="text-primary">
+                              {summaryStore}
+                            </strong>
+                            개 입니다.
+                          </h5>
+                          <hr></hr>
+                        </div>
                       </div>
                       <div className="chart-container">
+                       <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+                          요일별 매출
+                        </h5>
                         <IndustrySales
                           code={selectedArea.code}
                           category={inputDetailCategory}
+                          setSummary={setSummarySales}
                         />
                       </div>
                     </>

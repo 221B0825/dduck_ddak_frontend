@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const IndustrySales = ({ code, category }) => {
+const IndustrySales = ({ code, category, setSummaryStore }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false); // 데이터 유무 상태 추가
@@ -19,6 +19,8 @@ const IndustrySales = ({ code, category }) => {
           setIsEmpty(true); // 데이터가 없다면 isEmpty를 true로 설정
           return; // 데이터가 없으면 여기서 함수 종료
         }
+
+        
 
         setIsEmpty(false); // 데이터가 있으면 isEmpty를 false로 설정
 
