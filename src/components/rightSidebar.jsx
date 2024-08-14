@@ -310,31 +310,56 @@ const RightSidebar = ({
               </button>
 
               {/* 비교 모드일 때 */}
-              {compareMode ? (
-                baseArea &&
-                selectedArea && (
-                  <>
-                    <div className="chart-container">
-                      <IndustrySalesComparison
-                        name1={baseArea.name}
-                        code1={baseArea.code}
-                        name2={selectedArea.name}
-                        code2={selectedArea.code}
-                        category={inputDetailCategory}
-                        setSummary={setSummary}
-                      />
-                      <div>{summary}</div>
-                      <hr></hr>
-                      <PopulationTimeComparison
-                        name1={baseArea.name}
-                        code1={baseArea.code}
-                        name2={selectedArea.name}
-                        code2={selectedArea.code}
-                      />
-                    </div>
-                  </>
-                )
-              ) : (
+            
+                {compareMode ? (
+                  baseArea && selectedArea && (
+                    <>
+                      
+                        {inputDetailCategory ? (
+                          <>
+                            {/* 비교 모드 - 업종 선택 시*/}
+                            <div className="chart-container">
+                            <IndustrySalesComparison
+                              name1={baseArea.name}
+                              code1={baseArea.code}
+                              name2={selectedArea.name}
+                              code2={selectedArea.code}
+                              category={inputDetailCategory}
+                              setSummary={setSummary}
+                            />
+                            <div>{summary}</div>
+                            <hr></hr>
+                            </div>
+                            <div className="chart-container">
+                            <PopulationTimeComparison
+                              name1={baseArea.name}
+                              code1={baseArea.code}
+                              name2={selectedArea.name}
+                              code2={selectedArea.code}
+                            />
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {/* 비교 모드 - 업종 선택 안했을 때 */}
+                            <div className="chart-container">
+                            <IndustrySalesComparison
+                              name1={baseArea.name}
+                              code1={baseArea.code}
+                              name2={selectedArea.name}
+                              code2={selectedArea.code}
+                              category={inputDetailCategory}
+                              setSummary={setSummary}
+                            />
+                            <div>{summary}</div>
+                            <hr></hr>
+                            </div>
+                          </>
+                        )}
+                      
+                    </>
+                  )
+                ) : (
                 // 비교 모드가 아닐 때
                 <>
                   {/*  업종을 선택했을 때 */}
