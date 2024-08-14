@@ -26,6 +26,8 @@ import IndustrySalesCategory from "./charts/dongCharts/industrySalesCategory";
 
 import SalesCategoryAge from "./charts/dongCharts/salesCategoryAge";
 
+import SalesCategoryGender from "./charts/dongCharts/salesCategoryGender";
+
 import categoryData from "../apis/searchCategory.json";
 
 const RightSidebar = ({
@@ -368,6 +370,7 @@ const RightSidebar = ({
                           <hr></hr>
                         </div>
                       </div>
+                      {/* =========================================== */}
                       {/* 업종 요일별 매출 */}
                       <div className="chart-container">
                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
@@ -380,7 +383,18 @@ const RightSidebar = ({
                         />
                          <hr></hr>
                       </div>
-
+                    {/* =========================================== */}
+                    <div className="chart-container">
+                    <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+                          {inputDetailCategory} 성별 매출(%)
+                        </h5>
+                    <SalesCategoryGender
+                          code={selectedArea.code}
+                          category={inputDetailCategory}/>
+                    <hr></hr>
+                    </div>
+                    {/* =========================================== */}
+                      {/* 업종 나이별 매출 */}
                       <div className="chart-container">
                       <h5 className="ms-3" style={{ fontWeight: "bold" }}>
                           {inputDetailCategory} 나이별 매출(%)
@@ -389,6 +403,7 @@ const RightSidebar = ({
                           code={selectedArea.code}
                           category={inputDetailCategory} />
                       </div>
+                      
                     </>
                   ) : (
                     <>
