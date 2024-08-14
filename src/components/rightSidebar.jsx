@@ -42,6 +42,9 @@ const RightSidebar = ({
   // 분기별 유동인구 순위
   const [summaryRank, setSummaryRank] = useState([]);
 
+   // 분기별 매출 순위
+   const [summarySalesRank, setSummarySalesRank] = useState([]);
+
   // 분기별 유동인구
   const [summaryQuarter, setSummaryQuarter] = useState("");
   // 시간별 유동인구
@@ -424,7 +427,7 @@ const RightSidebar = ({
                         <h5 className="ms-3" style={{ fontWeight: "bold" }}>
                             분기별 매출
                         </h5>
-                       <SalesQuater code={selectedArea.code} setSummary={setSummaryQuarter} />
+                       <SalesQuater code={selectedArea.code} setSummarySalesRank={setSummarySalesRank} />
                         <hr></hr>
                       </div>
 

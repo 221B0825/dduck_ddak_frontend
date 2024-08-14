@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const SalesQuater = ({ code }) => {
+const SalesQuater = ({ code, setSummarySalesRank }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
@@ -40,7 +40,9 @@ const SalesQuater = ({ code }) => {
           const record = salesData.find(item => `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기` === q);
           return record ? record.salesAvgOfDistrict : null;
         });
-  
+        
+        let salesRankList = [];
+
         if (chart) {
           chart.destroy();
         }
