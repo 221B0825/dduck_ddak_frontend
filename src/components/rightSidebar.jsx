@@ -30,6 +30,7 @@ import SalesCategoryGender from "./charts/dongCharts/salesCategoryGender";
 
 import categoryData from "../apis/searchCategory.json";
 
+
 const RightSidebar = ({
   selectedArea,
   selectCategory,
@@ -342,6 +343,36 @@ const RightSidebar = ({
                         ) : (
                           <>
                             {/* 비교 모드 - 업종 선택 안했을 때 */}
+
+                            <div className="chart-container" style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+                                <span>{baseArea.name}</span>
+                              <div
+                                className=""
+                                style={{
+                                  border: "1px solid #D9D9D9",
+                                  borderRadius: "5px",
+                                  margin: "10px",
+                                  marginLeft: "100px",
+                                  textAlign: "center",
+                                }}
+                              >
+                              <IndustryBusiness code={baseArea.code} />
+                              </div>
+                              <span>{selectedArea.name}</span>
+                              <div
+                                className=""
+                                style={{
+                                  border: "1px solid #D9D9D9",
+                                  borderRadius: "5px",
+                                  margin: "10px",
+                                  marginLeft: "100px",
+                                  textAlign: "center",
+                                }}
+                              >
+                              <IndustryBusiness code={selectedArea.code} />
+                              </div>
+                          </div>
+
                             <div className="chart-container">
                             <IndustrySalesComparison
                               name1={baseArea.name}
