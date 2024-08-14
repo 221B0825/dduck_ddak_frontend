@@ -362,7 +362,7 @@ const RankingArea = (isOpen) => {
       </div>
 
       <div>
-        {selectedMainCategory === "매출" && <SalesDataTable data={data} />}
+        {selectedMainCategory === "매출" && <SalesDataTable data={data} selectedSubCategory={selectedSubCategory} />}
       </div>
     </div>
   );

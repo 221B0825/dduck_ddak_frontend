@@ -54,8 +54,8 @@ const SalesQuater = ({ code }) => {
               {
                 label: `${salesData[0].townName}`,
                 data: salesOfTown,
-                borderColor: "rgba(75, 192, 192, 1)",
-                backgroundColor: "rgba(75, 192, 192, 0.6)",
+                backgroundColor: "rgba(54, 162, 235, 0.2)", // 파란색 배경
+                borderColor: "rgba(54, 162, 235, 1)", // 파란색 경계
                 fill: false
               },
               {

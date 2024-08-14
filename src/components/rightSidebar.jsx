@@ -39,6 +39,9 @@ const RightSidebar = ({
   const [inputDetailCategory, setInputDetailCategory] = useState("");
   const [filteredCategoryList, setFilteredCategoryList] = useState([]);
 
+  // 분기별 유동인구 순위
+  const [summaryRank, setSummaryRank] = useState([]);
+
   // 분기별 유동인구
   const [summaryQuarter, setSummaryQuarter] = useState("");
   // 시간별 유동인구
@@ -199,7 +202,7 @@ const RightSidebar = ({
         className={`list-group list-group-flush ${
           isOpen ? "show-content" : "hidden-content"
         }`}
-        style={{ maxHeight: "950px", overflowY: "auto" }}
+        style={{ maxHeight: "940px", overflowY: "auto" }}
       >
         {selectedArea ? (
           <>
@@ -343,10 +346,7 @@ const RightSidebar = ({
                     <>
                       {/* 업종을 선택하지 않았을 때 */}
                       {/* 점포 영업기간 */}
-                      <div className="chart-container">
-                        <FloatingQuarter code={selectedArea.code} />
-                      </div>
-                      <div className="chart-container">
+                      <div className="chart-container mt-3">
                         <div
                           className="col-7"
                           style={{
@@ -358,18 +358,20 @@ const RightSidebar = ({
                           }}
                         >
                         <IndustryBusiness code={selectedArea.code} />
+                        </div>
                       </div>
-                        <SalesQuater code={selectedArea.code} />
-                      </div>
-                      {/* 분기별 유동인구 */}
+                      {/* 분기별 매출 유동인구 추이 */}
                       <div className="chart-container">
                         <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                          분기별 유동인구
+                            분기별 유동인구
                         </h5>
-                        <PopulationQuarter
-                          code={selectedArea.code}
-                          setSummary={setSummaryQuarter}
-                        />
+                        <FloatingQuarter code={selectedArea.code} />
+                        {/* summary를 위한 보이지 않는 차트 */}
+                        <div style={{display: "none"}}>
+                          <PopulationQuarter code={selectedArea.code}
+                          setSummary={setSummaryQuarter}/>
+                          </div>
+
                         <div style={{ textAlign: "center" }}>
                           <h5>
                             현재 동의 분기별 유동인구는 <br></br>전분기 대비{" "}
@@ -381,6 +383,16 @@ const RightSidebar = ({
                           <hr></hr>
                         </div>
                       </div>
+
+                      {/* 분기별 매출 구/시 합본 */}
+                      <div className="chart-container">
+                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+                            분기별 매출 추이
+                        </h5>
+                       <SalesQuater code={selectedArea.code} setSummary={setSummaryQuarter} />
+                        <hr></hr>
+                      </div>
+
                       {/* 시간대별 유동인구 */}
                       <div className="chart-container">
                         <h5 className="ms-3" style={{ fontWeight: "bold" }}>
