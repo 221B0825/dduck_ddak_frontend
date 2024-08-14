@@ -22,6 +22,10 @@ import FloatingQuarter from "./charts/dongCharts/floatingQuarter";
 
 import PopulationTimeComparison from "./charts/dongComparisonCharts/populationTimeComparison";
 
+import IndustrySalesCategory from "./charts/dongCharts/industrySalesCategory";
+
+import SalesCategoryAge from "./charts/dongCharts/salesCategoryAge";
+
 import categoryData from "../apis/searchCategory.json";
 
 const RightSidebar = ({
@@ -334,6 +338,16 @@ const RightSidebar = ({
                   {/*  업종을 선택했을 때 */}
                   {inputDetailCategory ? (
                     <>
+                    {/* 업종 분기별 매출 */}
+                      <div className="chart-container">
+                      <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+                          {inputDetailCategory} 분기별 매출
+                        </h5>
+                        <IndustrySalesCategory code={selectedArea.code} category={inputDetailCategory} />
+                        <hr></hr>
+                      </div>
+                    {/* =========================================== */}
+                    {/* 업종 분기별 점포수 */}
                       <div className="chart-container">
                         <h5 className="ms-3" style={{ fontWeight: "bold" }}>
                           분기별 점포수
@@ -354,6 +368,7 @@ const RightSidebar = ({
                           <hr></hr>
                         </div>
                       </div>
+                      {/* 업종 요일별 매출 */}
                       <div className="chart-container">
                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
                           요일별 매출
@@ -363,6 +378,16 @@ const RightSidebar = ({
                           category={inputDetailCategory}
                           setSummary={setSummarySales}
                         />
+                         <hr></hr>
+                      </div>
+
+                      <div className="chart-container">
+                      <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+                          {inputDetailCategory} 나이별 매출
+                        </h5>
+                        <SalesCategoryAge
+                          code={selectedArea.code}
+                          category={inputDetailCategory} />
                       </div>
                     </>
                   ) : (
@@ -402,43 +427,42 @@ const RightSidebar = ({
                           
                           }}
                         >
-                          
                           <span>구 내 행정동 순위 </span>
-                          
-                        <span style={{fontWeight: "bold", color: "#3065FA"}}>{summaryRank[0]} </span> / {summaryRank[1]}
-                      </div>
-                      <div
-                          className="col-6 mt-3"
-                          style={{
-                            border: "1px solid #D9D9D9",
-                            borderRadius: "5px",
-                            margin: "5px",
-                            padding: "5px",
-                            textAlign: "left",
-                            display: "flex",
-                            justifyContent: "space-between"
-                          }}
-                        >
-                        <span>시 내 행정동 순위 </span>
-                        <span style={{fontWeight: "bold", color: "#3065FA"}}> {summaryRank[2]}</span> / {summaryRank[3]}
+                          <span style={{fontWeight: "bold", color: "#3065FA"}}>{summaryRank[0]} </span> / {summaryRank[1]}
                         </div>
-                        </div>
+                        <div
+                            className="col-6 mt-3"
+                            style={{
+                              border: "1px solid #D9D9D9",
+                              borderRadius: "5px",
+                              margin: "5px",
+                              padding: "5px",
+                              textAlign: "left",
+                              display: "flex",
+                              justifyContent: "space-between"
+                            }}
+                          >
+                            <span>시 내 행정동 순위 </span>
+                            <span style={{fontWeight: "bold", color: "#3065FA"}}> {summaryRank[2]}</span> / {summaryRank[3]}
+                          </div>
+                          </div>
                         <FloatingQuarter code={selectedArea.code} setSummaryRank={setSummaryRank} />
                         {/* summary를 위한 보이지 않는 차트 */}
-                        <div style={{display: "none"}}>
-                          <PopulationQuarter code={selectedArea.code}
-                          setSummary={setSummaryQuarter}/>
-                          </div>
+                          <div style={{display: "none"}}>
+                            <PopulationQuarter code={selectedArea.code}
+                            setSummary={setSummaryQuarter}/>
+                            </div>
 
-                        <div style={{ textAlign: "center" }}>
-                          <h5>
-                            현재 동의 분기별 유동인구는 <br></br>전분기 대비{" "}
-                            <strong className="text-primary">
-                              {summaryQuarter}
-                            </strong>{" "}
-                            입니다.
-                          </h5>
-                          <hr></hr>
+                          <div style={{ textAlign: "center" }}>
+                            <h5>
+                              현재 동의 분기별 유동인구는 <br></br>전분기 대비{" "}
+                              <strong className="text-primary">
+                                {summaryQuarter}
+                              </strong>{" "}
+                              입니다.
+                            </h5>
+                            <hr></hr>
+                            
                         </div>
                       </div>
 

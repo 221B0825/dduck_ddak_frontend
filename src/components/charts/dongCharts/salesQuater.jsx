@@ -41,6 +41,8 @@ const SalesQuater = ({ code, setSummarySalesRank }) => {
           return record ? record.salesAvgOfDistrict : null;
         });
         
+        // fix
+        console.log("fix :: salesRankList for summary");
         let salesRankList = [];
 
         if (chart) {
