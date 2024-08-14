@@ -383,7 +383,7 @@ const RightSidebar = ({
 
                       <div className="chart-container">
                       <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                          {inputDetailCategory} 나이별 매출
+                          {inputDetailCategory} 나이별 매출(%)
                         </h5>
                         <SalesCategoryAge
                           code={selectedArea.code}

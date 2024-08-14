@@ -39,7 +39,7 @@ const SalesCategoryAge = ({ code, category }) => {
         data: {
           labels: ["10대", "20대", "30대", "40대", "50대", "60대 이상"],
           datasets: [{
-            label: `${category} 나이대별 매출 비율`,
+            label: `${category} 나이대별 매출 비율 %`,
             data: Object.values(chartData),
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',

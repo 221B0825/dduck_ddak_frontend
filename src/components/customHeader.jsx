@@ -37,7 +37,7 @@ const CustomHeader = ({ selectedArea }) => {
         },
         body: JSON.stringify({
           email: "hyeri0603@naver.com",
-          townCode: parseInt(selectedArea.selectedArea.code),
+          townCode: parseInt(selectedArea.code),
           quarter: 20241,
         }),
       });
