@@ -4,10 +4,12 @@ import shopLogo from "../assets/icons/shopLogo.png";
 import kakaoLogin from "../assets/icons/kakaoLogin.png";
 import naverLogin from "../assets/icons/naverLogin.png";
 
-const LoginModal = ({ show, onHide }) => {
+const LoginModal = ({ show, onHide, onLoginSuccess }) => {
   const handleKakaoLogin = () => {
     window.location.href =
       "https://api.gadduck.info/oauth2/authorization/kakao";
+    
+    onLoginSuccess();
   };
 
   return (
