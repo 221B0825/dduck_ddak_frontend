@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import shopLogoWithoutText from "../assets/icons/shopLogoWithoutText.png";
 import LoginModal from "./loginModal";
-import ScrapSelector from "../components/scrap/ScrapSelector";
+import ScrapSelector from "../components/scrap/scrapSelector";
 
 const CustomHeader = ({ selectedArea, setSelectQuery }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -24,7 +24,7 @@ const CustomHeader = ({ selectedArea, setSelectQuery }) => {
     } else {
       setIsLoggedIn(false);
       sessionStorage.removeItem("isLoggedIn");
-      alert('로그아웃 되었습니다.');
+      alert("로그아웃 되었습니다.");
     }
   };
 
@@ -41,7 +41,7 @@ const CustomHeader = ({ selectedArea, setSelectQuery }) => {
           quarter: 20241,
         }),
       });
-      
+
       if (response.status !== 200) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -62,18 +62,33 @@ const CustomHeader = ({ selectedArea, setSelectQuery }) => {
         <span className="fw-bold">가게뚝딱</span>
       </a>
 
-      <button type="button" className="btn btn-warning m-3" onClick={handleScrapClick}>
+      <button
+        type="button"
+        className="btn btn-warning m-3"
+        onClick={handleScrapClick}
+      >
         스크랩
       </button>
 
-      <ScrapSelector setSelectQuery={setSelectQuery} style={{ marginLeft: '0px', marginRight: '0px' }} />
+      <ScrapSelector
+        setSelectQuery={setSelectQuery}
+        style={{ marginLeft: "0px", marginRight: "0px" }}
+      />
 
-      <button type="button" className="btn btn-primary me-5" onClick={handleLoginClick}>
+      <button
+        type="button"
+        className="btn btn-primary me-5"
+        onClick={handleLoginClick}
+      >
         <i className="bi bi-box-arrow-in-right me-2"></i>
-        {isLoggedIn ? '로그아웃' : '로그인'}
+        {isLoggedIn ? "로그아웃" : "로그인"}
       </button>
 
-      <LoginModal show={showLoginModal} onHide={() => setShowLoginModal(false)} onLoginSuccess={handleLoginSuccess} />
+      <LoginModal
+        show={showLoginModal}
+        onHide={() => setShowLoginModal(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </nav>
   );
 };
