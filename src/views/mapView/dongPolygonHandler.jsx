@@ -5,7 +5,8 @@ export const createDongPolygon = (
   map,
   setSelectedArea,
   markersRef,
-  selectedPolygonRef
+  selectedPolygonRef,
+  scrapMarkersRef
 ) => {
   const path = area.path.map(
     (coords) => new kakao.maps.LatLng(coords.lat, coords.lng)
@@ -30,7 +31,8 @@ export const createDongPolygon = (
     map,
     setSelectedArea,
     markersRef,
-    selectedPolygonRef
+    selectedPolygonRef,
+    scrapMarkersRef
   );
 
   return polygon;
@@ -41,7 +43,8 @@ const attachDongPolygonEvents = (
   map,
   setSelectedArea,
   markersRef,
-  selectedPolygonRef
+  selectedPolygonRef,
+  scrapMarkersRef
 ) => {
   kakao.maps.event.addListener(polygon, "click", function () {
     if (selectedPolygonRef.current) {
@@ -84,7 +87,7 @@ const attachDongPolygonEvents = (
           calculatedArea: Math.floor(polygon.getArea()),
         });
 
-        addDongMarker(polygon.code, map, markersRef);
+        addDongMarker(polygon.code, map, markersRef, scrapMarkersRef);
       }
     } else {
       // 아무것도 선택되지 않은 상태에서 폴리곤을 처음 클릭한 경우
@@ -104,7 +107,7 @@ const attachDongPolygonEvents = (
         calculatedArea: Math.floor(polygon.getArea()),
       });
 
-      addDongMarker(polygon.code, map, markersRef);
+      addDongMarker(polygon.code, map, markersRef, scrapMarkersRef);
     }
   });
 
@@ -138,11 +141,12 @@ const attachDongPolygonEvents = (
 };
 
 export const addDongMarker = (code, map, markersRef, scrapMarkersRef) => {
-  markersRef.current.forEach(marker => {
+  markersRef.current.forEach((marker) => {
     if (!scrapMarkersRef.current.includes(marker)) {
-        marker.setMap(null);
+      marker.setMap(null);
     }
   });
+  markersRef.current = scrapMarkersRef.current.slice();
 
   const dongCenter = dongCenterData.find((dong) => dong.adm_cd === code);
 

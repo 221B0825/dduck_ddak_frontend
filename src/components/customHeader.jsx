@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import shopLogoWithoutText from "../assets/icons/shopLogoWithoutText.png";
 import LoginModal from "./loginModal";
+import ScrapSelector from "../components/scrap/ScrapSelector";
 
-const CustomHeader = ({ selectedArea }) => {
+const CustomHeader = ({ selectedArea, setSelectQuery }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // 세션 스토리지에서 로그인 상태 확인
     const loggedInStatus = sessionStorage.getItem("isLoggedIn") === "true";
     setIsLoggedIn(loggedInStatus);
   }, []);
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
-    sessionStorage.setItem("isLoggedIn", "true");  // 세션 스토리지에 로그인 상태 저장
+    sessionStorage.setItem("isLoggedIn", "true");
   };
 
   const handleLoginClick = () => {
@@ -23,7 +23,7 @@ const CustomHeader = ({ selectedArea }) => {
       setShowLoginModal(true);
     } else {
       setIsLoggedIn(false);
-      sessionStorage.removeItem("isLoggedIn");  // 로그아웃 시 세션 스토리지에서 로그인 상태 제거
+      sessionStorage.removeItem("isLoggedIn");
       alert('로그아웃 되었습니다.');
     }
   };
@@ -61,13 +61,18 @@ const CustomHeader = ({ selectedArea }) => {
         </div>
         <span className="fw-bold">가게뚝딱</span>
       </a>
+
       <button type="button" className="btn btn-warning m-3" onClick={handleScrapClick}>
         스크랩
       </button>
+
+      <ScrapSelector setSelectQuery={setSelectQuery} style={{ marginLeft: '0px', marginRight: '0px' }} />
+
       <button type="button" className="btn btn-primary me-5" onClick={handleLoginClick}>
         <i className="bi bi-box-arrow-in-right me-2"></i>
         {isLoggedIn ? '로그아웃' : '로그인'}
       </button>
+
       <LoginModal show={showLoginModal} onHide={() => setShowLoginModal(false)} onLoginSuccess={handleLoginSuccess} />
     </nav>
   );

@@ -29,7 +29,6 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      console.log("스크랩 조회 결과:", response.data.data);
       const newScrapMarkers = []; // 새로운 스크랩 마커 저장 배열
       response.data.data.forEach((scrap) => {
         const matchingDong = dongCenterData.find(

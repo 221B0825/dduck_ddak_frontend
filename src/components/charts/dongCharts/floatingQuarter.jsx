@@ -17,7 +17,6 @@ const FloatingQuarter = ({ code }) => {
         );
 
         const floatingData = response.data.data.populationList;
-        console.log(floatingData);
         const quarterOrder = [
           "2023년 1분기",
           "2023년 2분기",
@@ -34,7 +33,6 @@ const FloatingQuarter = ({ code }) => {
           );
           return record ? record.populationOfTown : null;
         });
-        console.log(populationOfTown);
 
         const populationAvgOfCity = quarterOrder.map((q) => {
           const record = floatingData.find(
