@@ -2,6 +2,8 @@ import React from "react";
 import IndustryBusiness from "../labels/industryBusiness";
 import IndustrySalesComparison from "../charts/dongComparisonCharts/industrySalesComparison";
 import PopulationTransitionComparison from "../charts/dongComparisonCharts/populationTransitionComparison";
+import SalesCategoryAgeComparison from "../charts/dongComparisonCharts/salesCategoryAgeComparison";
+import SalesCategoryGenderComparison from "../charts/dongComparisonCharts/salesCategoryGenderComparison";
 
 const CompareModeWithCategory = ({
   baseName,
@@ -69,6 +71,34 @@ const CompareModeWithCategory = ({
       {/* 분기별 유동인구 비교 */}
       <div className="chart-container">
         <PopulationTransitionComparison
+          baseName={baseName}
+          baseCode={baseCode}
+          selectName={selectName}
+          selectCode={selectCode}
+          category={category}
+        />
+      </div>
+
+      {/* 성별 매출 비교 */}
+      <div className="chart-container">
+        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+          성별 매출 비교
+        </h5>
+        <SalesCategoryGenderComparison
+          baseName={baseName}
+          baseCode={baseCode}
+          selectName={selectName}
+          selectCode={selectCode}
+          category={category}
+        />
+      </div>
+
+      {/* 연령대 매출 비교 */}
+      <div className="chart-container">
+        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+          연령대 매출 비교
+        </h5>
+        <SalesCategoryAgeComparison
           baseName={baseName}
           baseCode={baseCode}
           selectName={selectName}
