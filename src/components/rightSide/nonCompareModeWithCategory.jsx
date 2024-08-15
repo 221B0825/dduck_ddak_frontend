@@ -16,6 +16,15 @@ const NonCompareModeWithCategory = ({ selectedArea, inputDetailCategory }) => {
           code={selectedArea.code}
           category={inputDetailCategory}
         />
+        <hr />
+        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+          {inputDetailCategory} 매출 요일별 비교
+        </h5>
+        <IndustrySales
+          code={selectedArea.code}
+          category={inputDetailCategory}
+        />
+        <hr />
         <h5 className="ms-3" style={{ fontWeight: "bold" }}>
           {inputDetailCategory} 분기별 매출
         </h5>
@@ -24,7 +33,22 @@ const NonCompareModeWithCategory = ({ selectedArea, inputDetailCategory }) => {
           category={inputDetailCategory}
         />
         <hr />
-        {/* 추가적인 차트 구현 필요 */}
+        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+          {inputDetailCategory} 소비에 대한 성별 비율
+        </h5>
+        <SalesCategoryGender
+          code={selectedArea.code}
+          category={inputDetailCategory}
+        />
+        <hr />
+        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+          {inputDetailCategory} 소비에 대한 연령대 비율
+        </h5>
+        <SalesCategoryAge
+          code={selectedArea.code}
+          category={inputDetailCategory}
+        />
+        <hr />
       </div>
     </>
   );
