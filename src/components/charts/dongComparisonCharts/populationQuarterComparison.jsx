@@ -3,14 +3,28 @@ import Chart from "chart.js/auto";
 import axios from "axios";
 
 const PopulationQuarterComparison = ({
-  name1,
+  baseName,
   code1,
-  name2,
+  selectName,
   code2,
   setSummary,
 }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
+  const [commentBase, setCommentBase] = useState("");
+  const [commentSelect, setCommentSelect] = useState("");
+
+  const findMaxAges = (ages) => {
+    const last = ages[ages.length - 1].population;
+    const secondLast = ages[ages.length - 2].population;
+
+    // 감소 여부를 확인
+    if (last < secondLast) {
+      return "감소 중";
+    } else {
+      return "증가 중 또는 안정";
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,6 +39,8 @@ const PopulationQuarterComparison = ({
 
         const populationList1 = response1.data.data.populationList;
         const populationList2 = response2.data.data.populationList;
+        setCommentBase(findMaxAges(populationList1));
+        setCommentSelect(findMaxAges(populationList2));
 
         // 데이터를 차트에 맞게 변환
         const labels = populationList1.map(
@@ -43,8 +59,8 @@ const PopulationQuarterComparison = ({
           0;
         const summaryText =
           firstQuarter2024_1 > firstQuarter2024_2
-            ? `2024년 1분기에 ${name1} 동의 인구가 ${name2} 동보다 많습니다.`
-            : `2024년 1분기에 ${name2} 동의 인구가 ${name1} 동보다 많습니다.`;
+            ? `2024년 1분기에 ${baseName} 동의 인구가 ${selectName} 동보다 많습니다.`
+            : `2024년 1분기에 ${selectName} 동의 인구가 ${baseName} 동보다 많습니다.`;
 
         // setSummary(summaryText);
 
@@ -58,13 +74,13 @@ const PopulationQuarterComparison = ({
               labels,
               datasets: [
                 {
-                  label: `${name1.replace("서울특별시 ", "")}`,
+                  label: `${baseName.replace("서울특별시 ", "")}`,
                   data: values1,
                   borderColor: "rgb(54, 162, 235)",
                   backgroundColor: "rgba(54, 162, 235, 0.5)",
                 },
                 {
-                  label: `${name2.replace("서울특별시 ", "")}`,
+                  label: `${selectName.replace("서울특별시 ", "")}`,
                   data: values2,
                   borderColor: "rgb(255, 99, 132)",
                   backgroundColor: "rgba(255, 99, 132, 0.5)",
@@ -99,6 +115,19 @@ const PopulationQuarterComparison = ({
   return (
     <div style={{ margin: "40px" }}>
       <canvas ref={chartRef}></canvas>
+      <div style={{ textAlign: "center" }}>
+        <h6 className="m-3">{`각 동의 유동인구 증가세는`}</h6>
+        <h6 className="m-3">전 분기 대비</h6>
+        <h5 className="m-3">
+          {`${baseName} : `}
+          <strong className="text-primary">{commentBase}</strong>
+        </h5>
+        <h5 className="m-3">
+          {`${selectName} : `}
+          <strong className="text-primary">{commentSelect}</strong>
+        </h5>
+        <h6 className="m-3">{`입니다.`}</h6>
+      </div>
     </div>
   );
 };

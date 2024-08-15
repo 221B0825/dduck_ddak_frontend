@@ -12,6 +12,31 @@ const IndustrySalesComparison = ({
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [commentBase, setCommentBase] = useState("");
+  const [commentSelect, setCommentSelect] = useState("");
+
+  const labels = {
+    hour_0_6: "00시~06시",
+    hour_6_11: "06시~11시",
+    hour_11_14: "11시~14시",
+    hour_14_17: "14시~17시",
+    hour_17_21: "17시~21시",
+    hour_21_24: "21시~24시",
+  };
+
+  const findMaxAges = (ages) => {
+    let maxCount = 0;
+    let maxAges = "";
+
+    for (const [key, value] of Object.entries(ages)) {
+      if (value > maxCount) {
+        maxCount = value;
+        maxAges = key;
+      }
+    }
+
+    return labels[maxAges]; // 한글 레이블 반환
+  };
 
   //같은 업종 매출 비교
   useEffect(() => {
@@ -36,6 +61,9 @@ const IndustrySalesComparison = ({
           labels = Object.keys(salesData1).map((key) =>
             key.replace("hour_", "").replace("_", "~")
           );
+
+          setCommentBase(findMaxAges(salesData1));
+          setCommentSelect(findMaxAges(salesData2));
         } else {
           const [response1, response2] = await Promise.all([
             axios.get(
@@ -124,6 +152,16 @@ const IndustrySalesComparison = ({
       ) : (
         <canvas ref={chartRef}></canvas>
       )}
+      <div style={{ textAlign: "center" }}>
+        <h6>각 행정동 별 최대 매출 시간대</h6>
+        <h5>
+          {baseName}: <strong className="text-primary">{commentBase}</strong>
+        </h5>
+        <h5>
+          {selectName}:{" "}
+          <strong className="text-primary">{commentSelect}</strong>
+        </h5>
+      </div>
     </div>
   );
 };

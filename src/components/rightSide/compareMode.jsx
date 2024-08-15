@@ -55,9 +55,9 @@ const CompareMode = ({ baseArea, selectedArea }) => {
           분기별 유동인구 수
         </h5>
         <PopulationQuarterComparison
-          name1={baseArea.name.replace("서울특별시 ", "")}
+          baseName={baseArea.name.replace("서울특별시 ", "")}
           code1={baseArea.code}
-          name2={selectedArea.name.replace("서울특별시 ", "")}
+          selectName={selectedArea.name.replace("서울특별시 ", "")}
           code2={selectedArea.code}
         />
         <hr />
