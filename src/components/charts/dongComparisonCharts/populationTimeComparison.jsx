@@ -3,12 +3,11 @@ import Chart from "chart.js/auto";
 import axios from "axios";
 
 const PopulationTimeComparison = ({
-  name1,
-  code1,
-  name2,
-  code2,
+  baseName,
+  baseCode,
+  selectName,
+  selectCode,
   category,
-  setSummary,
 }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
@@ -19,10 +18,10 @@ const PopulationTimeComparison = ({
       try {
         const [response1, response2] = await Promise.all([
           axios.get(
-            `https://api.gadduck.info/towns/populations/floating/time?code=${code1}`
+            `https://api.gadduck.info/towns/populations/floating/time?code=${baseCode}`
           ),
           axios.get(
-            `https://api.gadduck.info/towns/populations/floating/time?code=${code2}`
+            `https://api.gadduck.info/towns/populations/floating/time?code=${selectCode}`
           ),
         ]);
 
@@ -45,14 +44,14 @@ const PopulationTimeComparison = ({
               labels: labels,
               datasets: [
                 {
-                  label: name1,
+                  label: baseName,
                   data: data1,
                   backgroundColor: "rgba(255, 99, 71, 0.6)", // 다홍색 배경
                   borderColor: "rgba(255, 99, 71, 1)", // 다홍색 경계
                   borderWidth: 1,
                 },
                 {
-                  label: name2,
+                  label: selectName,
                   data: data2,
                   backgroundColor: "rgba(54, 162, 235, 0.6)", // 파란색 배경
                   borderColor: "rgba(54, 162, 235, 1)", // 파란색 경계
@@ -90,7 +89,7 @@ const PopulationTimeComparison = ({
     if (chartRef.current) {
       fetchData();
     }
-  }, [code1, code2, category]);
+  }, [baseCode, selectCode, category]);
 
   return (
     <div style={{ margin: "40px" }}>

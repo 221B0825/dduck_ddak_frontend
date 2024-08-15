@@ -3,12 +3,11 @@ import Chart from "chart.js/auto";
 import axios from "axios";
 
 const IndustrySalesComparison = ({
-  name1,
-  code1,
-  name2,
-  code2,
+  baseCode,
+  baseName,
+  selectCode,
+  selectName,
   category,
-  setSummary,
 }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
@@ -22,14 +21,13 @@ const IndustrySalesComparison = ({
       let labels;
 
       try {
-        if (category == "") {
-          category = "전체";
+        if (category == "전체") {
           const [response1, response2] = await Promise.all([
             axios.get(
-              `https://api.gadduck.info/towns/sales/time?code=${code1}`
+              `https://api.gadduck.info/towns/sales/time?code=${baseCode}`
             ),
             axios.get(
-              `https://api.gadduck.info/towns/sales/time?code=${code2}`
+              `https://api.gadduck.info/towns/sales/time?code=${selectCode}`
             ),
           ]);
 
@@ -41,10 +39,10 @@ const IndustrySalesComparison = ({
         } else {
           const [response1, response2] = await Promise.all([
             axios.get(
-              `https://api.gadduck.info/towns/industry/sales?code=${code1}&name=${category}`
+              `https://api.gadduck.info/towns/industry/sales?code=${baseCode}&name=${category}`
             ),
             axios.get(
-              `https://api.gadduck.info/towns/industry/sales?code=${code2}&name=${category}`
+              `https://api.gadduck.info/towns/industry/sales?code=${selectCode}&name=${category}`
             ),
           ]);
 
@@ -61,9 +59,6 @@ const IndustrySalesComparison = ({
           ];
         }
 
-        // 요약 메시지
-        setSummary(``);
-
         const counts1 = Object.values(salesData1);
         const counts2 = Object.values(salesData2);
 
@@ -78,14 +73,14 @@ const IndustrySalesComparison = ({
             labels: labels,
             datasets: [
               {
-                label: name1,
+                label: baseName,
                 data: counts1,
                 backgroundColor: "rgba(255, 99, 71, 0.6)", // 다홍색 배경
                 borderColor: "rgba(255, 99, 71, 1)", // 다홍색 경계
                 borderWidth: 1,
               },
               {
-                label: name2,
+                label: selectName,
                 data: counts2,
                 backgroundColor: "rgba(54, 162, 235, 0.6)", // 파란색 배경
                 borderColor: "rgba(54, 162, 235, 1)", // 파란색 경계
@@ -120,7 +115,7 @@ const IndustrySalesComparison = ({
     };
 
     fetchData();
-  }, [code1, code2, category]);
+  }, [baseCode, selectCode, category]);
 
   return (
     <div style={{ margin: "40px" }}>

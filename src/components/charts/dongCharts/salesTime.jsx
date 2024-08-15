@@ -24,12 +24,11 @@ const SalesTime = ({ code, setSummary }) => {
         let summary = "";
         for (const [key, value] of Object.entries(timeData)) {
           if (value > maxPopulation) {
-              maxPopulation = value;
-              summary = key;
+            maxPopulation = value;
+            summary = key;
           }
         }
-        setSummary(`${formatTimeRange(summary)}`)
-        
+        // setSummary(`${formatTimeRange(summary)}`)
 
         if (chart) {
           chart.destroy(); // 이전 차트가 있으면 파괴
@@ -90,9 +89,11 @@ const SalesTime = ({ code, setSummary }) => {
 function formatTimeRange(key) {
   // 키 값에서 숫자만 추출하여 시간 범위 배열로 저장
   const times = key.match(/\d+/g).map(Number); // ['0', '6'] -> [0, 6]
-  
+
   // 시간 포맷을 '00시~06시까지' 형태로 변경
-  return `${times[0].toString().padStart(2, '0')}시~${times[1].toString().padStart(2, '0')}시까지`;
+  return `${times[0].toString().padStart(2, "0")}시~${times[1]
+    .toString()
+    .padStart(2, "0")}시까지`;
 }
 
 export default SalesTime;

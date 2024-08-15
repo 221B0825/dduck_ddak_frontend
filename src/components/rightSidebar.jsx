@@ -7,29 +7,12 @@ import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import pretendard from "../assets/fonts/pretendard";
 
-// 차트 및 기타 컴포넌트 임포트
-import PopulationQuarter from "./charts/dongCharts/populationQuarter";
-import PopulationTime from "./charts/dongCharts/populationTime";
-import SalesTime from "./charts/dongCharts/salesTime";
-import IndustrySales from "./charts/dongCharts/industrySales";
-import IndustryBusiness from "./labels/industryBusiness";
-import TownFacility from "./charts/dongCharts/townsFacility";
-import IndustryMulti from "./charts/dongCharts/industryStore";
-import PopulationMulti from "./charts/dongCharts/populationMulti";
-import IndustrySalesComparison from "./charts/dongComparisonCharts/industrySalesComparison";
-import SalesQuater from "./charts/dongCharts/salesQuater";
-import FloatingQuarter from "./charts/dongCharts/floatingQuarter";
-
-import PopulationTimeComparison from "./charts/dongComparisonCharts/populationTimeComparison";
-
-import IndustrySalesCategory from "./charts/dongCharts/industrySalesCategory";
-
-import SalesCategoryAge from "./charts/dongCharts/salesCategoryAge";
-
-import SalesCategoryGender from "./charts/dongCharts/salesCategoryGender";
+import CompareMode from "./rightSide/compareMode";
+import CompareModeWithCategory from "./rightSide/CompareModeWithCategory";
+import NonCompareMode from "./rightSide/nonCompareMode";
+import NonCompareModeWithCategory from "./rightSide/nonCompareModeWithCategory";
 
 import categoryData from "../apis/searchCategory.json";
-
 
 const RightSidebar = ({
   selectedArea,
@@ -45,25 +28,6 @@ const RightSidebar = ({
   const [inputCategory, setinputCategory] = useState("");
   const [inputDetailCategory, setInputDetailCategory] = useState("");
   const [filteredCategoryList, setFilteredCategoryList] = useState([]);
-
-  // 분기별 유동인구 순위
-  const [summaryRank, setSummaryRank] = useState([]);
-
-   // 분기별 매출 순위
-   const [summarySalesRank, setSummarySalesRank] = useState([]);
-
-  // 분기별 유동인구
-  const [summaryQuarter, setSummaryQuarter] = useState("");
-  // 시간별 유동인구
-  const [summaryTime, setSummaryTime] = useState("");
-  // 시간별 매출
-  const [summary, setSummary] = useState("");
-  // 시설 개수
-  const [summaryFacility, setSummaryFacility] = useState("");
-  // 점포수 비교
-  const [summaryStore, setSummaryStore] = useState("");
-  // 요일별 매출
-  const [summarySales, setSummarySales] = useState("");
 
   const handleCategoryChange = (e) => {
     setinputCategory(e.target.value);
@@ -119,7 +83,7 @@ const RightSidebar = ({
     let logoUrl =
       "https://raw.githubusercontent.com/Lazy-Mechanics/dduck_ddak_backend/main/src/main/resources/gadduck.png";
     const imgProps = doc.getImageProperties(logoUrl);
-    const logoWidth = 30; // 로고의 폭 
+    const logoWidth = 30; // 로고의 폭
     const logoHeight = (imgProps.height * logoWidth) / imgProps.width; // 비율 유지를 위한 높이 계산
     const logoX = doc.internal.pageSize.getWidth() / 2 - logoWidth / 2; // 중앙 정렬
     const logoY = 80; // 상단에서부터의 거리
@@ -266,362 +230,70 @@ const RightSidebar = ({
             >
               보고서 다운받기
             </button>
-
-            <div>
-              {/* 카테고리 선택 */}
-              <div className="ms-3 me-3">
-                <hr></hr>
-                <select
-                  className="form-select"
-                  value={inputCategory}
-                  onChange={handleCategoryChange}
-                  style={{ marginBottom: "10px" }}
-                  disabled={!isOpen} // 사이드바가 닫혀 있으면 선택 불가
-                >
-                  <option value="">카테고리 선택</option>
-                  {categoryData.상위카테고리.map((상위카테고리) => (
-                    <option key={상위카테고리} value={상위카테고리}>
-                      {상위카테고리}
-                    </option>
-                  ))}
-                </select>
-
-                {/* 하위 카테고리 선택 */}
-                <select
-                  className="form-select"
-                  value={inputDetailCategory}
-                  onChange={handleDetailCategoryChange}
-                  style={{ marginBottom: "10px" }}
-                  disabled={!inputCategory || !isOpen} // 상위 카테고리가 선택되지 않았거나 사이드바가 닫혀 있으면 선택 불가
-                >
-                  <option value="">하위 카테고리 선택</option>
-                  {filteredCategoryList.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <button
-                type="button"
-                className="btn btn-secondary btn-sm m-3"
-                onClick={resetCategory}
+            <div className="ms-3 me-3">
+              <hr></hr>
+              <select
+                className="form-select"
+                value={inputCategory}
+                onChange={handleCategoryChange}
+                style={{ marginBottom: "10px" }}
+                disabled={!isOpen} // 사이드바가 닫혀 있으면 선택 불가
               >
-                카테고리 선택 초기화
-              </button>
+                <option value="">카테고리 선택</option>
+                {categoryData.상위카테고리.map((상위카테고리) => (
+                  <option key={상위카테고리} value={상위카테고리}>
+                    {상위카테고리}
+                  </option>
+                ))}
+              </select>
 
-              {/* 비교 모드일 때 */}
-            
-                {compareMode ? (
-                  baseArea && selectedArea && (
-                    <>
-                      
-                        {inputDetailCategory ? (
-                          <>
-                            {/* 비교 모드 - 업종 선택 시*/}
-                            <div className="chart-container">
-                            <IndustrySalesComparison
-                              name1={baseArea.name}
-                              code1={baseArea.code}
-                              name2={selectedArea.name}
-                              code2={selectedArea.code}
-                              category={inputDetailCategory}
-                              setSummary={setSummary}
-                            />
-                            <div>{summary}</div>
-                            <hr></hr>
-                            </div>
-                            <div className="chart-container">
-                            <PopulationTimeComparison
-                              name1={baseArea.name}
-                              code1={baseArea.code}
-                              name2={selectedArea.name}
-                              code2={selectedArea.code}
-                            />
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            {/* 비교 모드 - 업종 선택 안했을 때 */}
-
-                            <div className="chart-container" style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-                                <span>{baseArea.name}</span>
-                              <div
-                                className=""
-                                style={{
-                                  border: "1px solid #D9D9D9",
-                                  borderRadius: "5px",
-                                  margin: "10px",
-                                  marginLeft: "100px",
-                                  textAlign: "center",
-                                }}
-                              >
-                              <IndustryBusiness code={baseArea.code} />
-                              </div>
-                              <span>{selectedArea.name}</span>
-                              <div
-                                className=""
-                                style={{
-                                  border: "1px solid #D9D9D9",
-                                  borderRadius: "5px",
-                                  margin: "10px",
-                                  marginLeft: "100px",
-                                  textAlign: "center",
-                                }}
-                              >
-                              <IndustryBusiness code={selectedArea.code} />
-                              </div>
-                          </div>
-
-                            <div className="chart-container">
-                            <IndustrySalesComparison
-                              name1={baseArea.name}
-                              code1={baseArea.code}
-                              name2={selectedArea.name}
-                              code2={selectedArea.code}
-                              category={inputDetailCategory}
-                              setSummary={setSummary}
-                            />
-                            <div>{summary}</div>
-                            <hr></hr>
-                            </div>
-                          </>
-                        )}
-                      
-                    </>
-                  )
-                ) : (
-                // 비교 모드가 아닐 때
-                <>
-                  {/*  업종을 선택했을 때 */}
-                  {inputDetailCategory ? (
-                    <>
-                    {/* 업종 분기별 매출 */}
-                      <div className="chart-container">
-                      <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                          {inputDetailCategory} 분기별 매출
-                        </h5>
-                        <IndustrySalesCategory code={selectedArea.code} category={inputDetailCategory} />
-                        <hr></hr>
-                      </div>
-                    {/* =========================================== */}
-                    {/* 업종 분기별 점포수 */}
-                      <div className="chart-container">
-                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                          분기별 점포수
-                        </h5>
-                        <IndustryMulti
-                          code={selectedArea.code}
-                          category={inputDetailCategory}
-                          setSummaryStore={setSummaryStore}
-                        />
-                        <div style={{ textAlign: "center" }}>
-                          <h5>
-                            현 분기의 점포수는{" "}
-                            <strong className="text-primary">
-                              {summaryStore}
-                            </strong>
-                            개 입니다.
-                          </h5>
-                          <hr></hr>
-                        </div>
-                      </div>
-                      {/* =========================================== */}
-                      {/* 업종 요일별 매출 */}
-                      <div className="chart-container">
-                       <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                          요일별 매출
-                        </h5>
-                        <IndustrySales
-                          code={selectedArea.code}
-                          category={inputDetailCategory}
-                          setSummary={setSummarySales}
-                        />
-                         <hr></hr>
-                      </div>
-                    {/* =========================================== */}
-                    <div className="chart-container">
-                    <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                          {inputDetailCategory} 성별 매출(%)
-                        </h5>
-                    <SalesCategoryGender
-                          code={selectedArea.code}
-                          category={inputDetailCategory}/>
-                    <hr></hr>
-                    </div>
-                    {/* =========================================== */}
-                      {/* 업종 나이별 매출 */}
-                      <div className="chart-container">
-                      <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                          {inputDetailCategory} 나이별 매출(%)
-                        </h5>
-                        <SalesCategoryAge
-                          code={selectedArea.code}
-                          category={inputDetailCategory} />
-                      </div>
-                      
-                    </>
-                  ) : (
-                    <>
-                      {/* 업종을 선택하지 않았을 때 */}
-                      {/* 점포 영업기간 */}
-                      <div className="chart-container">
-                        <div
-                          className="col-7 mt-3"
-                          style={{
-                            border: "1px solid #D9D9D9",
-                            borderRadius: "5px",
-                            margin: "10px",
-                            marginLeft: "100px",
-                            textAlign: "center",
-                          }}
-                        >
-                        <IndustryBusiness code={selectedArea.code} />
-                        </div>
-                      </div>
-                      {/* 분기별 매출 유동인구 추이 */}
-                      <div className="chart-container">
-                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                            분기별 유동인구
-                        </h5>
-                        <div style={{display: "flex",  marginLeft: "20px", marginRight: "35px"}}>
-                        <div
-                          className="col-6 mt-3"
-                          style={{
-                            border: "1px solid #D9D9D9",
-                            borderRadius: "5px",
-                            margin: "5px",
-                            padding: "5px",
-                            textAlign: "left",
-                            display: "flex",
-                            justifyContent: "space-between",
-                          
-                          }}
-                        >
-                          <span>구 내 행정동 순위 </span>
-                          <span style={{fontWeight: "bold", color: "#3065FA"}}>{summaryRank[0]} </span> / {summaryRank[1]}
-                        </div>
-                        <div
-                            className="col-6 mt-3"
-                            style={{
-                              border: "1px solid #D9D9D9",
-                              borderRadius: "5px",
-                              margin: "5px",
-                              padding: "5px",
-                              textAlign: "left",
-                              display: "flex",
-                              justifyContent: "space-between"
-                            }}
-                          >
-                            <span>시 내 행정동 순위 </span>
-                            <span style={{fontWeight: "bold", color: "#3065FA"}}> {summaryRank[2]}</span> / {summaryRank[3]}
-                          </div>
-                          </div>
-                        <FloatingQuarter code={selectedArea.code} setSummaryRank={setSummaryRank} />
-                        {/* summary를 위한 보이지 않는 차트 */}
-                          <div style={{display: "none"}}>
-                            <PopulationQuarter code={selectedArea.code}
-                            setSummary={setSummaryQuarter}/>
-                            </div>
-
-                          <div style={{ textAlign: "center" }}>
-                            <h5>
-                              현재 동의 분기별 유동인구는 <br></br>전분기 대비{" "}
-                              <strong className="text-primary">
-                                {summaryQuarter}
-                              </strong>{" "}
-                              입니다.
-                            </h5>
-                            <hr></hr>
-                            
-                        </div>
-                      </div>
-
-                      {/* 분기별 매출 구/시 합본 */}
-                      <div className="chart-container">
-                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                            분기별 매출
-                        </h5>
-                       <SalesQuater code={selectedArea.code} setSummarySalesRank={setSummarySalesRank} />
-                        <hr></hr>
-                      </div>
-
-                      {/* 시간대별 유동인구 */}
-                      <div className="chart-container">
-                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                          시간대별 유동인구
-                        </h5>
-                        <PopulationTime
-                          code={selectedArea.code}
-                          setSummary={setSummaryTime}
-                        />
-
-                        <div style={{ textAlign: "center" }}>
-                          <h5>
-                            현재 동의 시간대별 유동인구가 <br></br> 가장 많을
-                            때는{" "}
-                            <strong className="text-primary">
-                              {summaryTime}
-                            </strong>{" "}
-                            입니다.
-                          </h5>
-                          <hr></hr>
-                        </div>
-                      </div>
-
-                      {/* 직장유동인구/주거 인구 2024년1분기만 */}
-                      <div className="chart-container">
-                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                          직장/주거 인구
-                        </h5>
-                        <PopulationMulti code={selectedArea.code} />
-                      </div>
-                      <hr></hr>
-
-                      {/* 시간대별 매출 - 업종 전체 */}
-                      <div className="chart-container">
-                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                          시간대별 매출
-                        </h5>
-                        <SalesTime
-                          code={selectedArea.code}
-                          setSummary={setSummary}
-                        />
-
-                        <div style={{ textAlign: "center" }}>
-                          <h5>
-                            현재 동의 시간대별 매출이 <br></br> 가장 많을 때는{" "}
-                            <strong className="text-primary">{summary}</strong>{" "}
-                            입니다.
-                          </h5>
-                          <hr></hr>
-                        </div>
-                      </div>
-
-                      {/* 집객시설 */}
-                      <div className="chart-container">
-                        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-                          집객 시설 개수
-                        </h5>
-                        <TownFacility
-                          code={selectedArea.code}
-                          setSummary={setSummaryFacility}
-                        />
-                        <div style={{ textAlign: "center" }}>
-                          <h5>
-                            선택상권은{" "}
-                            <strong className="text-primary">
-                              {summaryFacility}
-                            </strong>{" "}
-                            비율이 가장 높습니다.
-                          </h5>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </>
-              )}
+              {/* 하위 카테고리 선택 */}
+              <select
+                className="form-select"
+                value={inputDetailCategory}
+                onChange={handleDetailCategoryChange}
+                style={{ marginBottom: "10px" }}
+                disabled={!inputCategory || !isOpen} // 상위 카테고리가 선택되지 않았거나 사이드바가 닫혀 있으면 선택 불가
+              >
+                <option value="">하위 카테고리 선택</option>
+                {filteredCategoryList.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
             </div>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm m-3"
+              onClick={resetCategory}
+            >
+              카테고리 선택 초기화
+            </button>
+            {compareMode ? (
+              inputDetailCategory ? (
+                // 비교 모드이고 업종을 선택했을 때
+                <CompareModeWithCategory
+                  baseName={baseArea.name.replace("서울특별시 ", "")}
+                  baseCode={baseArea.code}
+                  selectName={selectedArea.name.replace("서울특별시 ", "")}
+                  selectCode={selectedArea.code}
+                  category={inputDetailCategory}
+                />
+              ) : (
+                // 비교 모드이고 업종을 선택하지 않았을 때
+                <CompareMode baseArea={baseArea} selectedArea={selectedArea} />
+              )
+            ) : inputDetailCategory ? (
+              // 비교 모드가 아니고 업종을 선택했을 때
+              <NonCompareModeWithCategory
+                selectedArea={selectedArea}
+                inputDetailCategory={inputDetailCategory}
+              />
+            ) : (
+              // 비교 모드가 아니고 업종을 선택하지 않았을 때
+              <NonCompareMode selectedArea={selectedArea} />
+            )}
           </>
         ) : (
           <div className="list-group-item list-group-item-action bg-light">

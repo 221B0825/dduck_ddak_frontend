@@ -22,9 +22,9 @@ const IndustryBusiness = ({ code }) => {
   }, [code]);
 
   return (
-    <div style={{ margin: "5px" }}>
-      <h6>점포 평균 영업기간: {data} 년</h6>
-    </div>
+    <span style={{ margin: "5px", fontWeight: "bold", color: "#3065FA" }}>
+      {data}
+    </span>
   );
 };
 

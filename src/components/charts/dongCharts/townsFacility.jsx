@@ -10,7 +10,7 @@ const labels = {
   departmentStore: "백화점 수",
   schoolCnt: "학교 수",
   accommodationFacilityCnt: "숙박 시설 수",
-  transportationFacilityCnt: "교통 시설 수"
+  transportationFacilityCnt: "교통 시설 수",
 };
 
 const findMaxFacility = (facilities) => {
@@ -40,7 +40,7 @@ const TownFacility = ({ code, setSummary }) => {
         const data = response.data.data;
 
         const summaryText = findMaxFacility(data);
-        setSummary(summaryText);
+        // setSummary(summaryText);
 
         // 데이터를 차트에 맞게 변환
         const labels = [

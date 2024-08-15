@@ -21,18 +21,18 @@ const PopulationQuarter = ({ code, setSummary }) => {
           return `${year}년 ${quarter}분기`;
         });
         const values = populationList.map((item) => item.population);
-        
+
         // 가장 최근 두 분기의 데이터를 가져옴
         const last = populationList[populationList.length - 1].population;
         const secondLast = populationList[populationList.length - 2].population;
-        
+
         // 감소 여부를 확인
         if (last < secondLast) {
-          var summary =  "감소 중";
+          var summary = "감소 중";
         } else {
-          var summary =  "증가 중 또는 안정";
+          var summary = "증가 중 또는 안정";
         }
-        setSummary(`${summary}`)
+        setSummary(`${summary}`);
 
         if (chart) {
           chart.destroy(); // 이전 차트가 있으면 파괴

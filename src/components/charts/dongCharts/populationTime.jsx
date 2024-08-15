@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const PopulationTime = ({ code, setSummary }) => {
+const PopulationTime = ({ code }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
 
@@ -20,17 +20,16 @@ const PopulationTime = ({ code, setSummary }) => {
         );
         const values = Object.values(timeData);
 
-                
         let maxPopulation = 0;
         let summary = "";
         for (const [key, value] of Object.entries(timeData)) {
           if (value > maxPopulation) {
-              maxPopulation = value;
-              summary = key;
+            maxPopulation = value;
+            summary = key;
           }
         }
 
-        setSummary(`${formatTimeRange(summary)}`)
+        // setSummary(`${formatTimeRange(summary)}`)
 
         if (chart) {
           chart.destroy(); // 이전 차트가 있으면 파괴
@@ -95,9 +94,11 @@ const PopulationTime = ({ code, setSummary }) => {
 function formatTimeRange(key) {
   // 키 값에서 숫자만 추출하여 시간 범위 배열로 저장
   const times = key.match(/\d+/g).map(Number); // ['0', '6'] -> [0, 6]
-  
+
   // 시간 포맷을 '00시~06시까지' 형태로 변경
-  return `${times[0].toString().padStart(2, '0')}시~${times[1].toString().padStart(2, '0')}시까지`;
+  return `${times[0].toString().padStart(2, "0")}시~${times[1]
+    .toString()
+    .padStart(2, "0")}시까지`;
 }
 
 export default PopulationTime;
