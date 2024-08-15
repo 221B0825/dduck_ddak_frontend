@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const IndustryComparison = ({ code, category, setSummaryStore }) => {
+const IndustryComparison = ({ code, category }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,8 +16,7 @@ const IndustryComparison = ({ code, category, setSummaryStore }) => {
           `https://api.gadduck.info/towns/industry/recently?code=${code}&name=${category}`
         );
         const recentlyData = recentlyResponse.data.data;
-
-        setSummaryStore(recentlyData[0].count);
+        setComment(recentlyData[0].count);
 
         // Define the order of quarters
         const quarterOrder = [
@@ -57,7 +57,7 @@ const IndustryComparison = ({ code, category, setSummaryStore }) => {
                 backgroundColor: "rgba(75, 192, 192, 0.6)",
                 borderColor: "rgba(75, 192, 192, 1)",
                 borderWidth: 1,
-              }
+              },
             ],
           },
           options: {
@@ -93,6 +93,12 @@ const IndustryComparison = ({ code, category, setSummaryStore }) => {
       ) : (
         <canvas ref={chartRef}></canvas>
       )}
+      <div style={{ textAlign: "center" }}>
+        <h5>
+          현 분기의 점포수는
+          <strong className="text-primary">{" " + comment}</strong>개 입니다.
+        </h5>
+      </div>
     </div>
   );
 };
