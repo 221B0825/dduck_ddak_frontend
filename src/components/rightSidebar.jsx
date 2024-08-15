@@ -7,10 +7,10 @@ import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import pretendard from "../assets/fonts/pretendard";
 
-import CompareMode from "./rightSide/compareMode";
-import CompareModeWithCategory from "./rightSide/CompareModeWithCategory";
-import NonCompareMode from "./rightSide/nonCompareMode";
-import NonCompareModeWithCategory from "./rightSide/nonCompareModeWithCategory";
+import CompareMode from "../components/rightSide/compareMode";
+import CompareModeWithCategory from "../components/rightSide/compareModeWithCategory";
+import NonCompareMode from "../components/rightSide/nonCompareMode";
+import NonCompareModeWithCategory from "../components/rightSide/nonCompareModeWithCategory";
 
 import categoryData from "../apis/searchCategory.json";
 
