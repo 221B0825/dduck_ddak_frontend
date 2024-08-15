@@ -139,7 +139,6 @@ const TownFacility = ({ code }) => {
           현재 동의 시간대별 매출이 <br></br> 가장 많을 때는{" "}
           <strong className="text-primary">{summary}</strong> 입니다.
         </h5>
-        <hr></hr>
       </div>
     </div>
   );
