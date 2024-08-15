@@ -5,6 +5,7 @@ import axios from "axios";
 const PopulationMulti = ({ code }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
+  const [count, setCount] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,6 +55,7 @@ const PopulationMulti = ({ code }) => {
           const item = residentMapped.find((d) => d.quarter === label);
           return item ? item.population : 0;
         });
+        setCount([workingCounts[4], residentCounts[4]]);
 
         if (chart) {
           chart.destroy();
@@ -116,6 +118,15 @@ const PopulationMulti = ({ code }) => {
   return (
     <div style={{ margin: "40px" }}>
       <canvas ref={chartRef}></canvas>
+      <div style={{ textAlign: "center" }}>
+        <h5>
+          직장인구 수:{" "}
+          <strong className="text-primary">{count[0]?.toLocaleString()}</strong>
+          명, 주거인구 수:{" "}
+          <strong className="text-primary">{count[1]?.toLocaleString()}</strong>
+          명
+        </h5>
+      </div>
     </div>
   );
 };

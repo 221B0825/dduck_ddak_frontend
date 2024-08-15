@@ -27,9 +27,10 @@ const findMaxFacility = (facilities) => {
   return labels[maxFacility]; // 한글 레이블 반환
 };
 
-const TownFacility = ({ code, setSummary }) => {
+const TownFacility = ({ code }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
+  const [summary, setSummary] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +41,7 @@ const TownFacility = ({ code, setSummary }) => {
         const data = response.data.data;
 
         const summaryText = findMaxFacility(data);
-        // setSummary(summaryText);
+        setSummary(summaryText);
 
         // 데이터를 차트에 맞게 변환
         const labels = [
@@ -133,6 +134,13 @@ const TownFacility = ({ code, setSummary }) => {
   return (
     <div style={{ margin: "40px" }}>
       <canvas ref={chartRef}></canvas>
+      <div style={{ textAlign: "center" }}>
+        <h5>
+          현재 동의 시간대별 매출이 <br></br> 가장 많을 때는{" "}
+          <strong className="text-primary">{summary}</strong> 입니다.
+        </h5>
+        <hr></hr>
+      </div>
     </div>
   );
 };

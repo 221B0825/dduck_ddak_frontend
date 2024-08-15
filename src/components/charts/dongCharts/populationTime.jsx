@@ -5,6 +5,7 @@ import axios from "axios";
 const PopulationTime = ({ code }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,15 +22,12 @@ const PopulationTime = ({ code }) => {
         const values = Object.values(timeData);
 
         let maxPopulation = 0;
-        let summary = "";
         for (const [key, value] of Object.entries(timeData)) {
           if (value > maxPopulation) {
             maxPopulation = value;
-            summary = key;
+            setComment(formatTimeRange(key));
           }
         }
-
-        // setSummary(`${formatTimeRange(summary)}`)
 
         if (chart) {
           chart.destroy(); // 이전 차트가 있으면 파괴
@@ -87,6 +85,12 @@ const PopulationTime = ({ code }) => {
   return (
     <div style={{ margin: "40px" }}>
       <canvas ref={chartRef}></canvas>
+      <div style={{ textAlign: "center" }}>
+        <h5>
+          현재 동의 시간대별 유동인구가 <br></br> 가장 많을 때는{" "}
+          <strong className="text-primary">{comment}</strong> 입니다.
+        </h5>
+      </div>
     </div>
   );
 };

@@ -8,6 +8,7 @@ const FloatingQuarter = ({ code }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +25,18 @@ const FloatingQuarter = ({ code }) => {
           "2023년 4분기",
           "2024년 1분기",
         ];
+
+        // 가장 최근 두 분기의 데이터를 가져옴
+        const last = floatingData[floatingData.length - 1].populationOfTown;
+        const secondLast =
+          floatingData[floatingData.length - 2].populationOfTown;
+
+        // 감소 여부를 확인
+        if (last < secondLast) {
+          setComment("감소 중");
+        } else {
+          setComment("증가 중 또는 안정");
+        }
 
         const populationOfTown = quarterOrder.map((q) => {
           const record = floatingData.find(
@@ -151,6 +164,12 @@ const FloatingQuarter = ({ code }) => {
           <canvas ref={chartRef}></canvas>
         </>
       )}
+      <div style={{ textAlign: "center" }}>
+        <h5>
+          현재 동의 분기별 유동인구는 <br></br>전분기 대비{" "}
+          <strong className="text-primary">{comment}</strong> 입니다.
+        </h5>
+      </div>
     </div>
   );
 };

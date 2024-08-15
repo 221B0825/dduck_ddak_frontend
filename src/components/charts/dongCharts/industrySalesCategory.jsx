@@ -6,6 +6,7 @@ const IndustrySalesCategory = ({ code, category }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +25,17 @@ const IndustrySalesCategory = ({ code, category }) => {
           "2023년 4분기",
           "2024년 1분기",
         ];
+
+        // 가장 최근 두 분기의 데이터를 가져옴
+        const last = salesData[salesData.length - 1].salesOfTown;
+        const secondLast = salesData[salesData.length - 2].salesOfTown;
+
+        // 감소 여부를 확인
+        if (last < secondLast) {
+          setComment("감소 중");
+        } else {
+          setComment("증가 중 또는 안정");
+        }
 
         // 데이터를 분기 순서에 맞게 매핑
         const salesOfTown = quarterOrder.map((q) => {
@@ -114,6 +126,14 @@ const IndustrySalesCategory = ({ code, category }) => {
   return (
     <div style={{ margin: "40px" }}>
       {isEmpty ? <p>No data available.</p> : <canvas ref={chartRef}></canvas>}
+
+      <br></br>
+      <div style={{ textAlign: "center" }}>
+        <h5>
+          현재 동의 분기별 유동인구는 <br></br>전분기 대비{" "}
+          <strong className="text-primary">{comment}</strong> 입니다.
+        </h5>
+      </div>
     </div>
   );
 };
