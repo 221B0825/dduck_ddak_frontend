@@ -3,10 +3,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import shopLogoWithoutText from "../assets/icons/shopLogoWithoutText.png";
 import LoginModal from "./loginModal";
 import ScrapSelector from "../components/scrap/scrapSelector";
+import swal from "sweetalert";
 
 const CustomHeader = ({ selectedArea, setSelectQuery }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isScrapEmpty, setScrapEmpty] = useState(false);
 
   useEffect(() => {
     const loggedInStatus = sessionStorage.getItem("isLoggedIn") === "true";
@@ -24,7 +26,12 @@ const CustomHeader = ({ selectedArea, setSelectQuery }) => {
     } else {
       setIsLoggedIn(false);
       sessionStorage.removeItem("isLoggedIn");
-      alert("로그아웃 되었습니다.");
+      swal({
+        title: "로그아웃 완료",
+        text: "로그아웃이 정상적으로 처리되었습니다.",
+        icon: "success",
+        button: "확인",
+      });
     }
   };
 
@@ -44,12 +51,24 @@ const CustomHeader = ({ selectedArea, setSelectQuery }) => {
 
       if (response.status !== 200) {
         throw new Error(`HTTP error! status: ${response.status}`);
+      } else {
+        setScrapEmpty(true);
       }
 
-      alert("스크랩 요청이 성공적으로 처리되었습니다.");
+      swal({
+        title: "스크랩 확인",
+        text: "스크랩 요청이 성공적으로 처리되었습니다.",
+        icon: "success",
+        button: "확인",
+      });
     } catch (error) {
       console.error("스크랩 요청 중 에러가 발생했습니다:", error);
-      alert("스크랩 요청에 실패했습니다.");
+      swal({
+        title: "스크랩 실패",
+        text: "스크랩 요청 중 에러가 발생했습니다.\n로그인하셨는지 확인해주세요!",
+        icon: "error",
+        button: "확인",
+      });
     }
   };
 
@@ -61,30 +80,38 @@ const CustomHeader = ({ selectedArea, setSelectQuery }) => {
         </div>
         <span className="fw-bold">가게뚝딱</span>
       </a>
-
-      <button
-        type="button"
-        className="btn btn-warning m-3"
-        onClick={handleScrapClick}
+      <div
+        id="rightArea"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
-        스크랩
-      </button>
-      {isLoggedIn ? (
-        <ScrapSelector
-          setSelectQuery={setSelectQuery}
-          style={{ marginLeft: "0px", marginRight: "0px" }}
-        />
-      ) : null}
+        <button
+          type="button"
+          className="btn btn-warning m-3"
+          onClick={handleScrapClick}
+        >
+          <i class="bi bi-archive-fill"></i> 스크랩
+        </button>
+        {isLoggedIn && isScrapEmpty ? (
+          <ScrapSelector
+            setSelectQuery={setSelectQuery}
+            setScrapEmpty={setScrapEmpty}
+            style={{ marginLeft: "0px", marginRight: "0px" }}
+          />
+        ) : null}
 
-      <button
-        type="button"
-        className="btn btn-primary me-5"
-        onClick={handleLoginClick}
-      >
-        <i className="bi bi-box-arrow-in-right me-2"></i>
-        {isLoggedIn ? "로그아웃" : "로그인"}
-      </button>
-
+        <button
+          type="button"
+          className="btn btn-primary me-5"
+          onClick={handleLoginClick}
+        >
+          <i className="bi bi-box-arrow-in-right me-2"></i>
+          {isLoggedIn ? "로그아웃" : "로그인"}
+        </button>
+      </div>
       <LoginModal
         show={showLoginModal}
         onHide={() => setShowLoginModal(false)}
