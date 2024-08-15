@@ -113,7 +113,6 @@ const CompareMode = ({ baseArea, selectedArea }) => {
           selectName={selectedArea.name.replace("서울특별시 ", "")}
           selectCode={selectedArea.code}
         />
-        <hr />
       </div>
     </>
   );

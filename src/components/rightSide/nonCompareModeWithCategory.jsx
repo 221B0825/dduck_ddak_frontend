@@ -48,7 +48,6 @@ const NonCompareModeWithCategory = ({ selectedArea, inputDetailCategory }) => {
           code={selectedArea.code}
           category={inputDetailCategory}
         />
-        <hr />
       </div>
     </>
   );

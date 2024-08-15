@@ -45,6 +45,7 @@ const NonCompareMode = ({ selectedArea }) => {
           분기별 유동인구
         </h5>
         <FloatingQuarter code={selectedArea.code} />
+        <hr></hr>
       </div>
 
       {/* 분기별 매출 구/시 합본 */}

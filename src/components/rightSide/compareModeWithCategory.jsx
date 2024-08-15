@@ -1,9 +1,11 @@
 import React from "react";
 import IndustryBusiness from "../labels/industryBusiness";
-import IndustrySalesComparison from "../charts/dongComparisonCharts/industrySalesComparison";
-import PopulationTransitionComparison from "../charts/dongComparisonCharts/populationTransitionComparison";
+
 import SalesCategoryAgeComparison from "../charts/dongComparisonCharts/salesCategoryAgeComparison";
 import SalesCategoryGenderComparison from "../charts/dongComparisonCharts/salesCategoryGenderComparison";
+import IndustrySalesQuarterComparison from "../charts/dongComparisonCharts/industrySalesQuarterComparison";
+import IndustrySalesComparison from "../charts/dongComparisonCharts/industrySalesComparison";
+import IndustryStoreComparison from "../charts/dongComparisonCharts/industryStoreComparison";
 
 const CompareModeWithCategory = ({
   baseName,
@@ -51,32 +53,55 @@ const CompareModeWithCategory = ({
               padding: "5px",
             }}
           >
-            <span>{baseName} :</span>
-            <IndustryBusiness code={baseCode} />년
+            <span>{selectName} :</span>
+            <IndustryBusiness code={selectCode} />년
           </div>
         </div>
       </div>
 
-      {/* 전체 매출 비교 */}
+      {/* 카테고리 분기별 매출 비교 */}
       <div className="chart-container">
+        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+          {category} 분기별 매출
+        </h5>
+        <IndustrySalesQuarterComparison
+          baseName={baseName}
+          baseCode={baseCode}
+          selectCode={selectCode}
+          selectName={selectName}
+          category={category}
+        />
+        <hr></hr>
+      </div>
+
+      {/* 카테고리 요일별 매출 비교 */}
+      <div className="chart-container">
+        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+          {category} 요일별 매출
+        </h5>
         <IndustrySalesComparison
           baseName={baseName}
           baseCode={baseCode}
           selectCode={selectCode}
           selectName={selectName}
-          category={"전체"}
-        />
-      </div>
-
-      {/* 분기별 유동인구 비교 */}
-      <div className="chart-container">
-        <PopulationTransitionComparison
-          baseName={baseName}
-          baseCode={baseCode}
-          selectName={selectName}
-          selectCode={selectCode}
           category={category}
         />
+        <hr></hr>
+      </div>
+
+      {/* 점포 수 비교 */}
+      <div className="chart-container">
+        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+          {category} 점포 수
+        </h5>
+        <IndustryStoreComparison
+          baseName={baseName}
+          baseCode={baseCode}
+          selectCode={selectCode}
+          selectName={selectName}
+          category={category}
+        />
+        <hr></hr>
       </div>
 
       {/* 성별 매출 비교 */}
@@ -91,6 +116,7 @@ const CompareModeWithCategory = ({
           selectCode={selectCode}
           category={category}
         />
+        <hr></hr>
       </div>
 
       {/* 연령대 매출 비교 */}
