@@ -69,11 +69,12 @@ const CustomHeader = ({ selectedArea, setSelectQuery }) => {
       >
         스크랩
       </button>
-
-      <ScrapSelector
-        setSelectQuery={setSelectQuery}
-        style={{ marginLeft: "0px", marginRight: "0px" }}
-      />
+      {isLoggedIn ? (
+        <ScrapSelector
+          setSelectQuery={setSelectQuery}
+          style={{ marginLeft: "0px", marginRight: "0px" }}
+        />
+      ) : null}
 
       <button
         type="button"
