@@ -1,7 +1,7 @@
 import React from "react";
 import IndustryBusiness from "../labels/industryBusiness";
 import IndustrySalesComparison from "../charts/dongComparisonCharts/industrySalesComparison";
-import PopulationTimeComparison from "../charts/dongComparisonCharts/populationTimeComparison";
+import PopulationTransitionComparison from "../charts/dongComparisonCharts/populationTransitionComparison";
 
 const CompareModeWithCategory = ({
   baseName,
@@ -68,7 +68,7 @@ const CompareModeWithCategory = ({
 
       {/* 분기별 유동인구 비교 */}
       <div className="chart-container">
-        <PopulationTimeComparison
+        <PopulationTransitionComparison
           baseName={baseName}
           baseCode={baseCode}
           selectName={selectName}

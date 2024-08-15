@@ -3,6 +3,7 @@ import IndustryBusiness from "../labels/industryBusiness";
 import PopulationQuarterComparison from "../charts/dongComparisonCharts/populationQuarterComparison";
 import IndustrySalesComparison from "../charts/dongComparisonCharts/industrySalesComparison";
 import SalesQuaterComparison from "../charts/dongComparisonCharts/salseQuaterComparison";
+import PopulationTimeComparison from "../charts/dongComparisonCharts/populationTimeComparison";
 
 const CompareMode = ({ baseArea, selectedArea }) => {
   return (
@@ -59,6 +60,19 @@ const CompareMode = ({ baseArea, selectedArea }) => {
           code2={selectedArea.code}
         />
         <hr />
+      </div>
+
+      <div className="chart-container">
+        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+          시간대별 유동인구 수
+        </h5>
+        <PopulationTimeComparison
+          baseName={baseArea.name.replace("서울특별시 ", "")}
+          baseCode={baseArea.code}
+          selectName={selectedArea.name.replace("서울특별시", "")}
+          selectCode={selectedArea.code}
+        />
+        <hr></hr>
       </div>
 
       <div className="chart-container">
