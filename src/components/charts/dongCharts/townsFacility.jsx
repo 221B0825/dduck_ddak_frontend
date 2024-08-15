@@ -24,7 +24,7 @@ const findMaxFacility = (facilities) => {
     }
   }
 
-  return labels[maxFacility]; // 한글 레이블 반환
+  return labels[maxFacility] + " " + maxCount; // 한글 레이블 반환
 };
 
 const TownFacility = ({ code }) => {
@@ -136,8 +136,8 @@ const TownFacility = ({ code }) => {
       <canvas ref={chartRef}></canvas>
       <div style={{ textAlign: "center" }}>
         <h5>
-          현재 동의 시간대별 매출이 <br></br> 가장 많을 때는{" "}
-          <strong className="text-primary">{summary}</strong> 입니다.
+          현재 동의 가장 많은 <br></br> 집객시설은{" "}
+          <strong className="text-primary">{summary}</strong> 개 입니다.
         </h5>
       </div>
     </div>
