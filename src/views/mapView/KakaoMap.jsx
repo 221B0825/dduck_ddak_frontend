@@ -168,6 +168,8 @@ const KakaoMap = ({ setSelectedArea, selectQuery, baseArea, compareArea }) => {
   useEffect(() => {
     if (!mapRef.current || !selectQuery) return;
 
+    console.log("test", selectQuery);
+
     let polygonsRef =
       selectQuery.type === "dongCode" ? dongPolygonsRef : guPolygonsRef;
     let targetPolygon = polygonsRef.current.find(
