@@ -2,6 +2,7 @@ import React from "react";
 import IndustryBusiness from "../labels/industryBusiness";
 import PopulationQuarterComparison from "../charts/dongComparisonCharts/populationQuarterComparison";
 import IndustrySalesComparison from "../charts/dongComparisonCharts/industrySalesComparison";
+import SalesQuaterComparison from "../charts/dongComparisonCharts/salseQuaterComparison";
 
 const CompareMode = ({ baseArea, selectedArea }) => {
   return (
@@ -45,25 +46,46 @@ const CompareMode = ({ baseArea, selectedArea }) => {
             <IndustryBusiness code={selectedArea.code} />년
           </div>
         </div>
-        <h5 className="ms-3 mt-3" style={{ fontWeight: "bold" }}>
-          전체 매출 추이
-        </h5>
-        <IndustrySalesComparison
-          baseName={baseArea.name}
-          code1={baseArea.code}
-          name2={selectedArea.name}
-          code2={selectedArea.code}
-        />
-        <hr />
+      </div>
+
+      <div className="chart-container">
         <h5 className="ms-3" style={{ fontWeight: "bold" }}>
           분기별 유동인구 수
         </h5>
         <PopulationQuarterComparison
-          name1={baseArea.name}
+          name1={baseArea.name.replace("서울특별시 ", "")}
           code1={baseArea.code}
-          name2={selectedArea.name}
+          name2={selectedArea.name.replace("서울특별시 ", "")}
           code2={selectedArea.code}
         />
+        <hr />
+      </div>
+
+      <div className="chart-container">
+        <h5 className="ms-3" style={{ fontWeight: "bold" }}>
+          분기별 매출 추이
+        </h5>
+        <SalesQuaterComparison
+          baseName={baseArea.name.replace("서울특별시 ", "")}
+          baseCode={baseArea.code}
+          selectName={selectedArea.name.replace("서울특별시", "")}
+          selectCode={selectedArea.code}
+        />
+        <hr />
+      </div>
+
+      <div className="chart-container">
+        <h5 className="ms-3 mt-3" style={{ fontWeight: "bold" }}>
+          전체 매출 추이
+        </h5>
+        <IndustrySalesComparison
+          baseName={baseArea.name.replace("서울특별시 ", "")}
+          baseCode={baseArea.code}
+          selectName={selectedArea.name.replace("서울특별시 ", "")}
+          selectCode={selectedArea.code}
+          category={"전체"}
+        />
+        <hr />
       </div>
     </>
   );

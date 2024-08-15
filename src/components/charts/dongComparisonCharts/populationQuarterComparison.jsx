@@ -97,7 +97,7 @@ const PopulationQuarterComparison = ({
   }, [code1, code2, setSummary]);
 
   return (
-    <div style={{ height: "400px", width: "100%" }}>
+    <div style={{ margin: "40px" }}>
       <canvas ref={chartRef}></canvas>
     </div>
   );

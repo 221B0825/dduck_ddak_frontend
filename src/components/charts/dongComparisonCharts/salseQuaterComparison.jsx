@@ -2,21 +2,38 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const IndustrySalesCategory = ({ code, category }) => {
+const SalesQuaterComparison = ({
+  baseName,
+  baseCode,
+  selectName,
+  selectCode,
+}) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
 
+  const [rank1, setRank1] = useState([]);
+  const [rank2, setRank2] = useState([]);
+
   useEffect(() => {
+    console.log("base", baseCode);
+    console.log("select", selectCode);
+
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `https://api.gadduck.info/towns/industry/sales/transition?code=${code}&industryName=${category}`
-        );
+        const [response1, response2] = await Promise.all([
+          axios.get(
+            `https://api.gadduck.info/towns/sales/transition?code=${baseCode}`
+          ),
+          axios.get(
+            `https://api.gadduck.info/towns/sales/transition?code=${selectCode}`
+          ),
+        ]);
 
-        const salesData = response.data.data.salesList;
+        const salesData1 = response1.data.data.salesList;
+        const salesData2 = response2.data.data.salesList;
 
-        // 분기 순서를 정의
+        // 분기 순서를 정의 (이전에 정의된 quarterOrder를 유지)
         const quarterOrder = [
           "2023년 1분기",
           "2023년 2분기",
@@ -25,33 +42,23 @@ const IndustrySalesCategory = ({ code, category }) => {
           "2024년 1분기",
         ];
 
-        // 데이터를 분기 순서에 맞게 매핑
-        const salesOfTown = quarterOrder.map((q) => {
-          const record = salesData.find(
-            (item) =>
-              `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기` ===
-              q
-          );
-          return record ? record.salesOfTown : null;
-        });
+        // 분기 순서대로 데이터를 매핑하는 함수
+        const mapSalesToQuarters = (salesData) => {
+          return quarterOrder.map((q) => {
+            const [year, quarter] = q.split("년 ");
+            const quarterNumber = parseInt(year) * 10 + parseInt(quarter[0]);
+            const record = salesData.find(
+              (item) => item.quarter === quarterNumber
+            );
+            return record ? record.salesOfTown : null;
+          });
+        };
 
-        const salesAvgOfCity = quarterOrder.map((q) => {
-          const record = salesData.find(
-            (item) =>
-              `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기` ===
-              q
-          );
-          return record ? record.salesAvgOfCity : null;
-        });
+        const salesOfTown1 = mapSalesToQuarters(salesData1);
+        const salesOfTown2 = mapSalesToQuarters(salesData2);
 
-        const salesAvgOfDistrict = quarterOrder.map((q) => {
-          const record = salesData.find(
-            (item) =>
-              `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기` ===
-              q
-          );
-          return record ? record.salesAvgOfDistrict : null;
-        });
+        console.log(salesOfTown1);
+        console.log(salesOfTown2);
 
         if (chart) {
           chart.destroy();
@@ -64,24 +71,17 @@ const IndustrySalesCategory = ({ code, category }) => {
             labels: quarterOrder,
             datasets: [
               {
-                label: `${salesData[0].townName}`,
-                data: salesOfTown,
+                label: baseName,
+                data: salesOfTown1,
                 backgroundColor: "rgba(54, 162, 235, 0.2)", // 파란색 배경
                 borderColor: "rgba(54, 162, 235, 1)", // 파란색 경계
                 fill: false,
               },
               {
-                label: "자치구",
-                data: salesAvgOfDistrict,
+                label: selectName,
+                data: salesOfTown2,
                 borderColor: "rgba(255, 205, 86, 1)",
                 backgroundColor: "rgba(255, 205, 86, 0.6)",
-                fill: false,
-              },
-              {
-                label: "서울시",
-                data: salesAvgOfCity,
-                borderColor: "rgba(92,92,92, 1)",
-                backgroundColor: "#838383",
                 fill: false,
               },
             ],
@@ -109,7 +109,7 @@ const IndustrySalesCategory = ({ code, category }) => {
     };
 
     fetchData();
-  }, [code, chartRef, isEmpty]);
+  }, [baseCode, selectCode]);
 
   return (
     <div style={{ margin: "40px" }}>
@@ -118,4 +118,4 @@ const IndustrySalesCategory = ({ code, category }) => {
   );
 };
 
-export default IndustrySalesCategory;
+export default SalesQuaterComparison;

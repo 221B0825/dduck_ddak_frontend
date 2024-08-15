@@ -21,7 +21,7 @@ const IndustrySalesComparison = ({
       let labels;
 
       try {
-        if (category == "전체") {
+        if (category === "전체") {
           const [response1, response2] = await Promise.all([
             axios.get(
               `https://api.gadduck.info/towns/sales/time?code=${baseCode}`
