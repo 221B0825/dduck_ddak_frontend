@@ -80,8 +80,8 @@ const SalesQuaterComparison = ({
               {
                 label: selectName,
                 data: salesOfTown2,
-                borderColor: "rgba(255, 205, 86, 1)",
-                backgroundColor: "rgba(255, 205, 86, 0.6)",
+                borderColor: "rgb(255, 99, 132)",
+                backgroundColor: "rgba(255, 99, 132, 0.5)",
                 fill: false,
               },
             ],

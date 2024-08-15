@@ -75,15 +75,15 @@ const IndustrySalesComparison = ({
               {
                 label: baseName,
                 data: counts1,
-                backgroundColor: "rgba(255, 99, 71, 0.6)", // 다홍색 배경
-                borderColor: "rgba(255, 99, 71, 1)", // 다홍색 경계
+                backgroundColor: "rgba(54, 162, 235, 0.6)", // 파란색 배경
+                borderColor: "rgba(54, 162, 235, 1)", // 파란색 경계
                 borderWidth: 1,
               },
               {
                 label: selectName,
                 data: counts2,
-                backgroundColor: "rgba(54, 162, 235, 0.6)", // 파란색 배경
-                borderColor: "rgba(54, 162, 235, 1)", // 파란색 경계
+                borderColor: "rgb(255, 99, 132)",
+                backgroundColor: "rgba(255, 99, 132, 0.5)",
                 borderWidth: 1,
               },
             ],

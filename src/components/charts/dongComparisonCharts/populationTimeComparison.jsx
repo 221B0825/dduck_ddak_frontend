@@ -73,8 +73,8 @@ const PopulationTimeComparison = ({
                 {
                   label: selectName,
                   data: values2,
-                  borderColor: "rgb(255, 99, 71)", // 다홍색으로 설정
-                  backgroundColor: "rgba(255, 99, 71, 0.2)", // 다홍색의 투명 배경
+                  borderColor: "rgb(255, 99, 132)",
+                  backgroundColor: "rgba(255, 99, 132, 0.5)",
                   tension: 0.2,
                 },
               ],
@@ -116,15 +116,22 @@ const PopulationTimeComparison = ({
     <div style={{ margin: "40px" }}>
       <canvas ref={chartRef}></canvas>
       <div style={{ textAlign: "center" }}>
-        <h6 className="m-3">{`유동인구가 가장 많은 시간대`}</h6>
-        <h6 className="m-3">
+        <h5
+          className="m-2"
+          style={{
+            border: "1px solid #D9D9D9",
+            borderRadius: "5px",
+            padding: "10px",
+          }}
+        >{`유동인구가 가장 많은 시간대`}</h5>
+        <h5>
           {`${baseName} : `}
           <strong className="text-primary">{commentBase}</strong>
-        </h6>
-        <h6 className="m-3">
+        </h5>
+        <h5>
           {`${selectName} : `}
           <strong className="text-primary">{commentSelect}</strong>
-        </h6>
+        </h5>
       </div>
     </div>
   );

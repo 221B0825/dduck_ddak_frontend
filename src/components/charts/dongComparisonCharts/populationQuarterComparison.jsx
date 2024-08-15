@@ -60,14 +60,14 @@ const PopulationQuarterComparison = ({
                 {
                   label: `${name1.replace("서울특별시 ", "")}`,
                   data: values1,
-                  borderColor: "rgb(255, 99, 132)",
-                  backgroundColor: "rgba(255, 99, 132, 0.5)",
+                  borderColor: "rgb(54, 162, 235)",
+                  backgroundColor: "rgba(54, 162, 235, 0.5)",
                 },
                 {
                   label: `${name2.replace("서울특별시 ", "")}`,
                   data: values2,
-                  borderColor: "rgb(54, 162, 235)",
-                  backgroundColor: "rgba(54, 162, 235, 0.5)",
+                  borderColor: "rgb(255, 99, 132)",
+                  backgroundColor: "rgba(255, 99, 132, 0.5)",
                 },
               ],
             },
