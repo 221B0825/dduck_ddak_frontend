@@ -6,6 +6,7 @@ const SalesQuater = ({ code, setSummarySalesRank }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -13,9 +14,9 @@ const SalesQuater = ({ code, setSummarySalesRank }) => {
         const response = await axios.get(
           `https://api.gadduck.info/towns/sales/transition?code=${code}`
         );
-  
+
         const salesData = response.data.data.salesList;
-  
+
         // 분기 순서를 정의
         const quarterOrder = [
           "2023년 1분기",
@@ -24,23 +25,45 @@ const SalesQuater = ({ code, setSummarySalesRank }) => {
           "2023년 4분기",
           "2024년 1분기",
         ];
-  
+
+        const last = salesData[salesData.length - 1].salesOfTown;
+        const secondLast = salesData[salesData.length - 2].salesOfTown;
+
+        // 감소 여부를 확인
+        if (last < secondLast) {
+          setComment("감소 중");
+        } else {
+          setComment("증가 중 또는 안정");
+        }
+
         // 데이터를 분기 순서에 맞게 매핑
-        const salesOfTown = quarterOrder.map(q => {
-          const record = salesData.find(item => `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기` === q);
+        const salesOfTown = quarterOrder.map((q) => {
+          const record = salesData.find(
+            (item) =>
+              `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기` ===
+              q
+          );
           return record ? record.salesOfTown : null;
         });
-  
-        const salesAvgOfCity = quarterOrder.map(q => {
-          const record = salesData.find(item => `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기` === q);
+
+        const salesAvgOfCity = quarterOrder.map((q) => {
+          const record = salesData.find(
+            (item) =>
+              `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기` ===
+              q
+          );
           return record ? record.salesAvgOfCity : null;
         });
-  
-        const salesAvgOfDistrict = quarterOrder.map(q => {
-          const record = salesData.find(item => `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기` === q);
+
+        const salesAvgOfDistrict = quarterOrder.map((q) => {
+          const record = salesData.find(
+            (item) =>
+              `${Math.floor(item.quarter / 10)}년 ${item.quarter % 10}분기` ===
+              q
+          );
           return record ? record.salesAvgOfDistrict : null;
         });
-        
+
         // fix
         console.log("fix :: salesRankList for summary");
         let salesRankList = [];
@@ -48,10 +71,10 @@ const SalesQuater = ({ code, setSummarySalesRank }) => {
         if (chart) {
           chart.destroy();
         }
-  
+
         const ctx = chartRef.current.getContext("2d");
         const newChart = new Chart(ctx, {
-          type: 'line',  // 차트 유형을 선 차트로 변경
+          type: "line", // 차트 유형을 선 차트로 변경
           data: {
             labels: quarterOrder,
             datasets: [
@@ -60,38 +83,38 @@ const SalesQuater = ({ code, setSummarySalesRank }) => {
                 data: salesOfTown,
                 backgroundColor: "rgba(54, 162, 235, 0.2)", // 파란색 배경
                 borderColor: "rgba(54, 162, 235, 1)", // 파란색 경계
-                fill: false
+                fill: false,
               },
               {
-                label: '자치구',
+                label: "자치구",
                 data: salesAvgOfDistrict,
                 borderColor: "rgba(255, 205, 86, 1)",
-                backgroundColor: "rgba(255, 205, 86, 0.6)", 
-                fill: false
+                backgroundColor: "rgba(255, 205, 86, 0.6)",
+                fill: false,
               },
               {
-                label: '서울시',
+                label: "서울시",
                 data: salesAvgOfCity,
                 borderColor: "rgba(92,92,92, 1)",
                 backgroundColor: "#838383",
-                fill: false
-              }
-            ]
+                fill: false,
+              },
+            ],
           },
           options: {
             scales: {
               y: {
-                beginAtZero: true
-              }
+                beginAtZero: true,
+              },
             },
             plugins: {
               legend: {
                 labels: {
-                  color: 'black'  // 여기서 범례 텍스트 색상을 검은색으로 설정
-                }
-              }
-            }
-          }
+                  color: "black", // 여기서 범례 텍스트 색상을 검은색으로 설정
+                },
+              },
+            },
+          },
         });
         setChart(newChart);
       } catch (error) {
@@ -99,10 +122,9 @@ const SalesQuater = ({ code, setSummarySalesRank }) => {
         setIsEmpty(true);
       }
     };
-  
+
     fetchData();
   }, [code, chartRef, isEmpty]);
-  
 
   return (
     <div style={{ margin: "40px" }}>
@@ -111,6 +133,12 @@ const SalesQuater = ({ code, setSummarySalesRank }) => {
       ) : (
         <canvas ref={chartRef}></canvas>
       )}
+      <div style={{ textAlign: "center" }}>
+        <h5>
+          현재 동의 매출은 <br></br>전분기 대비{" "}
+          <strong className="text-primary">{comment}</strong> 입니다.
+        </h5>
+      </div>
     </div>
   );
 };

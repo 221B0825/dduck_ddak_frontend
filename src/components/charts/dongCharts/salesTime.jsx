@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const SalesTime = ({ code, setSummary }) => {
+const SalesTime = ({ code }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
+  const [summary, setSummary] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,14 +22,12 @@ const SalesTime = ({ code, setSummary }) => {
         const values = Object.values(timeData);
 
         let maxPopulation = 0;
-        let summary = "";
         for (const [key, value] of Object.entries(timeData)) {
           if (value > maxPopulation) {
             maxPopulation = value;
-            summary = key;
+            setSummary(formatTimeRange(key));
           }
         }
-        // setSummary(`${formatTimeRange(summary)}`)
 
         if (chart) {
           chart.destroy(); // 이전 차트가 있으면 파괴
@@ -82,6 +81,13 @@ const SalesTime = ({ code, setSummary }) => {
   return (
     <div style={{ margin: "40px" }}>
       <canvas ref={chartRef}></canvas>
+      <div style={{ textAlign: "center" }}>
+        <h5>
+          현재 동의 시간대별 매출이 <br></br> 가장 많을 때는{" "}
+          <strong className="text-primary">{summary}</strong> 입니다.
+        </h5>
+        <hr></hr>
+      </div>
     </div>
   );
 };
