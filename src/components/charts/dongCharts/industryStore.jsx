@@ -54,8 +54,8 @@ const IndustryComparison = ({ code, category }) => {
               {
                 label: `행정동 별 ${category} 점포 수 추이`,
                 data: recentlyCounts,
-                backgroundColor: "rgba(75, 192, 192, 0.6)",
-                borderColor: "rgba(75, 192, 192, 1)",
+                backgroundColor: "rgba(54, 162, 235, 0.2)", // 파란색 배경
+                borderColor: "rgba(54, 162, 235, 1)", // 파란색 경계
                 borderWidth: 1,
               },
             ],

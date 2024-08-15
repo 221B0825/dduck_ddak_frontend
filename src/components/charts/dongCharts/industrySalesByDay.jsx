@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import axios from "axios";
 
-const IndustrySales = ({ code, category, setSummaryStore }) => {
+const IndustrySales = ({ code, category }) => {
   const chartRef = useRef(null);
   const [chart, setChart] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false); // 데이터 유무 상태 추가
@@ -49,7 +49,7 @@ const IndustrySales = ({ code, category, setSummaryStore }) => {
         setIsEmpty(false); // 데이터가 있으면 isEmpty를 false로 설정
 
         // 데이터를 차트에 맞게 변환
-        const labels = [
+        const labelsArray = [
           "월요일",
           "화요일",
           "수요일",
@@ -70,16 +70,46 @@ const IndustrySales = ({ code, category, setSummaryStore }) => {
         const newChart = new Chart(ctx, {
           type: "bar",
           data: {
-            labels: labels,
+            labels: labelsArray,
             datasets: [
               {
                 label: `일자별 매출`,
                 data: counts,
+                backgroundColor: [
+                  "rgba(255, 99, 132, 0.6)", // 월요일 - 빨간색
+                  "rgba(54, 162, 235, 0.6)", // 화요일 - 파란색
+                  "rgba(255, 206, 86, 0.6)", // 수요일 - 노란색
+                  "rgba(75, 192, 192, 0.6)", // 목요일 - 청록색
+                  "rgba(153, 102, 255, 0.6)", // 금요일 - 보라색
+                  "rgba(255, 159, 64, 0.6)", // 토요일 - 주황색
+                  "rgba(255, 35, 35, 0.6)", // 일요일 - 녹색
+                ],
+                borderColor: [
+                  "rgba(255, 99, 132, 1)",
+                  "rgba(54, 162, 235, 1)",
+                  "rgba(255, 206, 86, 1)",
+                  "rgba(75, 192, 192, 1)",
+                  "rgba(153, 102, 255, 1)",
+                  "rgba(255, 159, 64, 1)",
+                  "rgba(244, 0, 0, 0.6)",
+                ],
+                borderWidth: 1,
               },
             ],
           },
           options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  stepSize: 1,
+                },
+              },
+            },
             plugins: {
+              legend: {
+                display: true,
+              },
               title: {
                 display: true,
                 text: `행정동 별 ${category} 매출 추이`,

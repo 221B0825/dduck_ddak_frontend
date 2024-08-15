@@ -68,7 +68,7 @@ const SalesCategoryGender = ({ code, category }) => {
   }, [chartData]);
 
   return (
-    <div style={{ margin: "40px" }}>
+    <div style={{ margin: "60px" }}>
       {chartData ? (
         <>
           <canvas ref={chartRef}></canvas>
@@ -88,7 +88,7 @@ const SalesCategoryGender = ({ code, category }) => {
       <div style={{ textAlign: "center" }}>
         <h5>
           여성 비율:{" "}
-          <strong className="text-primary">
+          <strong style={{ color: "#FF7A97" }}>
             {count[0]?.toLocaleString()}%
           </strong>
           , 남성 비율:{" "}

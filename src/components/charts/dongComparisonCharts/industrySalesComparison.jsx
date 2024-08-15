@@ -24,6 +24,30 @@ const IndustrySalesComparison = ({
     hour_21_24: "21시~24시",
   };
 
+  const labelsDays = {
+    monday: "월요일",
+    tuesday: "화요일",
+    wednesday: "수요일",
+    thursday: "목요일",
+    friday: "금요일",
+    saturday: "토요일",
+    sunday: "일요일",
+  };
+
+  const findMaxDays = (ages) => {
+    let maxCount = 0;
+    let maxAges = "";
+
+    for (const [key, value] of Object.entries(ages)) {
+      if (value > maxCount) {
+        maxCount = value;
+        maxAges = key;
+      }
+    }
+
+    return labelsDays[maxAges]; // 한글 레이블 반환
+  };
+
   const findMaxAges = (ages) => {
     let maxCount = 0;
     let maxAges = "";
@@ -63,6 +87,7 @@ const IndustrySalesComparison = ({
           );
 
           setCommentBase(findMaxAges(salesData1));
+
           setCommentSelect(findMaxAges(salesData2));
         } else {
           const [response1, response2] = await Promise.all([
@@ -85,6 +110,9 @@ const IndustrySalesComparison = ({
             "토요일",
             "일요일",
           ];
+
+          setCommentBase(findMaxDays(salesData1));
+          setCommentSelect(findMaxDays(salesData2));
         }
 
         const counts1 = Object.values(salesData1);
@@ -153,7 +181,16 @@ const IndustrySalesComparison = ({
         <canvas ref={chartRef}></canvas>
       )}
       <div style={{ textAlign: "center" }}>
-        <h6>각 행정동 별 최대 매출 시간대</h6>
+        <h5
+          className="m-2"
+          style={{
+            border: "1px solid #D9D9D9",
+            borderRadius: "5px",
+            padding: "10px",
+          }}
+        >
+          최고 매출
+        </h5>
         <h5>
           {baseName}: <strong className="text-primary">{commentBase}</strong>
         </h5>

@@ -127,8 +127,16 @@ const SalesQuaterComparison = ({
     <div style={{ margin: "40px" }}>
       {isEmpty ? <p>No data available.</p> : <canvas ref={chartRef}></canvas>}
       <div style={{ textAlign: "center" }}>
-        <h6 className="m-3">{`각 동의 매출 증가세는`}</h6>
-        <h6 className="m-3">전 분기 대비</h6>
+        <h5
+          className="m-2"
+          style={{
+            border: "1px solid #D9D9D9",
+            borderRadius: "5px",
+            padding: "10px",
+          }}
+        >
+          전 분기 대비 매출
+        </h5>
         <h5 className="m-3">
           {`${baseName} : `}
           <strong className="text-primary">{commentBase}</strong>
@@ -137,7 +145,6 @@ const SalesQuaterComparison = ({
           {`${selectName} : `}
           <strong className="text-primary">{commentSelect}</strong>
         </h5>
-        <h6 className="m-3">{`입니다.`}</h6>
       </div>
     </div>
   );

@@ -92,6 +92,7 @@ const SalesCategoryAgeComparison = ({
             {
               label: `${baseName} 연령대별 매출`,
               data: Object.values(chartData.data1),
+
               backgroundColor: "rgba(54, 162, 235, 0.6)",
               borderColor: "rgba(54, 162, 235, 1)",
               borderWidth: 1,
@@ -99,6 +100,7 @@ const SalesCategoryAgeComparison = ({
             {
               label: `${selectName} 연령대별 매출`,
               data: Object.values(chartData.data2),
+
               backgroundColor: "rgba(255, 99, 132, 0.6)",
               borderColor: "rgba(255, 99, 132, 1)",
               borderWidth: 1,
