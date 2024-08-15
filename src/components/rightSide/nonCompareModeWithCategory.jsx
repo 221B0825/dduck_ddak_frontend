@@ -21,7 +21,7 @@ const NonCompareModeWithCategory = ({ selectedArea, inputDetailCategory }) => {
       </div>
       <div className="chart-container">
         <h5 className="ms-3" style={{ fontWeight: "bold" }}>
-          {inputDetailCategory} 매출 요일별
+          {inputDetailCategory} 요일별 매출
         </h5>
         <IndustrySales
           code={selectedArea.code}
